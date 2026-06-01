@@ -1,2 +1,6 @@
-# next-gen-wealth
-This is a repository for next gen wealth, containing artificats suitable for use with the FinServ wealth package
+# Next Gen Wealth
+
+This is a repository for next genaration wealth and contains artificats that use the FinServ wealth package.  In here you will find the following artifacts:
+
+- Meeting Playbook Definition
+    - Annual Review
