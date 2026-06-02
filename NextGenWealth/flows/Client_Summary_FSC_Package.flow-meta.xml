@@ -1,0 +1,1528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <description>Adds the case details to the prompt instructions.</description>
+        <name>Add_Case_Details_to_Prompt_Instructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Case Details to Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Case: {!Loop_Through_Cases.CaseNumber} [SourceId : {!Loop_Through_Cases.Id}]
+- Subject: {!Loop_Through_Cases.Subject}
+- Status: {!Loop_Through_Cases.Status}
+- Priority: {!Loop_Through_Cases.Priority}
+- Created Date: {!Loop_Through_Cases.CreatedDate}
+
+
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Cases</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Add_Financial_Account_Details_to_Prompt_Text</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Account Details to Prompt Text</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Financial Account: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.Name} 
+[SourceId: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.Id}]
+- Type: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__FinancialAccountType__c}
+- Status: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__Status__c}
+- Balance: $ {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__Balance__c}
+- Is Held Away: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__HeldAway__c}
+- Is Managed:{!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__Managed__c}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Iterate_Over_Financial_Account_Roles</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the Financial Accounts heading to the prompt instructions.</description>
+        <name>Add_Financial_Accounts_Heading</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Accounts Heading</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## FINANCIAL ACCOUNTS
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Iterate_Over_Financial_Account_Roles</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the goal details to the prompt instructions.</description>
+        <name>Add_Financial_Goal_Details_to_Prompt_Text</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Goal Details to Prompt Text</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>FINANCIAL GOAL: {!Iterate_Over_Financial_Goals.Name}
+- Target Amount: {!Iterate_Over_Financial_Goals.FinServ__TargetValue__c}
+- Actual Amount: {!Iterate_Over_Financial_Goals.FinServ__ActualValue__c}
+- Target Date: {!Iterate_Over_Financial_Goals.FinServ__TargetDate__c}
+- Status: {!Iterate_Over_Financial_Goals.FinServ__Status__c}
+====
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Iterate_Over_Financial_Goals</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the Financial Goals heading to the prompt instructions.</description>
+        <name>Add_Financial_Goals_Heading</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Goals Heading</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## FINANCIAL GOALS
+
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Iterate_Over_Financial_Goals</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Add_Followup_Summary_to_Prompt_Instructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Followup Summary to Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>- Prior Meeting Followup Summary: {!Get_Followup_Summary_Text.Text}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Tasks_for_Stages</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the Interaction Summaries heading to the prompt instructions.</description>
+        <name>Add_Interaction_Summaries_Heading</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Interaction Summaries Heading</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## PAST INTERACTIONS
+                
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Interaction_Summaries</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the value interaction summary detail to the prompt instructions.</description>
+        <name>Add_Interaction_Summary_Details_to_Prompt_Text</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Interaction Summary Details to Prompt Text</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Interaction: {!Loop_Through_Interaction_Summaries.Interaction.Name} [SourceId: {!Loop_Through_Interaction_Summaries.Id}]
+- Date: {!Loop_Through_Interaction_Summaries.CreatedDate}
+- Meeting Notes: {!Loop_Through_Interaction_Summaries.MeetingNotes}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Interaction_Summaries</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the value of life event details to the prompt instructions.</description>
+        <name>Add_Life_Event_Details_to_Prompt_Instructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Life Event Details to Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Life Event: {!Loop_Through_Life_Events.Name} [SourceId: {!Loop_Through_Life_Events.Id}]
+- Event Type: {!Loop_Through_Life_Events.EventType}
+- Event Date: {!Loop_Through_Life_Events.EventDate}
+- Description: {!Loop_Through_Life_Events.EventDescription}
+
+
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Life_Events</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Add_Meeting_Playbook_Details_to_Prompt_Instructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Meeting Playbook Details to Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Prior Meeting Name: {!Loop_Through_Meeting_Playbooks.Name} [SourceId : {!Loop_Through_Meeting_Playbooks.Id}]
+- Created Date: {!Loop_Through_Meeting_Playbooks.CreatedDate}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Has_Followup_Summary_Decision</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the Open Cases heading to the prompt instructions.</description>
+        <name>Add_Open_Cases_Heading</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Open Cases Heading</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## OPEN CASES
+
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Cases</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the prior Meetings heading to the prompt instruction</description>
+        <name>Add_Past_Meeting_Playbooks</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Past Meeting Playbooks</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## PRIOR MEETINGS
+
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Meeting_Playbooks</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the Person Life Events heading to the prompt instructions.</description>
+        <name>Add_Person_Life_Events_Heading</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Person Life Events Heading</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## UPCOMING LIFE EVENTS
+
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Life_Events</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the ID of the current meeting playbook stage in the loop to the stageIdsForTasks collection.</description>
+        <name>Add_Stage_ID_to_Collection</name>
+        <label>Add Stage ID to Stage IDs Collection</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>stageIdsForTasks</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Loop_Through_Stages_to_Collect_IDs.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Stages_to_Collect_IDs</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the task details to the prompt instructions.</description>
+        <name>Add_Task_to_Prompt_Instructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Task Details to Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Prior Meeting Tasks:
+- Task: {!Loop_Through_Tasks.Subject} [SourceId :{!Loop_Through_Tasks.Id}]
+- Description: {!Loop_Through_Tasks.Description}
+- Status: {!Loop_Through_Tasks.Status}
+- Priority: {!Loop_Through_Tasks.Priority}
+- Due Date: {!Loop_Through_Tasks.ActivityDate}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Tasks</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets stageIdsForTasks to null to clear the collection.</description>
+        <name>Clear_Stage_IDs_Collection</name>
+        <label>Clear Stage IDs Collection</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>stageIdsForTasks</assignToReference>
+            <operator>Assign</operator>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Meeting_Playbook_Stages_Ids</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Account record.</description>
+        <name>Set_Get_Account_Error</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Account Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions  when there&apos;s an error getting the Account record.</description>
+        <name>Set_Get_Account_Error_Message</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Account Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions  when there&apos;s an error getting the Account Contact Relationship records.</description>
+        <name>Set_Get_All_Account_Contact_Relationship_Error_Message</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get All Account Contact Relationship Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions  when there&apos;s an error getting the Contact record.</description>
+        <name>Set_Get_Contact_Error_Message</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Contact Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Financial Account Party record.</description>
+        <name>Set_Get_Financial_Account_Parties_Error</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Financial Account Party Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Financial Goal Party record.</description>
+        <name>Set_Get_Financial_Goal_Parties_Error</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Financial Goal Party Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions  when there&apos;s an error getting the followup summary.</description>
+        <name>Set_Get_Followup_Summary_Text_Error_Message</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Followup Summary Text Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the promptText variable when there&apos;s an error getting the Interaction Summary record.</description>
+        <name>Set_Get_Interaction_Summaries_Error</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Interaction Summary Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions  when there&apos;s an error getting the Lead record.</description>
+        <name>Set_Get_Lead_Error_Message</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Lead Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Meeting Playbook Stage record.</description>
+        <name>Set_Get_Meeting_Playbook_Stages_Error</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Meeting Playbook Stage Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Case record.</description>
+        <name>Set_Get_Open_Cases_Error</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Open Case Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Meeting Playbook record.</description>
+        <name>Set_Get_Past_Meetings_Error</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Meeting Playbook Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Account record.</description>
+        <name>Set_Get_Primary_Household_Member_Error_Message</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Primary Household Member Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred in the flow:
+{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions  when there&apos;s an error getting the task record.</description>
+        <name>Set_Get_Tasks_for_Stages_Error</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Open Task Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Person Life Event record.</description>
+        <name>Set_Get_Upcoming_Life_Events_Error</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Person Life Event Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the a message to the prompt instructions when there are no related records associated to the meeting playbook.</description>
+        <name>Set_No_Related_Record_Message</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set No Related Record Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>###
+No associated related record on the meeting playbook to generate a client summary.
+###
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Sets PrimaryMemberAccountId to the account ID of the contact from Get_Primary_Household_Member.</description>
+        <name>Store_Household_Member_Contact</name>
+        <label>Set Primary Member Account ID for Household Account</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>primaryMemberAccountId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Primary_Household_Member.Contact.AccountId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Account_2</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets PrimaryMemberAccountId to the person contact ID of the account from Get_Account.</description>
+        <name>Store_Person_Account_Contact</name>
+        <label>Set Primary Member Account ID for Person Account</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>primaryMemberAccountId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Account.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Account_2</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Has_Financial_Account_Roles_Decision</name>
+        <label>Has Financial Account Roles Decision</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Interaction_Summaries</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Has_Financial_Account_Roles</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Financial_Account_Roles</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Financial_Accounts_Heading</targetReference>
+            </connector>
+            <label>Has Financial Account Roles</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Has_Financial_Goals</name>
+        <label>Has Financial Goals</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Financial_Account_Roles</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Has_Goals</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Financial_Goals</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Financial_Goals_Heading</targetReference>
+            </connector>
+            <label>Has Goals</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Has_Followup_Summary_Decision</name>
+        <label>Has Followup Summary Decision</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Tasks_for_Stages</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Has_Followup_Summary</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Followup_Summary_Text.Text</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Followup_Summary_to_Prompt_Instructions</targetReference>
+            </connector>
+            <label>Has Followup Summary</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Has_Interaction_Summaries</name>
+        <label>Has Interaction Summaries</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Upcoming_Life_Events</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Has_Interaction</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Interaction_Summaries</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Interaction_Summaries_Heading</targetReference>
+            </connector>
+            <label>Has Interaction</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Has_Lead_or_Account_Related_Record</name>
+        <label>Has Lead, Account, or Contact Related Record</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Set_No_Related_Record_Message</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No Related Record Associated</defaultConnectorLabel>
+        <rules>
+            <name>Has_Lead</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Lead.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>Has Lead</label>
+        </rules>
+        <rules>
+            <name>Has_Account</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Account.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Account_Contact_Relationship</targetReference>
+            </connector>
+            <label>Has Account</label>
+        </rules>
+        <rules>
+            <name>Has_Contact</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Contact.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>Has Contact</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Has_Open_Cases_Decision</name>
+        <label>Has Open Cases Decision</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Past_Meetings</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Has_Open_Cases</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Open_Cases</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Open_Cases_Heading</targetReference>
+            </connector>
+            <label>Has Open Cases</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Has_Past_Meeting_Playbooks_Decision</name>
+        <label>Has Past Meeting Playbooks Decision</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Has_Past_Meeting_Playbooks</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Past_Meetings</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Past_Meeting_Playbooks</targetReference>
+            </connector>
+            <label>Has Past Meeting Playbooks</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Has_Upcoming_Person_Live_Events_Decision</name>
+        <label>Has Upcoming Person Live Events Decision</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Open_Cases</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Has_Upcoming_Person_Live_Events</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Upcoming_Life_Events</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Person_Life_Events_Heading</targetReference>
+            </connector>
+            <label>Has Upcoming Person Live Events</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether the account found by Get_Account is a person account.</description>
+        <name>Is_Person_or_Household_Account</name>
+        <label>Is Person or Household</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Account_2</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>Person_Account</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Account.IsPersonAccount</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Store_Person_Account_Contact</targetReference>
+            </connector>
+            <label>Is Person Account</label>
+        </rules>
+        <rules>
+            <name>Is_Household</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Account_Contact_Relationship</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Primary_Household_Member</targetReference>
+            </connector>
+            <label>Is Household</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>Client Summary FSC Use Case {!$Flow.CurrentDateTime}</interviewLabel>
+    <isOverridable>true</isOverridable>
+    <label>Client Summary FSC Package</label>
+    <loops>
+        <description>Repeats an action for each financial account role record in Financial Account Roles from Get_Financial_Account_Roles.</description>
+        <name>Iterate_Over_Financial_Account_Roles</name>
+        <label>Iterate Over Financial Account Roles</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Financial_Account_Roles</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Financial_Account_Details_to_Prompt_Text</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Interaction_Summaries</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each financial goal record in Financial Goals from Get_Financial_Goals</description>
+        <name>Iterate_Over_Financial_Goals</name>
+        <label>Iterate Over Financial Goals</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Financial_Goals</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Financial_Goal_Details_to_Prompt_Text</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Financial_Account_Roles</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each case record in Cases from Get_Open_Cases.</description>
+        <name>Loop_Through_Cases</name>
+        <label>Iterate Over Cases</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Open_Cases</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Case_Details_to_Prompt_Instructions</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Past_Meetings</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each interaction summary record in Interaction Summaries from Get_Interaction_Summaries.</description>
+        <name>Loop_Through_Interaction_Summaries</name>
+        <label>Iterate Over Interaction Summaries</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Interaction_Summaries</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Interaction_Summary_Details_to_Prompt_Text</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Upcoming_Life_Events</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each person life event record in Person Life Events from Get_Upcoming_Life_Events.</description>
+        <name>Loop_Through_Life_Events</name>
+        <label>Iterate Over Person Life Events</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Upcoming_Life_Events</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Life_Event_Details_to_Prompt_Instructions</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Open_Cases</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each meeting playbook record in Meeting Playbooks from Get_Past_Meetings.</description>
+        <name>Loop_Through_Meeting_Playbooks</name>
+        <label>Iterate Over Meeting Playbooks</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Past_Meetings</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Clear_Stage_IDs_Collection</targetReference>
+        </nextValueConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each meeting playbook stage record in Meeting Playbook Stages from Get_Meeting_Playbook_Stages.</description>
+        <name>Loop_Through_Stages_to_Collect_IDs</name>
+        <label>Iterate Over Meeting Playbook Stages</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Meeting_Playbook_Stages_Ids</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Stage_ID_to_Collection</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Followup_Summary_Text</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action to format and append details for each task record in Tasks from Get_Tasks_for_Stages.</description>
+        <name>Loop_Through_Tasks</name>
+        <label>Iterate Over Tasks</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Tasks_for_Stages</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Task_to_Prompt_Instructions</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Loop_Through_Meeting_Playbooks</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>PromptFlow</processType>
+    <recordLookups>
+        <description>Gets the account record with an ID that matches the related record ID of Meeting Playbook from Get_Meeting_Records. Stores the result in the Account from Get_Account record variable.</description>
+        <name>Get_Account</name>
+        <label>Get Account</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Lead</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Account_Error</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Input.MeetingPlaybookStage.MeetingPlaybook.RelatedRecordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the primary member of a household or directly the person account.</description>
+        <name>Get_Account_2</name>
+        <label>Get Account</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Financial_Goals</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Account_Error_Message</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>primaryMemberAccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Get Account Contact Relationship to check if it&apos;s a household account</description>
+        <name>Get_Account_Contact_Relationship</name>
+        <label>Get All Account Contact Relationship</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Is_Person_or_Household_Account</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_All_Account_Contact_Relationship_Error_Message</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Account.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>AccountContactRelation</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the Contact record with an ID that matches the related record ID of Meeting Playbook.</description>
+        <name>Get_Contact</name>
+        <label>Get Contact</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Has_Lead_or_Account_Related_Record</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Contact_Error_Message</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Input.MeetingPlaybookStage.MeetingPlaybook.RelatedRecordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contact</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the active financial account role records with an account ID that matches PrimaryMemberAccountId. Stores the results in the Financial Account Roles from Get_Financial_Account_Roles record collection.</description>
+        <name>Get_Financial_Account_Roles</name>
+        <label>Get Financial Account Roles</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Has_Financial_Account_Roles_Decision</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Financial_Account_Parties_Error</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>FinServ__Active__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>FinServ__RelatedAccount__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>primaryMemberAccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>FinServ__FinancialAccountRole__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the financial goal records with an primary owner ID that matches PrimaryMemberAccountId. Stores the results in the Financial Goals from Get_Financial_Goals record collection.</description>
+        <name>Get_Financial_Goals</name>
+        <label>Get Financial Goals</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Has_Financial_Goals</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Financial_Goal_Parties_Error</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>FinServ__PrimaryOwner__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>primaryMemberAccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>FinServ__FinancialGoal__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Followup_Summary_Text</name>
+        <label>Get Followup Summary Text</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Add_Meeting_Playbook_Details_to_Prompt_Instructions</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Followup_Summary_Text_Error_Message</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Type</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>FollowupSummaryPrompt</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>MeetingPlaybookStageId</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>stageIdsForTasks</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>MeetingPlaybookStageText</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets up to three interaction summary records with an account ID that matches PrimaryMemberAccountId. Records are sorted by CreatedDate in descending order (most recent first). Stores the results in the Interaction Summaries from Get_Interaction_Summaries record collection.</description>
+        <name>Get_Interaction_Summaries</name>
+        <label>Get Interaction Summaries</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Has_Interaction_Summaries</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Interaction_Summaries_Error</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>primaryMemberAccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <limit>
+            <numberValue>3.0</numberValue>
+        </limit>
+        <object>InteractionSummary</object>
+        <sortField>CreatedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the lead record with an ID that matches the related record ID of Meeting Playbook.</description>
+        <name>Get_Lead</name>
+        <label>Get Lead</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Contact</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Lead_Error_Message</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Input.MeetingPlaybookStage.MeetingPlaybook.RelatedRecordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Lead</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the meeting playbook stage records with a meeting playbook ID that matches the ID of the current meeting playbook in the loop. Stores the results in the Meeting Playbook Stages from Get_Meeting_Playbook_Stages record collection.</description>
+        <name>Get_Meeting_Playbook_Stages_Ids</name>
+        <label>Get Meeting Playbook Stages Ids</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_Through_Stages_to_Collect_IDs</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Meeting_Playbook_Stages_Error</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>MeetingPlaybookId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Loop_Through_Meeting_Playbooks.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>MeetingPlaybookStage</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets up to three case records with an account ID that matches PrimaryMemberAccountId and any status except Closed. Records are sorted by CreatedDate in descending order (most recent first). Stores the results in the Cases from Get_Open_Cases record collection.</description>
+        <name>Get_Open_Cases</name>
+        <label>Get Open Cases</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Has_Open_Cases_Decision</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Open_Cases_Error</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Closed</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>primaryMemberAccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <limit>
+            <numberValue>3.0</numberValue>
+        </limit>
+        <object>Case</object>
+        <sortField>CreatedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets up to three meeting playbook records with a related record ID that matches the ID of the account from Get_Account. Records are sorted by CreatedDate in descending order (most recent first). Stores the results in the Meeting Playbooks from Get_Past_Meetings record collection.</description>
+        <name>Get_Past_Meetings</name>
+        <label>Get Past Meeting Playbooks</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Has_Past_Meeting_Playbooks_Decision</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Past_Meetings_Error</targetReference>
+        </faultConnector>
+        <filterLogic>1 AND (2 OR 3) AND 4</filterLogic>
+        <filters>
+            <field>RelatedRecordId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Account.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Status</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>PostMeeting</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Status</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Completed</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>CreatedDate</field>
+            <operator>LessThan</operator>
+            <value>
+                <elementReference>$Flow.CurrentDate</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <limit>
+            <numberValue>3.0</numberValue>
+        </limit>
+        <object>MeetingPlaybook</object>
+        <sortField>CreatedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the active account contact relation record for the primary member with an account ID that matches the ID of the account from Get_Account. Stores the result in the Primary Household Member from Get_Primary_Household_Member record variable.</description>
+        <name>Get_Primary_Household_Member</name>
+        <label>Get Primary Household Member</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Store_Household_Member_Contact</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Primary_Household_Member_Error_Message</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Account.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>FinServ__Primary__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>AccountContactRelation</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the task records with an ID that matches any ID in the stageIdsForTasks collection. Stores the results in the Tasks from Get_Tasks_for_Stages record collection.</description>
+        <name>Get_Tasks_for_Stages</name>
+        <label>Get Tasks</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_Through_Tasks</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Tasks_for_Stages_Error</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>WhatId</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>stageIdsForTasks</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Task</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets up to three person life event records with a primary person ID that matches the contact ID of Primary Household Member from Get_Primary_Household_Member record collection and an event date that is the current date or one in the future. Records are sorted by EventDate in ascending order. Stores the results in the Person Life Events from Get_Upcoming_Life_Events record collection.</description>
+        <name>Get_Upcoming_Life_Events</name>
+        <label>Get Person Life Events</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Has_Upcoming_Person_Live_Events_Decision</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Upcoming_Life_Events_Error</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>PrimaryPersonId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Account_2.PersonContactId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>EventDate</field>
+            <operator>GreaterThanOrEqualTo</operator>
+            <value>
+                <elementReference>$Flow.CurrentDate</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <limit>
+            <numberValue>3.0</numberValue>
+        </limit>
+        <object>PersonLifeEvent</object>
+        <sortField>EventDate</sortField>
+        <sortOrder>Asc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <capabilityTypes>
+            <name>PromptTemplateType://meetingcenter__clientSummary</name>
+            <capabilityName>PromptTemplateType://meetingcenter__clientSummary</capabilityName>
+            <inputs>
+                <name>MeetingPlaybookStage</name>
+                <capabilityInputName>MeetingPlaybookStage</capabilityInputName>
+                <dataType>SOBJECT://MeetingPlaybookStage</dataType>
+                <isCollection>false</isCollection>
+            </inputs>
+        </capabilityTypes>
+        <connector>
+            <targetReference>Get_Account</targetReference>
+        </connector>
+        <triggerType>Capability</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>Stores the ID of the primary member&apos;s account.</description>
+        <name>primaryMemberAccountId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores a collection of IDs for meeting playbook stages.</description>
+        <name>stageIdsForTasks</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>
