@@ -1,0 +1,43 @@
+Write a python script tools/CreateZip.py
+cd into the folder that is the parent of CreateZip.py (using the __file__ keyword).
+
+
+Use argparse to make this script accept the following arguments
+- namespace (string, optional, defaults to "FinServ")
+- exclude (string, comment is "comma separated list of types to exclude with no spaces before/after the comma")
+- create-zip (boolean, defaults to true)
+- help
+The comment for the the entire parser is "Create NextGenWealth.zip in the tmp folder"
+
+Call the equivalent of `cp -r NextGenWealth $TMPDIR`.  You may have to replace TMPDIR with the equivalent way in Python so that the script works on Windows.
+
+Then cd NextGenWealth, and call the function build_artifact_map from CreateContents.py.
+
+Now cd to the tmp NextGenWealth folder you created above.
+
+If namespace is anything other than "FinServ" the replace "FinServ__" in all files with the value of namespace + "__".
+
+Now call find_roots from CreateContents.py to get a list of root artifacts.
+If any of these artifact's info.type is one of the types to exclude ignoring case, remove this artifact from the list of root artifacts.
+
+Iterate over the types in the exclude string.
+
+Walk the remaining root artifacts, descending into the outgoing for each, and generate package.xml, overwriting the existing one in this tmp location as follows:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <name>type</name>
+        <members>name1</members>
+        <members>name2</members>
+    </types>
+    <version>67.0</version>
+</Package>
+```
+
+Here type comes from artifact's info's type, and name comes from the artifact's info's name.
+
+Write to stdout that you have to created $TMPDIR/NextGenWealth for namespace={namespace} and exclude={exclude}
+
+If create_zip is true then zip the directory into $TMPDIR/NextGenWealth.zip and write to stdout to advertise this zip file.

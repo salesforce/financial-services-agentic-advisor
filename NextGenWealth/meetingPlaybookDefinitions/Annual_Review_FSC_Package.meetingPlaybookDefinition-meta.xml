@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MeetingPlaybookDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
-    <clonedFrom>meetingcenter_wealth__Annual_Review</clonedFrom>
+    <clonedFrom>NextGenWealth:Annual_Review</clonedFrom>
     <description>Ideal for quarterly or annual check-ins with existing clients. Includes pre-meeting research, in-session discussion guide, and post-meeting follow-up.</description>
     <isActive>true</isActive>
     <label>Annual Review FSC Package</label>
