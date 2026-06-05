@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Create NextGenWealth.zip in the tmp folder."""
+"""Create a project to called ClonedcNextGenWealth to deploy the next gen wealth project."""
 import argparse
 import os
 import shutil
+import sys
 import tempfile
+import zipfile
 from pathlib import Path
 
 # import the helpers from the sibling script. Importing it runs CreateContents'
@@ -36,7 +38,7 @@ def replace_namespace(root_dir, namespace):
 
 def collect_members(roots):
     """Walk roots, descending into outgoing, returning {type: [names...]} in order."""
-    collected = {}  # type -> list of bare names (ordered, deduped)
+    collected = {}  # type -> list of names (ordered, deduped)
     seen = set()  # ids of visited artifacts
 
     def walk(artifact):
@@ -71,9 +73,26 @@ def build_package_xml(collected):
     return "\n".join(lines) + "\n"
 
 
+def build_single_package_zip(clone_dir):
+    """Zip package.xml and all folders in clone_dir into SinglePackage.zip."""
+    zip_path = os.path.join(clone_dir, "SinglePackage.zip")
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
+        # package.xml at the root of the archive
+        zf.write("package.xml", "package.xml")
+        # all folders, recursively
+        for entry in sorted(os.listdir(".")):
+            if not os.path.isdir(entry):
+                continue
+            for dirpath, _, filenames in os.walk(entry):
+                for filename in filenames:
+                    full = os.path.join(dirpath, filename)
+                    zf.write(full, os.path.relpath(full, "."))
+    return zip_path
+
+
 def main():
     parser = argparse.ArgumentParser(
-        description="Create NextGenWealth.zip in the tmp folder"
+        description="Create a project to called ClonedcNextGenWealth to deploy the next gen wealth project"
     )
     parser.add_argument(
         "--namespace",
@@ -86,58 +105,64 @@ def main():
         help="comma separated list of types to exclude with no spaces before/after the comma",
     )
     parser.add_argument(
-        "--create-zip",
-        action=argparse.BooleanOptionalAction,
-        default=True,
-        help="zip the tmp NextGenWealth folder (defaults to true)",
+        "--target-directory",
+        default=tempfile.gettempdir(),
+        help="directory to create ClonedNextGenWealth in (defaults to TMPDIR)",
     )
     args = parser.parse_args()
 
-    # cd into the folder that holds NextGenWealth. CreateZip.py lives in tools/,
+    # cd into the folder that holds NextGenWealth. CreateProject.py lives in tools/,
     # so its parent's parent (the repo root) is where NextGenWealth lives, which
     # mirrors how CreateContents.py resolves its own location.
     repo_root = Path(__file__).resolve().parent.parent
     os.chdir(repo_root)
 
-    # cp -r NextGenWealth $TMPDIR  (tempfile.gettempdir() is the cross-platform TMPDIR)
-    tmpdir = tempfile.gettempdir()
-    dest = os.path.join(tmpdir, "NextGenWealth")
-    if os.path.exists(dest):
-        shutil.rmtree(dest)
-    shutil.copytree("NextGenWealth", dest)
+    # Resolve the clone destination to an absolute path so later chdir calls don't
+    # invalidate it.
+    clone_dir = os.path.abspath(
+        os.path.join(args.target_directory, "ClonedNextGenWealth")
+    )
+
+    # Error out if <target-directory>/ClonedNextGenWealth already exists.
+    if os.path.exists(clone_dir):
+        sys.exit(f"Error: {clone_dir} already exists")
+
+    # cp -r NextGenWealth <target-directory> (renamed to ClonedNextGenWealth).
+    shutil.copytree("NextGenWealth", clone_dir)
 
     # cd NextGenWealth (source), then build the artifact map from the source tree.
     os.chdir("NextGenWealth")
     artifact_map = CreateContents.build_artifact_map()
 
-    # cd to the tmp NextGenWealth folder created above.
-    os.chdir(dest)
+    # cd to the ClonedNextGenWealth folder created above.
+    os.chdir(clone_dir)
 
     # If namespace is anything other than FinServ, rewrite the FinServ__ prefix.
     if args.namespace != "FinServ":
-        replace_namespace(dest, args.namespace)
+        replace_namespace(clone_dir, args.namespace)
 
-    # find_roots reads files relative to the cwd (the tmp copy).
+    # find_roots reads files relative to the cwd (the clone).
     roots = CreateContents.find_roots(artifact_map)
 
     # Drop any root whose type is one of the excluded types (case-insensitive).
     exclude_types = [t.lower() for t in args.exclude.split(",") if t]
     for excluded in exclude_types:
+        # remove excluded artifact and it's children
         roots = [r for r in roots if r.info.type.lower() != excluded]
 
-    # Walk the remaining roots and overwrite package.xml in this tmp location.
+    # Walk the remaining roots and overwrite package.xml in the clone location.
     collected = collect_members(roots)
     with open("package.xml", "w", encoding="utf-8") as fh:
         fh.write(build_package_xml(collected))
 
-    print(f"Created {dest} for namespace={args.namespace} and exclude={args.exclude}")
+    # cd ClonedNextGenWealth and zip package.xml and all folders into SinglePackage.zip.
+    os.chdir(clone_dir)
+    zip_path = build_single_package_zip(clone_dir)
 
-    if args.create_zip:
-        zip_base = os.path.join(tmpdir, "NextGenWealth")
-        zip_path = shutil.make_archive(
-            zip_base, "zip", root_dir=tmpdir, base_dir="NextGenWealth"
-        )
-        print(f"Created zip archive {zip_path}")
+    print(f"Created sf project {clone_dir}")
+    print(f"Zip file {zip_path}")
+    print(f"namespace={args.namespace}")
+    print(f"exclude={args.exclude}")
 
 
 if __name__ == "__main__":

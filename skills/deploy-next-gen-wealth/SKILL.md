@@ -1,19 +1,28 @@
 ---
-name: git-to-org-deploy
+name: deploy-next-gen-wealth
 description: |
-  Deploy Salesforce metadata from a git repository to a Salesforce org using SFDX/SF CLI.
+  Deploys the NextGenWealth repository for the FinServ WealthApp to a Salesforce org using SFDX/SF CLI.
   Handles CLI installation, git clone, package extraction, and deployment.
-  Use when the user asks to "deploy to an org", "push metadata", "deploy from git",
-  "sfdx deploy", "sf deploy", "git to org", or wants to pull source from a repo and deploy it.
+  Use when the user asks to "deploy the NextGenWealth FinServ WealthApp to an org".
 ---
 
-# Git-to-Org Deploy
+# deploy-next-gen-wealth
 
 Pull Salesforce metadata from a git repository and deploy it to a target org using the Salesforce CLI.
 
 ## Workflow
 
-### Step 1: Ensure Salesforce CLI is installed
+### Step 1: Ensure that python3 is installed
+
+Check that `python3` is available on PATH:
+
+```bash
+python3 --version
+```
+
+If it is missing, install it before continuing (e.g., `brew install python3` on macOS, or the platform's package manager). `python3` is required by the package preparation step (`tools/CreateProject.py`) in Step 5.
+
+### Step 2: Ensure Salesforce CLI is installed
 
 Check if `sf` or `sfdx` is available on PATH:
 
@@ -33,40 +42,29 @@ export PATH="$HOME/bin:$PATH"
 sf --version
 ```
 
-### Step 2: Verify installation
+### Step 3: Verify installation
 
-Confirm `sf --version` returns a valid version string before proceeding.
+Confirm `sf --version` returns @salesforce/cli/2.137.7 or higher.  If the version is too low run `sf update`.
 
-### Step 3: Get source from git repository
-
-Ask the user for the git repository URL and the path within it that contains the deployable source.
-
-Clone the repository:
+### Step 4: Get source from git repository
 
 ```bash
-cd /tmp && git clone <repo-url>
+cd /tmp && git clone https://github.com/salesforce/next-gen-wealth
 ```
 
 If authentication is needed, prompt the user for credentials or suggest using a personal access token in the URL.
 
-### Step 4: Extract and prepare the package
+### Step 5: Extract and prepare the package
 
-If the source is a zip file, extract it:
+If the user said they want a specific namespace set customNamespace to this value.  Otherwise set customNamespace to "FinServ".
 
-```bash
-mkdir -p /tmp/<project>-deploy
-unzip /tmp/<repo>/<path-to-zip> -d /tmp/<project>-deploy/
+```
+cd /tmp/next-gen-wealth
+rm -rf $TMPDIR/ClonedNextGenWealth
+python3 tools/CreateProject.py --namespace <customNamespace>
 ```
 
-If the source is already unzipped SFDX source format or metadata format, use it directly.
-
-Verify the package contains either:
-- A `package.xml` (metadata API format) — deploy with `--manifest`
-- An `sfdx-project.json` (source format) — deploy with `--source-dir`
-
-If modifications are needed (e.g., updating API version, adjusting paths, fixing metadata), make them before deployment. Ask the user if any modifications are required.
-
-### Step 5: Authenticate to the target org
+### Step 6: Authenticate to the target org
 
 Ask the user for:
 - **Instance URL** (e.g., `https://login.test1.pc-rnd.salesforce.com`, `https://login.salesforce.com`)
@@ -84,49 +82,31 @@ If web login is not possible (headless environment without browser callback), tr
 - **SFDX auth URL**: `sf org login sfdx-url --sfdx-url-file <file> --alias <alias>`
 - **JWT**: `sf org login jwt --client-id <id> --jwt-key-file <key> --username <user> --alias <alias>`
 
-### Step 6: Dry-run validation (test-only deploy)
+### Step 7: Dry-run validation (test-only deploy)
 
 Before deploying for real, run a validation-only deploy to check for errors without writing changes to the org. This prevents partial deploys that leave the org in a broken state.
 
-For metadata format with `package.xml`:
-
 ```bash
+cd $TMPDIR/ClonedNextGenWealth
 export PATH="$HOME/bin:$PATH"
-cd /tmp/<project>-deploy/<package-dir>
-sf project deploy start --manifest package.xml --target-org <alias> --dry-run
-```
-
-For source format with `sfdx-project.json`:
-
-```bash
-export PATH="$HOME/bin:$PATH"
-cd /tmp/<project>-deploy/<package-dir>
-sf project deploy start --source-dir . --target-org <alias> --dry-run
+sf project deploy start --manifest package.xml --target-org <alias> --ignore-conflicts --ignore-warnings --wait 30 --dry-run
 ```
 
 If the dry-run **fails**: report the errors to the user and **do NOT proceed** with the actual deploy. Work with the user to fix the issues first.
 
-If the dry-run **succeeds**: report the results to the user and **ask for explicit confirmation** before proceeding to the actual deploy in Step 7. Do NOT auto-proceed.
+If the dry-run **succeeds**: report the results to the user and **ask for explicit confirmation** before proceeding to the actual deploy in Step 8. Do NOT auto-proceed.
 
-### Step 7: Deploy to the org
-
-For metadata format with `package.xml`:
+### Step 8: Deploy to the org
 
 ```bash
+cd $TMPDIR/ClonedNextGenWealth
 export PATH="$HOME/bin:$PATH"
-cd /tmp/<project>-deploy/<package-dir>
-sf project deploy start --manifest package.xml --target-org <alias>
+sf project deploy start --manifest package.xml --target-org <alias> --ignore-conflicts --ignore-warnings --wait 30
 ```
 
-For source format with `sfdx-project.json`:
+Print the output (stdout and stderr) as the LLM response.
 
-```bash
-export PATH="$HOME/bin:$PATH"
-cd /tmp/<project>-deploy/<package-dir>
-sf project deploy start --source-dir . --target-org <alias>
-```
-
-### Step 8: Verify deployment
+### Step 9: Verify deployment
 
 Check the output for:
 - **Status: Succeeded** — deployment is complete
@@ -155,5 +135,5 @@ Check the output for:
 After successful deployment, optionally clean up temporary files:
 
 ```bash
-rm -rf /tmp/<repo> /tmp/<project>-deploy
+rm -rf /tmp/next-gen-wealth $TMPDIR/ClonedNextGenWealth
 ```
