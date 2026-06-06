@@ -1,0 +1,42 @@
+Write a python script tools/CreateContents.py
+cd into the folder that is the parent of CreateContents.py (using the __file__ keyword).
+Then it does cd NextGenWealth
+
+Create a named tuple called ArtifactInfo with members type, name, label, description.
+Create a class Artifact with members info which is initialized in the constructor, and num_incoming which is 0, and outgoing with a line level comment this this is an array of Artifact
+Create a map called artifact_map which is a map of string to Artifact 
+Find all files ending in -meta.xml and strip off the extension and add to artifact_map as follows:
+The key in artifact_map is the name which we show how to get below.
+For genAiPromptTemplates/Create_Annual_Review_Client_Summary_FSC_Package.genAiPromptTemplate-meta.xml the type is genAiPromptTemplate (i.e. remove the ’s’ at the end of genAiPromptTemplates), the name is Create_Annual_Review_Client_Summary_FSC_Package(i.e. remove the extension), the label comes from either the <masterLabel>, <label>, or <name> attributes at the top level.  If none of these exist throw an error.  description comes from the <description> tag if any so it cab be None.
+If the key already exists in the map raise an error that f”Duplicate artifact {name} which is both a {type already in map} and {type computed above}”.
+Create a function build_artifact_map that returns artifact_map.
+
+Open each -meta.xml file, and parse every tag to see if it is in the set.
+For example for meetingPlaybookDefinitions/Annual_Review_FSC_Package.meetingPlaybookDefinition-meta.xml we have a line
+<promptTemplate>Create_Annual_Review_Preparation_Brief_FSC_Package</promptTemplate>
+The tag value is "Create_Annual_Review_Preparation_Brief_FSC_Package".
+If the tag value is "flow://Prep_Brief_Summary_FSC_Package" then change it to "Prep_Brief_Summary_FSC_Package" (i.e. remove the "flow://").
+Since “Create_Annual_Review_Preparation_Brief_FSC_Package” is in artifact_map, add this tuple to a list ("Annual_Review_FSC_Package.meetingPlaybookDefinition", "Create_Annual_Review_Preparation_Brief_FSC_Package")
+The file also has in it
+<isAllowMultipleUse>false</isAllowMultipleUse>
+But as "false" is not in artifact_map, ignore it.
+
+The sort the list toplogically and update the Artifact objects inside artifact_map, increment num_incoming and adds to outgoing.  This function should be called find_roots and it return a list of Artifact changes that have num_incoming == 0.
+
+Generate a file CONTENTS.md like the following
+```
+# Contents
+
+- label (type
+  - label (type)
+- label (type)
+```
+
+In the contents section:
+The top level type comes from each root object, the type and label from ArtifactInfo.
+The nested type comes from the top artifact's outgoing array
+Remember to capitalize the first letter of the type, and change "GenAiPromptTemplate" to "PromptTemplate"
+As you emit each child node decrement num_incoming
+If at the end there is an Artifact with num_incoming greater than zero there is a cycle so raise an error.
+
+

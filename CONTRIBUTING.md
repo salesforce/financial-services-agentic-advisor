@@ -43,6 +43,7 @@ Issues labelled `good first contribution`.
 
 # Contribution Checklist
 
+- [x] Use one of methods in README.md to test deploying the package
 - [x] Clean, simple, well styled code
 - [x] Commits should be atomic and messages must be descriptive. Related issues should be mentioned by Issue number.
 - [x] Comments

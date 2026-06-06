@@ -13,11 +13,6 @@
         <name>GenAiPromptTemplate</name>
     </types>
     <types>
-        <members>AnnualReviewPostMeetingTemplate_1778792897252</members>
-        <members>AnnualReviewPreMeetingTemplate_1778792888255</members>
-        <name>ActionPlanTemplate</name>
-    </types>
-    <types>
         <members>Annual_Review_FSC_Package</members>
         <name>MeetingPlaybookDefinition</name>
     </types>
