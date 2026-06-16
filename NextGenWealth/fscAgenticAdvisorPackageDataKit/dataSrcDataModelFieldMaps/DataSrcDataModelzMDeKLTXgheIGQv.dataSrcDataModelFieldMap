@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSrcDataModelFieldMap xmlns="http://soap.sforce.com/2006/04/metadata">
+    <filterApplied>false</filterApplied>
+    <filterOperationType>Equal</filterOperationType>
+    <masterLabel>DataSrcDataModelzMDeKLTXgheIGQv</masterLabel>
+    <sourceField>Financial_Account_Balance_DLO.Description__c</sourceField>
+    <targetField>ssot__FinancialAccountBalance__dlm.ssot__Description__c</targetField>
+    <templateVersion>1</templateVersion>
+    <versionNumber>1.0</versionNumber>
+</DataSrcDataModelFieldMap>

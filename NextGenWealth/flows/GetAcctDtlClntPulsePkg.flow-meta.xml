@@ -1,0 +1,1153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <description>Adds the account heading to the prompt instructions.</description>
+        <name>AddAccountHeadingPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Account Heading Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## ACCOUNT
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>AddAccountDetailsPromptInstructions</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds details from Account from GetAccount to the prompt instructions.</description>
+        <name>AddAccountDetailsPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Account Details Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>ACCOUNT:
+{!GetAccount.Name}
+- Created Date:
+{!GetAccount.CreatedDate}
+- Relationship status:
+{!GetAccount.Type}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetFinancialGoals</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the financial goals heading to the prompt instructions.</description>
+        <name>AddFinancialGoalsHeadingPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Goals Heading Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## FINANCIAL GOALS
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverFinancialGoals</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds details of the current financial goal record in the loop to the prompt instructions.</description>
+        <name>AddFinancialGoalDetailsPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Goal Details Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>FINANCIAL GOAL: {!IterateOverFinancialGoals.Name}
+- Target Amount: {!IterateOverFinancialGoals.FinServ__TargetValue__c}
+- Actual Amount: {!IterateOverFinancialGoals.FinServ__ActualValue__c}
+- Target Date: {!IterateOverFinancialGoals.FinServ__TargetDate__c}
+- Status: {!IterateOverFinancialGoals.FinServ__Status__c}
+====
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverFinancialGoals</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the financial accounts heading to the prompt instructions.</description>
+        <name>AddFinancialAccountsHeadingPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Accounts Heading Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## FINANCIAL ACCOUNTS
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverFinancialAccountRoles</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds details of the current financial account role record in the loop to the prompt instructions. Adds the financial account ID of the current record to the FinancialAccountIds collection.</description>
+        <name>AddFinancialAccountDetailsPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Account Details Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>FINANCIAL ACCOUNT:
+{!IterateOverFinancialAccountRoles.FinServ__FinancialAccount__r.Name}
+[SourceId: {!IterateOverFinancialAccountRoles.FinServ__FinancialAccount__c}]
+- Type: {!IterateOverFinancialAccountRoles.FinServ__FinancialAccount__r.FinServ__FinancialAccountType__c}
+- Status: {!IterateOverFinancialAccountRoles.FinServ__FinancialAccount__r.FinServ__Status__c}
+- Balance: $ {!IterateOverFinancialAccountRoles.FinServ__FinancialAccount__r.FinServ__Balance__c}
+- Is Held Away: {!IterateOverFinancialAccountRoles.FinServ__FinancialAccount__r.FinServ__HeldAway__c}
+- Is Managed: {!IterateOverFinancialAccountRoles.FinServ__FinancialAccount__r.FinServ__Managed__c}
+====
+</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>FinancialAccountIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>IterateOverFinancialAccountRoles.FinServ__FinancialAccount__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverFinancialAccountRoles</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the upcoming person life events heading to the prompt instructions.</description>
+        <name>AddUpcomingPersonLifeEventsHeadingPromptInst</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Upcoming Person Life Events Heading Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## UPCOMING LIFE EVENTS
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverPersonLifeEvents</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds details from the current record in the IterateOverPersonLifeEvents loop to the prompt instructions.</description>
+        <name>AddLifeEventDetailsPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Life Event Details Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Life Event: {!IterateOverPersonLifeEvents.Name} [SourceId: {!IterateOverPersonLifeEvents.Id}]
+- Event Type: {!IterateOverPersonLifeEvents.EventType}
+- Event Date: {!IterateOverPersonLifeEvents.EventDate}
+- Description: {!IterateOverPersonLifeEvents.EventDescription}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverPersonLifeEvents</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the open cases heading to the prompt instructions.</description>
+        <name>AddOpenCasesHeadingPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Open Cases Heading Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## OPEN CASES
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverCases</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds details from the current record in the IterateOverCases loop to the prompt instructions.</description>
+        <name>AddCaseDetailsPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Case Details Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Case: {!IterateOverCases.CaseNumber} [SourceId: {!IterateOverCases.Id}]
+- Subject: {!IterateOverCases.Subject}
+- Status: {!IterateOverCases.Status}
+- Priority: {!IterateOverCases.Priority}
+- Created Date: {!IterateOverCases.CreatedDate}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverCases</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets TargetAccountId to the account ID of the contact in Account Contact Relationship from GetAccountContactRelationship record variable.</description>
+        <name>SetTargetAccountIdHshldAcct</name>
+        <label>Set Target Account ID</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>TargetAccountId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>GetAccountContactRelationshipPrimHshldMbr.Contact.AccountId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetAccount</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets TargetAccountId to the ID of the record passed into the flow as part of prompt template input.</description>
+        <name>SetTargetAccountIdPersAcct</name>
+        <label>Set Target Account ID</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>TargetAccountId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Input.objectToSummarize.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetAccount</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the error message returned by the flow to the prompt instructions.</description>
+        <name>AddGetAccountErrorPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Get Account Error Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the error message returned by the flow to the prompt instructions.</description>
+        <name>AddGetFinancialAccountRolesErrorPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Get Financial Account Roles Error Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the error message returned by the flow to the prompt instructions.</description>
+        <name>AddGetFinancialGoalsErrorPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Get Financial Goals Error Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the error message returned by the flow to the prompt instructions.</description>
+        <name>AddGetPersonLifeEventsErrorPromptInst</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Get Person Life Events Error Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the error message returned by the flow to the prompt instructions.</description>
+        <name>AddOpenCasesErrorPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Open Cases Error Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the last interaction date heading to the prompt instructions.</description>
+        <name>AddLastInteractionDateHeadingPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Last Interaction Date Heading Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## LAST INTERACTION DATE
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>AddLastInteractionDetailsPromptInstructions</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the last modified date of the Event from GetEvent record variable to the prompt instructions.</description>
+        <name>AddLastInteractionDetailsPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Last Interaction Details Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Last interaction date: {!GetEvent.LastModifiedDate}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetFinancialAccountRoles</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the financial asset under management heading to the prompt instructions.</description>
+        <name>AddAssetUnderMgmtHeadingPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Asset Under Management Heading Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## FINANCIAL ASSET UNDER MANAGEMENT(AUM)
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverFinancialAcctAssetUnderMgmtSnapshots</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds details of the current financial account asset under management snapshot record in the loop to the prompt instructions.</description>
+        <name>AddFinancialAcctAssetUnderMgmtDetailsPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Acct Asset Under Management Details Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>AUM:
+- Financial Account Id: {!IterateOverFinancialAcctAssetUnderMgmtSnapshots.FinancialAccountId__c}
+- Amount: {!IterateOverFinancialAcctAssetUnderMgmtSnapshots.AssetUnderManagementAmount__c}
+- As of Date: {!IterateOverFinancialAcctAssetUnderMgmtSnapshots.AsOfDate__c}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverFinancialAcctAssetUnderMgmtSnapshots</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the financial performance heading to the prompt instructions.</description>
+        <name>AddFinancialPerformanceHeadingPromptInst</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Performance Heading Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## FINANCIAL PERFORMANCE
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverFinancialAccountPerformanceSnapshots</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds details of the current financial account performance snapshot record in the loop to the prompt instructions.</description>
+        <name>AddFinPerformanceDetailsPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Performance Details Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Financial Performance:
+- Financial Account Id: {!IterateOverFinancialAccountPerformanceSnapshots.FinancialAccountId__c}
+- As of Date: {!IterateOverFinancialAccountPerformanceSnapshots.AsOfDate__c}
+- Year To Date Return: {!IterateOverFinancialAccountPerformanceSnapshots.YearToDateReturnNetAmt__c}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverFinancialAccountPerformanceSnapshots</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the error message returned by the flow to the prompt instructions.</description>
+        <name>AddGetPersonLifeEventErrorPromptInstructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Get Person Life Event Error Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the error message returned by the flow to the prompt instructions.</description>
+        <name>AddGetFinancialAcctAssetUnderManagementErrorPromptInst</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Get Financial Acct Asset Under Management Error Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the error message returned by the flow to the prompt instructions.</description>
+        <name>AddGetFinancialAccountPerformanceErrorPromptInst</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Get Financial Account Performance Error Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <description>Determines whether the account record passed into the flow is a household account or a person account.</description>
+        <name>WhichAccountType</name>
+        <label>Which Account Type?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Other (Default)</defaultConnectorLabel>
+        <rules>
+            <name>IsHousehold</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Input.objectToSummarize.IsPersonAccount</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>GetAccountContactRelationshipPrimHshldMbr</targetReference>
+            </connector>
+            <label>Household</label>
+        </rules>
+        <rules>
+            <name>IsPersonAccount</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Input.objectToSummarize.IsPersonAccount</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SetTargetAccountIdPersAcct</targetReference>
+            </connector>
+            <label>Person Account</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether financial goal records were found by checking if the Financial Goals from GetFinancialGoals record collection contains a record.</description>
+        <name>HaveFinancialGoalRecords</name>
+        <label>Have Financial Goal Records?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>GetEvent</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Yes</defaultConnectorLabel>
+        <rules>
+            <name>HasFinancialGoalRecords</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetFinancialGoals</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>AddFinancialGoalsHeadingPromptInstructions</targetReference>
+            </connector>
+            <label>No (Default)</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether financial account role records were found by checking if the Financial Account Roles from GetFinancialAccountRoles record collection contains a record.</description>
+        <name>HaveFinancialAccountRoleRecords</name>
+        <label>Have Financial Account Role Records?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>GetPersonLifeEvents</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Yes</defaultConnectorLabel>
+        <rules>
+            <name>HasFinancialAccountRoleRecordsOutcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetFinancialAccountRoles</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>AddFinancialAccountsHeadingPromptInstructions</targetReference>
+            </connector>
+            <label>No (Default)</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether person life event records were found by checking if the Person Life Events from GetPersonLifeEvents record collection contains a record.</description>
+        <name>HavePersonLifeEvents</name>
+        <label>Have Person Life Events?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>GetCases</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Yes</defaultConnectorLabel>
+        <rules>
+            <name>HasPersonLifeEventsRecords</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetPersonLifeEvents</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>AddUpcomingPersonLifeEventsHeadingPromptInst</targetReference>
+            </connector>
+            <label>No (Default)</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether open case records were found by checking if the Cases from GetCases record collection contains a record.</description>
+        <name>HaveCases</name>
+        <label>Have Cases?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Yes</defaultConnectorLabel>
+        <rules>
+            <name>HasCases</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetCases</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>AddOpenCasesHeadingPromptInstructions</targetReference>
+            </connector>
+            <label>No (Default)</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether financial account asset under management snapshot records were found by checking if the Financial Account Asset Under Management Snapshots from GetFinancialAcctAssetUnderManagementSnapshots record collection contains a record.</description>
+        <name>HaveFinancialAcctAssetUnderManagementSnapshotRecords</name>
+        <label>Have Financial Acct Asset Under Management Snapshot Records?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>HaveFinancialAccountPerformanceSnapshotRecords</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Yes</defaultConnectorLabel>
+        <rules>
+            <name>HasFinancialAcctAssesUnderManagementSnapshotRecords</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetFinancialAcctAssetUnderManagementSnapshots</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>AddAssetUnderMgmtHeadingPromptInstructions</targetReference>
+            </connector>
+            <label>No (Default)</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether financial account performance snapshot records were found by checking if the Financial Account Performance Snapshots from GetFinancialAccountPerformanceSnapshots record collection contains a record.</description>
+        <name>HaveFinancialAccountPerformanceSnapshotRecords</name>
+        <label>Have Financial Account Performance Snapshot Records?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>GetPersonLifeEvents</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Yes</defaultConnectorLabel>
+        <rules>
+            <name>HasFinancialAccountPerformanceSnapshotRecords</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetFinancialAccountPerformanceSnapshots</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>AddFinancialPerformanceHeadingPromptInst</targetReference>
+            </connector>
+            <label>No (Default)</label>
+        </rules>
+    </decisions>
+    <description>Gets the details of a household account or a person account record and sends those details to the associated prompt template as prompt instructions.</description>
+    <environments>Default</environments>
+    <formulas>
+        <description>Calculates a date that is 60 days before the current date if the last modified date of Event from GetEvent is empty, or the date of the event if it is not empty.</description>
+        <name>EffectiveLastInteractionDateFormula</name>
+        <dataType>Date</dataType>
+        <expression>IF(ISNULL({!GetEvent.LastModifiedDate}), TODAY() - 60, DATEVALUE({!GetEvent.LastModifiedDate}))</expression>
+    </formulas>
+    <interviewLabel>Get Managed Package Account Details for Client Pulse {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Get Managed Package Account Details for Client Pulse</label>
+    <loops>
+        <description>Repeats an action for each financial goal record in Financial Goals from GetFinancialGoals.</description>
+        <name>IterateOverFinancialGoals</name>
+        <label>Iterate Over Financial Goals</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetFinancialGoals</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AddFinancialGoalDetailsPromptInstructions</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>GetEvent</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each financial account role record in Financial Account Roles from GetFinancialAccountRoles.</description>
+        <name>IterateOverFinancialAccountRoles</name>
+        <label>Iterate Over Financial Account Roles</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetFinancialAccountRoles</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AddFinancialAccountDetailsPromptInstructions</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>GetFinancialAcctAssetUnderManagementSnapshots</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each person life event record in Person Life Events from GetPersonLifeEvents.</description>
+        <name>IterateOverPersonLifeEvents</name>
+        <label>Iterate Over Person Life Events</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetPersonLifeEvents</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AddLifeEventDetailsPromptInstructions</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>GetCases</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each case record in Cases from GetCases record collection.</description>
+        <name>IterateOverCases</name>
+        <label>Iterate Over Cases</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetCases</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AddCaseDetailsPromptInstructions</targetReference>
+        </nextValueConnector>
+    </loops>
+    <loops>
+        <description>Repeats actions for each financial account asset under management snapshot record in Financial Account Asset Under Management Snapshots from GetFinancialAcctAssetUnderManagementSnapshots.</description>
+        <name>IterateOverFinancialAcctAssetUnderMgmtSnapshots</name>
+        <label>Iterate Over Financial Acct Asset Under Management Snapshots</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetFinancialAcctAssetUnderManagementSnapshots</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AddFinancialAcctAssetUnderMgmtDetailsPromptInstructions</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>HaveFinancialAccountPerformanceSnapshotRecords</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each financial account performance snapshot record in Financial Account Performance Snapshots from GetFinancialAccountPerformanceSnapshots record collection.</description>
+        <name>IterateOverFinancialAccountPerformanceSnapshots</name>
+        <label>Iterate Over Financial Account Performance Snapshots</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetFinancialAccountPerformanceSnapshots</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AddFinPerformanceDetailsPromptInstructions</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>GetPersonLifeEvents</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>PromptFlow</processType>
+    <recordLookups>
+        <description>Gets the active, primary account contact relationship record with an Account ID matching the ID of the account record passed into the flow as part of the prompt template input. Stores the result in the Account Contact Relationship from GetAccountContactRelationshipPrimHshldMbr record variable.</description>
+        <name>GetAccountContactRelationshipPrimHshldMbr</name>
+        <label>Get Account Contact Relationship</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>SetTargetAccountIdHshldAcct</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Input.objectToSummarize.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>FinServ__Primary__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>AccountContactRelation</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the account record with an ID that matches TargetAccountId. Stores the result in the Account from GetAccount record variable.</description>
+        <name>GetAccount</name>
+        <label>Get Account</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>AddAccountHeadingPromptInstructions</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddGetAccountErrorPromptInstructions</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>TargetAccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the financial goal records with a primary owner ID that matches TargetAccountId. Stores the results in the Financial Goals from GetFinancialGoals record collection.</description>
+        <name>GetFinancialGoals</name>
+        <label>Get Financial Goals</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>HaveFinancialGoalRecords</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddGetFinancialGoalsErrorPromptInstructions</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>FinServ__PrimaryOwner__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>TargetAccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>FinServ__FinancialGoal__c</object>
+        <sortField>LastModifiedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the active financial account role records with a related account ID that matches TargetAccountId. Stores the results in the Financial Account Roles from GetFinancialAccountRoles record collection.</description>
+        <name>GetFinancialAccountRoles</name>
+        <label>Get Financial Account Roles</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>HaveFinancialAccountRoleRecords</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddGetFinancialAccountRolesErrorPromptInstructions</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>FinServ__RelatedAccount__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>TargetAccountId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>FinServ__Active__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>FinServ__FinancialAccountRole__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the 3 most recent person life event records with a Contact ID that matches the contact ID of the account record passed into the flow as part of prompt template input. Stores the results in the Person Life Events from GetPersonLifeEvents record collection.</description>
+        <name>GetPersonLifeEvents</name>
+        <label>Get Person Life Events</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>HavePersonLifeEvents</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddGetPersonLifeEventsErrorPromptInst</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>PrimaryPersonId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Input.objectToSummarize.PersonContactId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <limit>
+            <numberValue>3.0</numberValue>
+        </limit>
+        <object>PersonLifeEvent</object>
+        <sortField>EventDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets open case records with an account ID that matches TargetAccountId. Stores the results in the Cases from GetCases record collection.</description>
+        <name>GetCases</name>
+        <label>Get Cases</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>HaveCases</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddOpenCasesErrorPromptInstructions</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Closed</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>TargetAccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <limit>
+            <numberValue>3.0</numberValue>
+        </limit>
+        <object>Case</object>
+        <sortField>CreatedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the most recent modified event record with an account ID that matches TargetAccountId and a subject of Meeting or Call. Stores the result in the Event from GetEvent record variable.</description>
+        <name>GetEvent</name>
+        <label>Get Event</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>AddLastInteractionDateHeadingPromptInstructions</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddGetPersonLifeEventErrorPromptInstructions</targetReference>
+        </faultConnector>
+        <filterLogic>(1 OR 2) AND 3</filterLogic>
+        <filters>
+            <field>Subject</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Meeting</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Subject</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Call</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>TargetAccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Event</object>
+        <sortField>LastModifiedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets up to 50 financial account asset under management snapshot records with an As Of Date greater than EffectiveLastInteractionDateFormula and a financial account ID in FinancialAccountIds collection. Stores the results in the Financial Acct Asset Under Management Snapshots from GetFinancialAcctAssetUnderManagementSnapshots record collection.</description>
+        <name>GetFinancialAcctAssetUnderManagementSnapshots</name>
+        <label>Get Financial Acct Asset Under Management Snapshots</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>GetFinancialAccountPerformanceSnapshots</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddGetFinancialAcctAssetUnderManagementErrorPromptInst</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>FinancialAccountId__c</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>FinancialAccountIds</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>AsOfDate__c</field>
+            <operator>GreaterThan</operator>
+            <value>
+                <elementReference>EffectiveLastInteractionDateFormula</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <limit>
+            <numberValue>50.0</numberValue>
+        </limit>
+        <object>FinclAcctAssetUndMgmtSnpsht_std__dlm</object>
+        <sortField>AsOfDate__c</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets up to 50 financial account performance snapshot records with an As Of Date greater than EffectiveLastInteractionDateFormula and a financial account ID in FinancialAccountIds collection. Stores the results in the Financial Account Performance Snapshots from GetFinancialAccountPerformanceSnapshots record collection.</description>
+        <name>GetFinancialAccountPerformanceSnapshots</name>
+        <label>Get Financial Account Performance Snapshots</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>HaveFinancialAcctAssetUnderManagementSnapshotRecords</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddGetFinancialAccountPerformanceErrorPromptInst</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>FinancialAccountId__c</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>FinancialAccountIds</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>AsOfDate__c</field>
+            <operator>GreaterThan</operator>
+            <value>
+                <elementReference>EffectiveLastInteractionDateFormula</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <limit>
+            <numberValue>50.0</numberValue>
+        </limit>
+        <object>FinancialAccountPerformanceSnapshot_std__dlm</object>
+        <sortField>AsOfDate__c</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <capabilityTypes>
+            <name>PromptTemplateType://nextgenwealth__clientPulse</name>
+            <capabilityName>PromptTemplateType://nextgenwealth__clientPulse</capabilityName>
+            <inputs>
+                <name>objectToSummarize</name>
+                <capabilityInputName>objectToSummarize</capabilityInputName>
+                <dataType>SOBJECT://Account</dataType>
+                <isCollection>false</isCollection>
+            </inputs>
+        </capabilityTypes>
+        <connector>
+            <targetReference>WhichAccountType</targetReference>
+        </connector>
+        <triggerType>Capability</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>Stores the account ID of the primary household member if the account record passed into the flow as part of prompt template input is a household record. If the account record passed into the flow as part of prompt template input is a person account, it stores the ID of the person account.</description>
+        <name>TargetAccountId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores a collection of financial account IDs.</description>
+        <name>FinancialAccountIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

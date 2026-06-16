@@ -88,6 +88,13 @@
             <masterLabel>Create Life Event</masterLabel>
             <promptGeneratedTextType>PostMeetingActionPrompt</promptGeneratedTextType>
         </mtgPlbkDefStgCapability>
+        <mtgPlbkDefStgCapability>
+            <capabilityOrder>5</capabilityOrder>
+            <flow>meetingcenter_wealth__GetHshldUpdts</flow>
+            <isAllowMultipleUse>false</isAllowMultipleUse>
+            <masterLabel>Update Household</masterLabel>
+            <promptGeneratedTextType>PostMeetingActionPrompt</promptGeneratedTextType>
+        </mtgPlbkDefStgCapability>
         <stageOrder>3</stageOrder>
         <stageType>PostMeeting</stageType>
     </meetingPlaybookDefStage>
