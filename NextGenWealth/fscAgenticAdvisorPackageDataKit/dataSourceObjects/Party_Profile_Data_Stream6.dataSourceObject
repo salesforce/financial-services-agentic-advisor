@@ -52,7 +52,6 @@
     <dataSourceFields>
         <fullName>BusinessEntityIncDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>BusinessEntityIncDate</externalName>
         <fieldFormula>sourceField[&apos;BusinessEntityIncDate&apos;]</fieldFormula>
@@ -101,7 +100,6 @@
     <dataSourceFields>
         <fullName>BusinessEntityRgstrDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>BusinessEntityRgstrDate</externalName>
         <fieldFormula>sourceField[&apos;BusinessEntityRgstrDate&apos;]</fieldFormula>
@@ -246,7 +244,6 @@
     <dataSourceFields>
         <fullName>CreatedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>CreatedDate</externalName>
         <fieldFormula>sourceField[&apos;CreatedDate&apos;]</fieldFormula>
@@ -327,7 +324,6 @@
     <dataSourceFields>
         <fullName>DateOfBirth</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>DateOfBirth</externalName>
         <fieldFormula>sourceField[&apos;DateOfBirth&apos;]</fieldFormula>
@@ -585,7 +581,6 @@
     <dataSourceFields>
         <fullName>LastModifiedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastModifiedDate</externalName>
         <fieldFormula>sourceField[&apos;LastModifiedDate&apos;]</fieldFormula>
@@ -618,7 +613,6 @@
     <dataSourceFields>
         <fullName>LastProfileReviewDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastProfileReviewDate</externalName>
         <fieldFormula>sourceField[&apos;LastProfileReviewDate&apos;]</fieldFormula>
@@ -635,7 +629,6 @@
     <dataSourceFields>
         <fullName>LastReferencedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastReferencedDate</externalName>
         <fieldFormula>sourceField[&apos;LastReferencedDate&apos;]</fieldFormula>
@@ -652,7 +645,6 @@
     <dataSourceFields>
         <fullName>LastViewedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastViewedDate</externalName>
         <fieldFormula>sourceField[&apos;LastViewedDate&apos;]</fieldFormula>
@@ -749,7 +741,6 @@
     <dataSourceFields>
         <fullName>NextProfileReviewDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>NextProfileReviewDate</externalName>
         <fieldFormula>sourceField[&apos;NextProfileReviewDate&apos;]</fieldFormula>
@@ -1038,7 +1029,6 @@
     <dataSourceFields>
         <fullName>SystemModstamp</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>SystemModstamp</externalName>
         <fieldFormula>sourceField[&apos;SystemModstamp&apos;]</fieldFormula>

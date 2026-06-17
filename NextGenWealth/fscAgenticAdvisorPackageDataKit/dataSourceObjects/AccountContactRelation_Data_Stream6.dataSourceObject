@@ -52,7 +52,6 @@
     <dataSourceFields>
         <fullName>CreatedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>CreatedDate</externalName>
         <fieldFormula>sourceField[&apos;CreatedDate&apos;]</fieldFormula>
@@ -101,7 +100,6 @@
     <dataSourceFields>
         <fullName>EndDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>EndDate</externalName>
         <fieldFormula>sourceField[&apos;EndDate&apos;]</fieldFormula>
@@ -279,7 +277,6 @@
     <dataSourceFields>
         <fullName>LastModifiedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastModifiedDate</externalName>
         <fieldFormula>sourceField[&apos;LastModifiedDate&apos;]</fieldFormula>
@@ -376,7 +373,6 @@
     <dataSourceFields>
         <fullName>StartDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>StartDate</externalName>
         <fieldFormula>sourceField[&apos;StartDate&apos;]</fieldFormula>
@@ -393,7 +389,6 @@
     <dataSourceFields>
         <fullName>SystemModstamp</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>SystemModstamp</externalName>
         <fieldFormula>sourceField[&apos;SystemModstamp&apos;]</fieldFormula>

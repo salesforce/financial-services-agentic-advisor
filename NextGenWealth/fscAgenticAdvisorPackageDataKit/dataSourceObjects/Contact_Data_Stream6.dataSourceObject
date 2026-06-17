@@ -52,7 +52,6 @@
     <dataSourceFields>
         <fullName>Birthdate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>Birthdate</externalName>
         <fieldFormula>sourceField[&apos;Birthdate&apos;]</fieldFormula>
@@ -85,7 +84,6 @@
     <dataSourceFields>
         <fullName>CreatedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>CreatedDate</externalName>
         <fieldFormula>sourceField[&apos;CreatedDate&apos;]</fieldFormula>
@@ -182,7 +180,6 @@
     <dataSourceFields>
         <fullName>EmailBouncedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>EmailBouncedDate</externalName>
         <fieldFormula>sourceField[&apos;EmailBouncedDate&apos;]</fieldFormula>
@@ -310,8 +307,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_EmployedSince_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__EmployedSince__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__EmployedSince__c&apos;]</fieldFormula>
@@ -759,8 +755,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_WeddingAnniversary_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__WeddingAnniversary__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__WeddingAnniversary__c&apos;]</fieldFormula>
@@ -906,7 +901,6 @@
     <dataSourceFields>
         <fullName>LastActivityDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastActivityDate</externalName>
         <fieldFormula>sourceField[&apos;LastActivityDate&apos;]</fieldFormula>
@@ -923,7 +917,6 @@
     <dataSourceFields>
         <fullName>LastCURequestDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastCURequestDate</externalName>
         <fieldFormula>sourceField[&apos;LastCURequestDate&apos;]</fieldFormula>
@@ -940,7 +933,6 @@
     <dataSourceFields>
         <fullName>LastCUUpdateDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastCUUpdateDate</externalName>
         <fieldFormula>sourceField[&apos;LastCUUpdateDate&apos;]</fieldFormula>
@@ -973,7 +965,6 @@
     <dataSourceFields>
         <fullName>LastModifiedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastModifiedDate</externalName>
         <fieldFormula>sourceField[&apos;LastModifiedDate&apos;]</fieldFormula>
@@ -1006,7 +997,6 @@
     <dataSourceFields>
         <fullName>LastReferencedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastReferencedDate</externalName>
         <fieldFormula>sourceField[&apos;LastReferencedDate&apos;]</fieldFormula>
@@ -1023,7 +1013,6 @@
     <dataSourceFields>
         <fullName>LastViewedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastViewedDate</externalName>
         <fieldFormula>sourceField[&apos;LastViewedDate&apos;]</fieldFormula>
@@ -1212,23 +1201,6 @@
         <sequence xsi:nil="true"/>
         <usageTag>NONE</usageTag>
         <versionNumber>1.0</versionNumber>
-    </dataSourceFields>
-    <dataSourceFields>
-        <fullName>Mapped_Birthdate_DateTime</fullName>
-        <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
-        <definitionCreationType>Custom</definitionCreationType>
-        <externalName>Mapped_Birthdate_DateTime</externalName>
-        <fieldFormula>sourceField[&apos;Birthdate&apos;]</fieldFormula>
-        <isDataRequired>false</isDataRequired>
-        <isEventDate>false</isEventDate>
-        <isFormula>true</isFormula>
-        <isRecordModified>false</isRecordModified>
-        <keyQualifierName>KQ_Mapped_Birthdate_DateTime</keyQualifierName>
-        <masterLabel>Birthdate as DateTime</masterLabel>
-        <sequence xsi:nil="true"/>
-        <usageTag>NONE</usageTag>
-        <versionNumber xsi:nil="true"/>
     </dataSourceFields>
     <dataSourceFields>
         <fullName>MasterRecordId</fullName>
@@ -1537,7 +1509,6 @@
     <dataSourceFields>
         <fullName>SystemModstamp</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>SystemModstamp</externalName>
         <fieldFormula>sourceField[&apos;SystemModstamp&apos;]</fieldFormula>

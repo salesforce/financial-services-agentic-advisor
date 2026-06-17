@@ -196,7 +196,6 @@
     <dataSourceFields>
         <fullName>CreatedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>CreatedDate</externalName>
         <fieldFormula>sourceField[&apos;CreatedDate&apos;]</fieldFormula>
@@ -436,8 +435,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_EmployedSince_pc</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__EmployedSince__pc</externalName>
         <fieldFormula>sourceField[&apos;FinServ__EmployedSince__pc&apos;]</fieldFormula>
@@ -565,8 +563,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_LastInteraction_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__LastInteraction__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__LastInteraction__c&apos;]</fieldFormula>
@@ -582,8 +579,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_LastReview_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__LastReview__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__LastReview__c&apos;]</fieldFormula>
@@ -599,8 +595,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_LastTransactionDate_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__LastTransactionDate__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__LastTransactionDate__c&apos;]</fieldFormula>
@@ -728,8 +723,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_NextInteraction_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__NextInteraction__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__NextInteraction__c&apos;]</fieldFormula>
@@ -761,8 +755,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_NextReview_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__NextReview__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__NextReview__c&apos;]</fieldFormula>
@@ -1130,8 +1123,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_WeddingAnniversary_pc</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__WeddingAnniversary__pc</externalName>
         <fieldFormula>sourceField[&apos;FinServ__WeddingAnniversary__pc&apos;]</fieldFormula>
@@ -1261,7 +1253,6 @@
     <dataSourceFields>
         <fullName>LastActivityDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastActivityDate</externalName>
         <fieldFormula>sourceField[&apos;LastActivityDate&apos;]</fieldFormula>
@@ -1294,7 +1285,6 @@
     <dataSourceFields>
         <fullName>LastModifiedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastModifiedDate</externalName>
         <fieldFormula>sourceField[&apos;LastModifiedDate&apos;]</fieldFormula>
@@ -1327,7 +1317,6 @@
     <dataSourceFields>
         <fullName>LastReferencedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastReferencedDate</externalName>
         <fieldFormula>sourceField[&apos;LastReferencedDate&apos;]</fieldFormula>
@@ -1344,7 +1333,6 @@
     <dataSourceFields>
         <fullName>LastViewedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastViewedDate</externalName>
         <fieldFormula>sourceField[&apos;LastViewedDate&apos;]</fieldFormula>
@@ -1473,7 +1461,6 @@
     <dataSourceFields>
         <fullName>PersonBirthdate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>PersonBirthdate</externalName>
         <fieldFormula>sourceField[&apos;PersonBirthdate&apos;]</fieldFormula>
@@ -1538,7 +1525,6 @@
     <dataSourceFields>
         <fullName>PersonEmailBouncedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>PersonEmailBouncedDate</externalName>
         <fieldFormula>sourceField[&apos;PersonEmailBouncedDate&apos;]</fieldFormula>
@@ -1587,7 +1573,6 @@
     <dataSourceFields>
         <fullName>PersonLastCURequestDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>PersonLastCURequestDate</externalName>
         <fieldFormula>sourceField[&apos;PersonLastCURequestDate&apos;]</fieldFormula>
@@ -1604,7 +1589,6 @@
     <dataSourceFields>
         <fullName>PersonLastCUUpdateDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>PersonLastCUUpdateDate</externalName>
         <fieldFormula>sourceField[&apos;PersonLastCUUpdateDate&apos;]</fieldFormula>
@@ -2165,7 +2149,6 @@
     <dataSourceFields>
         <fullName>SystemModstamp</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>SystemModstamp</externalName>
         <fieldFormula>sourceField[&apos;SystemModstamp&apos;]</fieldFormula>

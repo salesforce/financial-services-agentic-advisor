@@ -20,7 +20,6 @@
     <dataSourceFields>
         <fullName>CreatedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>CreatedDate</externalName>
         <fieldFormula>sourceField[&apos;CreatedDate&apos;]</fieldFormula>
@@ -164,8 +163,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_LastUpdated_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__LastUpdated__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__LastUpdated__c&apos;]</fieldFormula>
@@ -359,7 +357,6 @@
     <dataSourceFields>
         <fullName>LastActivityDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastActivityDate</externalName>
         <fieldFormula>sourceField[&apos;LastActivityDate&apos;]</fieldFormula>
@@ -392,7 +389,6 @@
     <dataSourceFields>
         <fullName>LastModifiedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastModifiedDate</externalName>
         <fieldFormula>sourceField[&apos;LastModifiedDate&apos;]</fieldFormula>
@@ -409,7 +405,6 @@
     <dataSourceFields>
         <fullName>LastReferencedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastReferencedDate</externalName>
         <fieldFormula>sourceField[&apos;LastReferencedDate&apos;]</fieldFormula>
@@ -426,7 +421,6 @@
     <dataSourceFields>
         <fullName>LastViewedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastViewedDate</externalName>
         <fieldFormula>sourceField[&apos;LastViewedDate&apos;]</fieldFormula>
@@ -475,7 +469,6 @@
     <dataSourceFields>
         <fullName>SystemModstamp</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>SystemModstamp</externalName>
         <fieldFormula>sourceField[&apos;SystemModstamp&apos;]</fieldFormula>

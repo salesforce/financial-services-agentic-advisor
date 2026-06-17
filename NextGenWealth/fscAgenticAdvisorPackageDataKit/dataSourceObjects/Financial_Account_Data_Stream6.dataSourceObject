@@ -20,7 +20,6 @@
     <dataSourceFields>
         <fullName>CreatedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>CreatedDate</externalName>
         <fieldFormula>sourceField[&apos;CreatedDate&apos;]</fieldFormula>
@@ -132,8 +131,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_ApplicationDate_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__ApplicationDate__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__ApplicationDate__c&apos;]</fieldFormula>
@@ -245,8 +243,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_BookedDate_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__BookedDate__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__BookedDate__c&apos;]</fieldFormula>
@@ -342,8 +339,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_CloseDate_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__CloseDate__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__CloseDate__c&apos;]</fieldFormula>
@@ -519,8 +515,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_ExpectedCloseDate_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__ExpectedCloseDate__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__ExpectedCloseDate__c&apos;]</fieldFormula>
@@ -793,7 +788,6 @@
     <dataSourceFields>
         <fullName>FinServ_LastTransactionDate_c</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__LastTransactionDate__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__LastTransactionDate__c&apos;]</fieldFormula>
@@ -809,8 +803,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_LastUpdated_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__LastUpdated__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__LastUpdated__c&apos;]</fieldFormula>
@@ -858,8 +851,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_LoanEndDate_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__LoanEndDate__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__LoanEndDate__c&apos;]</fieldFormula>
@@ -955,8 +947,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_NextStatementDate_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__NextStatementDate__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__NextStatementDate__c&apos;]</fieldFormula>
@@ -988,8 +979,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_OpenDate_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__OpenDate__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__OpenDate__c&apos;]</fieldFormula>
@@ -1133,8 +1123,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_PaymentDueDate_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__PaymentDueDate__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__PaymentDueDate__c&apos;]</fieldFormula>
@@ -1454,8 +1443,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_RenewalDate_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__RenewalDate__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__RenewalDate__c&apos;]</fieldFormula>
@@ -1695,8 +1683,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_TermDepositMaturityDate_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__TermDepositMaturityDate__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__TermDepositMaturityDate__c&apos;]</fieldFormula>
@@ -1760,8 +1747,7 @@
     </dataSourceFields>
     <dataSourceFields>
         <fullName>FinServ_TotalHoldAmountAsOfDate_c</fullName>
-        <datatype>D</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
+        <datatype>F</datatype>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>FinServ__TotalHoldAmountAsOfDate__c</externalName>
         <fieldFormula>sourceField[&apos;FinServ__TotalHoldAmountAsOfDate__c&apos;]</fieldFormula>
@@ -1827,7 +1813,6 @@
     <dataSourceFields>
         <fullName>LastActivityDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastActivityDate</externalName>
         <fieldFormula>sourceField[&apos;LastActivityDate&apos;]</fieldFormula>
@@ -1860,7 +1845,6 @@
     <dataSourceFields>
         <fullName>LastModifiedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastModifiedDate</externalName>
         <fieldFormula>sourceField[&apos;LastModifiedDate&apos;]</fieldFormula>
@@ -1877,7 +1861,6 @@
     <dataSourceFields>
         <fullName>LastReferencedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastReferencedDate</externalName>
         <fieldFormula>sourceField[&apos;LastReferencedDate&apos;]</fieldFormula>
@@ -1894,7 +1877,6 @@
     <dataSourceFields>
         <fullName>LastViewedDate</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>LastViewedDate</externalName>
         <fieldFormula>sourceField[&apos;LastViewedDate&apos;]</fieldFormula>
@@ -1975,7 +1957,6 @@
     <dataSourceFields>
         <fullName>SystemModstamp</fullName>
         <datatype>F</datatype>
-        <dateFormat>yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSS&apos;Z&apos;</dateFormat>
         <definitionCreationType>Custom</definitionCreationType>
         <externalName>SystemModstamp</externalName>
         <fieldFormula>sourceField[&apos;SystemModstamp&apos;]</fieldFormula>
