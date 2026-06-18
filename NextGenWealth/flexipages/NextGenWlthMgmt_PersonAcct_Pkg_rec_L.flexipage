@@ -234,7 +234,7 @@
         <type>Facet</type>
     </flexiPageRegions>
 
-    <masterLabel>NextGenWlthMgmt PersonAcct Pkg rec L</masterLabel>
+    <masterLabel>Agentic Advisor Person Account Record Page For Package</masterLabel>
     <sobjectType>Account</sobjectType>
     <template>
         <name>flexipage:recordHomeLeftSidebarTemplateDesktop</name>
