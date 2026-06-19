@@ -52,7 +52,7 @@
                     <name>generativeAIPromptTemplateName</name>
                     <valueList>
                         <valueListItems>
-                            <value>Generate_Client_Pulse_For_Person_Account_FSC_Package</value>
+                            <value>GenerateClientPulseForPersonAccountMngPkg</value>
                         </valueListItems>
                     </valueList>
                 </componentInstanceProperties>
@@ -62,7 +62,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>autoGeneratePromptTemplateName</name>
-                    <value>Generate_Client_Pulse_For_Person_Account_FSC_Package</value>
+                    <value>GenerateClientPulseForPersonAccountMngPkg</value>
                 </componentInstanceProperties>
                 <componentName>industries_common:generateSummaryWrapper</componentName>
                 <identifier>industries_common__generateSummaryWrapper</identifier>
