@@ -3,10 +3,6 @@
     <description>Ideal for quarterly or annual check-ins with existing clients. Includes pre-meeting research, in-session discussion guide, and post-meeting follow-up.</description>
     <isActive>false</isActive>
     <label>Annual Review FSC Package</label>
-    <meetingPlaybookDefPermSet>
-        <meetingPlaybookDefinition>Annual_Review_FSC_Package</meetingPlaybookDefinition>
-        <permissionSet>force__EinsteinForFinancialServicesPsl</permissionSet>
-    </meetingPlaybookDefPermSet>
     <meetingPlaybookDefStage>
         <mtgPlbkDefStgCapability>
             <capabilityOrder>-1</capabilityOrder>
