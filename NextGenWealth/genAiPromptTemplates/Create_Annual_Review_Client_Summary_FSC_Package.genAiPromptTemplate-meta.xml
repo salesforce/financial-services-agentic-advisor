@@ -44,7 +44,7 @@ Context:
             <required>true</required>
         </inputs>
         <isCitationEnabled>false</isCitationEnabled>
-        <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
+        <primaryModel> sfdc_ai__DefaultBedrockAnthropicClaude45Sonnet </primaryModel>
         <status>Published</status>
         <templateDataProviders>
             <definition>flow://Client_Summary_FSC_Package</definition>
@@ -98,7 +98,7 @@ Context:
             <required>true</required>
         </inputs>
         <isCitationEnabled>false</isCitationEnabled>
-        <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
+        <primaryModel>sfdc_ai__DefaultBedrockAnthropicClaude45Sonnet</primaryModel>
         <status>Published</status>
         <templateDataProviders>
             <definition>flow://Client_Summary_FSC_Package</definition>
@@ -153,7 +153,7 @@ Context:
             <required>true</required>
         </inputs>
         <isCitationEnabled>false</isCitationEnabled>
-        <primaryModel>sfdc_ai__DefaultGPT5Mini</primaryModel>
+        <primaryModel> sfdc_ai__DefaultBedrockAnthropicClaude45Sonnet</primaryModel>
         <status>Published</status>
         <templateDataProviders>
             <definition>flow://Client_Summary_FSC_Package</definition>

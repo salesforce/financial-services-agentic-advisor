@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MeetingPlaybookDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>Ideal for quarterly or annual check-ins with existing clients. Includes pre-meeting research, in-session discussion guide, and post-meeting follow-up.</description>
-    <isActive>true</isActive>
+    <isActive>false</isActive>
     <label>Annual Review FSC Package</label>
     <meetingPlaybookDefPermSet>
         <meetingPlaybookDefinition>Annual_Review_FSC_Package</meetingPlaybookDefinition>
@@ -90,6 +90,13 @@
             <flow>meetingcenter_wealth__PrdCreaLifeEvnt</flow>
             <isAllowMultipleUse>false</isAllowMultipleUse>
             <masterLabel>Create Life Event</masterLabel>
+            <promptGeneratedTextType>PostMeetingActionPrompt</promptGeneratedTextType>
+        </mtgPlbkDefStgCapability>
+        <mtgPlbkDefStgCapability>
+            <capabilityOrder>5</capabilityOrder>
+            <flow>meetingcenter_wealth__GetHshldUpdtMtg</flow>
+            <isAllowMultipleUse>false</isAllowMultipleUse>
+            <masterLabel>Update Household</masterLabel>
             <promptGeneratedTextType>PostMeetingActionPrompt</promptGeneratedTextType>
         </mtgPlbkDefStgCapability>
         <stageOrder>3</stageOrder>
