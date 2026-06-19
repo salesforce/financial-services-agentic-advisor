@@ -205,7 +205,7 @@
             <componentInstance>
                 <componentInstanceProperties>
                     <name>graphName</name>
-                    <value>file:FSC_Household_Arc_Graphs.FSC_Household_Relations_GRAPH</value>
+                    <value>Household_Graph_for_Managed_Package</value>
                 </componentInstanceProperties>
                 <componentName>runtime_industries_arcgraph:arcGraph</componentName>
                 <identifier>arcGraph_relationships</identifier>
