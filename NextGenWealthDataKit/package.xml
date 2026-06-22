@@ -46,6 +46,8 @@
         <members>FSCAgenticAdvisorPackageDataKit9</members>
         <members>FSCAgenticAdvisorPackageDataKit91</members>
         <members>FSCAgenticAdvisorPackageDataKit92</members>
+        <members>FSCAgenticAdvisorPackageDataKit93</members>
+        <members>FSCAgenticAdvisorPackageDataKit94</members>
         <members>FSCAgenticAdvisorPackageDataKit_1730925277766</members>
         <members>FSCAgenticAdvisorPackageDataKit_1730925277943</members>
         <name>DataPackageKitObject</name>
@@ -65,12 +67,14 @@
         <members>Contact_Data_Stream6</members>
         <members>FinServ_FinancialAccountBalance_c_Home</members>
         <members>Financial_Account_Data_Stream6</members>
+        <members>Financial_Account_Prfm_Snapshot_Data_Stream6</members>
         <members>Financial_Account_Role_Data_Stream6</members>
         <members>Financial_Custodian_Advisor_Data_Stream6</members>
         <members>Financial_Custodian_Data_Stream6</members>
         <members>Financial_Goal_Data_Stream6</members>
         <members>Financial_Holding_Data_Stream6</members>
         <members>Financial_Plan_Data_Stream5</members>
+        <members>Fincl_Acct_Asset_Und_Mgmt_Snpsht_Data_Stream6</members>
         <members>Lead_Data_Stream6</members>
         <members>Party_Profile_Data_Stream6</members>
         <members>Person_Life_Event_Data_Stream6</members>
@@ -105,6 +109,34 @@
         <members>DataSrcDataModelETjpdnSCyRyUYfQ</members>
         <members>DataSrcDataModelEkPQSPOJdLDFGTT</members>
         <members>DataSrcDataModelEwcytZoGqYHFiTH</members>
+        <members>DataSrcDataModelFAAUMSAmountMap</members>
+        <members>DataSrcDataModelFAAUMSAsOfDateMap</members>
+        <members>DataSrcDataModelFAAUMSDataSourceMap</members>
+        <members>DataSrcDataModelFAAUMSDataSourceObjectMap</members>
+        <members>DataSrcDataModelFAAUMSFinancialAccountMap</members>
+        <members>DataSrcDataModelFAAUMSIdMap</members>
+        <members>DataSrcDataModelFAPSAsOfDateMap</members>
+        <members>DataSrcDataModelFAPSDataSourceMap</members>
+        <members>DataSrcDataModelFAPSDataSourceObjectMap</members>
+        <members>DataSrcDataModelFAPSFinancialAccountMap</members>
+        <members>DataSrcDataModelFAPSFiveYrBalanceMap</members>
+        <members>DataSrcDataModelFAPSFiveYrReturnMap</members>
+        <members>DataSrcDataModelFAPSITDAnnBalanceMap</members>
+        <members>DataSrcDataModelFAPSITDAnnNetMap</members>
+        <members>DataSrcDataModelFAPSITDBalanceMap</members>
+        <members>DataSrcDataModelFAPSITDReturnAnnMap</members>
+        <members>DataSrcDataModelFAPSITDReturnMap</members>
+        <members>DataSrcDataModelFAPSIdMap</members>
+        <members>DataSrcDataModelFAPSMTDBalanceMap</members>
+        <members>DataSrcDataModelFAPSMTDReturnMap</members>
+        <members>DataSrcDataModelFAPSOneYrBalanceMap</members>
+        <members>DataSrcDataModelFAPSOneYrReturnMap</members>
+        <members>DataSrcDataModelFAPSQTDBalanceMap</members>
+        <members>DataSrcDataModelFAPSQTDReturnMap</members>
+        <members>DataSrcDataModelFAPSThreeYrBalanceMap</members>
+        <members>DataSrcDataModelFAPSThreeYrReturnMap</members>
+        <members>DataSrcDataModelFAPSYTDBalanceMap</members>
+        <members>DataSrcDataModelFAPSYTDReturnMap</members>
         <members>DataSrcDataModelFCAAdvisorCodeMap</members>
         <members>DataSrcDataModelFCAAdvisorReferenceMap</members>
         <members>DataSrcDataModelFCADataSourceMap</members>
@@ -465,12 +497,14 @@
         <members>Account_Data_Stream</members>
         <members>Contact_Data_Stream</members>
         <members>Financial_Account_Data_Stream</members>
+        <members>Financial_Account_Prfm_Snapshot_Data_Stream</members>
         <members>Financial_Account_Role_Data_Stream</members>
         <members>Financial_Custodian_Advisor_Data_Stream</members>
         <members>Financial_Custodian_Data_Stream</members>
         <members>Financial_Goal_Data_Stream</members>
         <members>Financial_Holding_Data_Stream</members>
         <members>Financial_Plan_Data_Stream</members>
+        <members>Fincl_Acct_Asset_Und_Mgmt_Snpsht_Data_Stream</members>
         <members>Lead_Data_Stream</members>
         <members>Party_Profile_Data_Stream</members>
         <members>Person_Life_Event_Data_Stream</members>

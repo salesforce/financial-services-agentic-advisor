@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSrcDataModelFieldMap xmlns="http://soap.sforce.com/2006/04/metadata">
+    <filterApplied>false</filterApplied>
+    <masterLabel>DataSrcDataModelFAPSQTDReturnMap</masterLabel>
+    <sourceField>Financial_Account_Prfm_Snapshot_Data_Stream6.QuarterToDateReturnNetAmt__c</sourceField>
+    <targetField>FinancialAccountPrfmSnapshotDmo.FinancialAccountPrfmSnapshotDmo.QuarterToDateReturnNetAmt</targetField>
+    <templateVersion>1</templateVersion>
+    <versionNumber>1.0</versionNumber>
+</DataSrcDataModelFieldMap>
