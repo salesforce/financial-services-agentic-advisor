@@ -17,6 +17,31 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
+                <componentInstanceProperties>
+                    <name>primaryMemberFields</name>
+                    <valueList>
+                        <valueListItems>
+                            <value>Name</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>PersonEmail</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>Phone</value>
+                        </valueListItems>
+                    </valueList>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>accountFields</name>
+                    <valueList>
+                        <valueListItems>
+                            <value>FinServ__AUM__c</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>FinServ__LastInteraction__c</value>
+                        </valueListItems>
+                    </valueList>
+                </componentInstanceProperties>
                 <componentName>runtime_industries_client360:clientProfileCard</componentName>
                 <identifier>clientProfileCard_contactDetails</identifier>
             </componentInstance>
