@@ -108,7 +108,7 @@
         </connector>
     </assignments>
     <assignments>
-        <description>Adds the Financial Account details to the prompt instructions and collects the FA Id into FinancialAccountIdsForCurrentMember so it can be used as the IN-filter for the bulk AUM and Financial Performance lookups that run after Iterate_Over_Financial_Account_Roles completes.</description>
+        <description>Adds the Financial Account details to the prompt instructions.</description>
         <name>Add_Financial_Account_Details_to_Prompt_Text</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
         <label>Add Financial Account Details to Prompt Text</label>
@@ -128,13 +128,6 @@
 - Is Managed: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__Managed__c}
 ====
 </stringValue>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>FinancialAccountIdsForCurrentMember</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <elementReference>Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__c</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -375,124 +368,10 @@
         </connector>
     </assignments>
     <assignments>
-        <description>Adds the Financial Asset Under Management heading to the prompt instructions.</description>
-        <name>Add_Financial_Asset_Under_Management_Heading</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Add Financial Asset Under Management Heading</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>## FINANCIAL ASSET UNDER MANAGEMENT(AUM)
-</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Iterate_Over_AUM_Snapshots</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <description>Adds one AUM snapshot's details to the prompt instructions for the current iteration of Iterate_Over_AUM_Snapshots.</description>
-        <name>Add_AUM_Details_to_Prompt_Instructions</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Add AUM Details to Prompt Instructions</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>AUM:
-- Financial Account Id: {!Iterate_Over_AUM_Snapshots.FinancialAccountId__c}
-- Amount: {!Iterate_Over_AUM_Snapshots.AssetUnderManagementAmount__c}
-- As of Date: {!Iterate_Over_AUM_Snapshots.AsOfDate__c}
-</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Iterate_Over_AUM_Snapshots</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <description>Adds the Financial Performance heading to the prompt instructions.</description>
-        <name>Add_Financial_Performance_Heading</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Add Financial Performance Heading</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>## FINANCIAL PERFORMANCE
-</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Iterate_Over_Performance_Snapshots</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <description>Adds one Financial Performance snapshot's details to the prompt instructions for the current iteration of Iterate_Over_Performance_Snapshots.</description>
-        <name>Add_Financial_Performance_Details</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Add Financial Performance Details</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>Financial Performance:
-- Financial Account Id: {!Iterate_Over_Performance_Snapshots.FinancialAccountId__c}
-- As of Date: {!Iterate_Over_Performance_Snapshots.AsOfDate__c}
-- Year To Date Return: {!Iterate_Over_Performance_Snapshots.YearToDateReturnNetAmt__c}
-</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Iterate_Over_Performance_Snapshots</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
         <description>Adds the flow error message to the prompt instructions when there's an error getting the latest Event record.</description>
         <name>Set_Get_Event_Error_Message</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
         <label>Set Get Event Error Message</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>{!$Flow.FaultMessage}
-</stringValue>
-            </value>
-        </assignmentItems>
-    </assignments>
-    <assignments>
-        <description>Adds the flow error message to the prompt instructions when there's an error getting the AUM records.</description>
-        <name>Set_Get_AUM_Error_Message</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Set Get AUM Error Message</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>{!$Flow.FaultMessage}
-</stringValue>
-            </value>
-        </assignmentItems>
-    </assignments>
-    <assignments>
-        <description>Adds the flow error message to the prompt instructions when there's an error getting the Financial Performance records.</description>
-        <name>Set_Get_Financial_Performance_Error_Message</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Set Get Financial Performance Error Message</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
@@ -639,65 +518,7 @@
             <label>Has Open Cases</label>
         </rules>
     </decisions>
-    <decisions>
-        <description>Skips the AUM heading and snapshots when the bulk-fetched Get_AUM collection is empty.</description>
-        <name>Has_AUM_Decision</name>
-        <label>Has AUM Decision</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>Has_Performance_Decision</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>Has_AUM</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Get_AUM</leftValueReference>
-                <operator>IsEmpty</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Add_Financial_Asset_Under_Management_Heading</targetReference>
-            </connector>
-            <label>Has AUM</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <description>Skips the Financial Performance heading and snapshots when the bulk-fetched Get_Financial_Performance collection is empty.</description>
-        <name>Has_Performance_Decision</name>
-        <label>Has Performance Decision</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>Get_Person_Life_Events</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>Has_Performance</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Get_Financial_Performance</leftValueReference>
-                <operator>IsEmpty</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Add_Financial_Performance_Heading</targetReference>
-            </connector>
-            <label>Has Performance</label>
-        </rules>
-    </decisions>
     <environments>Default</environments>
-    <formulas>
-        <description>Effective cut-off date for AUM and Financial Performance snapshot lookups. Uses the latest Meeting/Call LastModifiedDate from Get_Latest_Meeting_Event when an event exists for the current member; otherwise falls back to 60 days before today so that some recent history is always emitted.</description>
-        <name>EffectiveLastInteractionDate</name>
-        <dataType>Date</dataType>
-        <expression>IF(ISNULL({!Get_Latest_Meeting_Event.LastModifiedDate}), TODAY() - 60, DATEVALUE({!Get_Latest_Meeting_Event.LastModifiedDate}))</expression>
-    </formulas>
     <interviewLabel>ClientPulseAccount FSC Package {!$Flow.CurrentDateTime}</interviewLabel>
     <label>ClientPulseAccount FSC Package</label>
     <loops>
@@ -716,7 +537,7 @@
         </noMoreValuesConnector>
     </loops>
     <loops>
-        <description>Repeats an action for each financial account role record in Financial Account Roles from Get_Financial_Account_Roles. After every role has been processed control passes to the bulk AUM lookup.</description>
+        <description>Repeats an action for each financial account role record in Financial Account Roles from Get_Financial_Account_Roles.</description>
         <name>Iterate_Over_Financial_Account_Roles</name>
         <label>Iterate Over Financial Account Roles</label>
         <locationX>0</locationX>
@@ -727,7 +548,7 @@
             <targetReference>Add_Financial_Account_Details_to_Prompt_Text</targetReference>
         </nextValueConnector>
         <noMoreValuesConnector>
-            <targetReference>Get_AUM</targetReference>
+            <targetReference>Get_Person_Life_Events</targetReference>
         </noMoreValuesConnector>
     </loops>
     <loops>
@@ -756,36 +577,6 @@
         <nextValueConnector>
             <targetReference>Add_Case_Details_to_Prompt_Instructions</targetReference>
         </nextValueConnector>
-    </loops>
-    <loops>
-        <description>Iterates over the bulk-fetched Get_AUM collection emitting one AUM block per snapshot. Filtering is left to the prompt template; FSC_Package does not maintain per-FA in-memory matching.</description>
-        <name>Iterate_Over_AUM_Snapshots</name>
-        <label>Iterate Over AUM Snapshots</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <collectionReference>Get_AUM</collectionReference>
-        <iterationOrder>Asc</iterationOrder>
-        <nextValueConnector>
-            <targetReference>Add_AUM_Details_to_Prompt_Instructions</targetReference>
-        </nextValueConnector>
-        <noMoreValuesConnector>
-            <targetReference>Has_Performance_Decision</targetReference>
-        </noMoreValuesConnector>
-    </loops>
-    <loops>
-        <description>Iterates over the bulk-fetched Get_Financial_Performance collection emitting one block per snapshot. Filtering is left to the prompt template; FSC_Package does not maintain per-FA in-memory matching.</description>
-        <name>Iterate_Over_Performance_Snapshots</name>
-        <label>Iterate Over Performance Snapshots</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <collectionReference>Get_Financial_Performance</collectionReference>
-        <iterationOrder>Asc</iterationOrder>
-        <nextValueConnector>
-            <targetReference>Add_Financial_Performance_Details</targetReference>
-        </nextValueConnector>
-        <noMoreValuesConnector>
-            <targetReference>Get_Person_Life_Events</targetReference>
-        </noMoreValuesConnector>
     </loops>
     <processMetadataValues>
         <name>BuilderType</name>
@@ -994,7 +785,7 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets the latest interaction event (Meeting or Call) for the current member, sorted by LastModifiedDate descending. The result is used to (1) emit the Last Interaction Date section and (2) compute the EffectiveLastInteractionDate formula that bounds the AUM and Financial Performance bulk lookups.</description>
+        <description>Gets the latest interaction event (Meeting or Call) for the current member, sorted by LastModifiedDate descending. The result is used to emit the Last Interaction Date section.</description>
         <name>Get_Latest_Meeting_Event</name>
         <label>Get Latest Meeting Event</label>
         <locationX>0</locationX>
@@ -1034,80 +825,6 @@
         <sortOrder>Desc</sortOrder>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
-    <recordLookups>
-        <description>BULK fetch: gets up to 50 AUM (Asset Under Management) snapshots from FinclAcctAssetUndMgmtSnpsht_std__dlm whose FinancialAccountId__c is in FinancialAccountIdsForCurrentMember (collected during Iterate_Over_Financial_Account_Roles) AND whose AsOfDate__c is more recent than EffectiveLastInteractionDate. Runs ONCE after Iterate_Over_Financial_Account_Roles completes. Filter assumes the DMO's FinancialAccountId__c values match the FSC managed FinServ__FinancialAccount__c IDs in this org's Data Cloud bundle.</description>
-        <name>Get_AUM</name>
-        <label>Get AUM</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Get_Financial_Performance</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>Set_Get_AUM_Error_Message</targetReference>
-        </faultConnector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>FinancialAccountId__c</field>
-            <operator>In</operator>
-            <value>
-                <elementReference>FinancialAccountIdsForCurrentMember</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>AsOfDate__c</field>
-            <operator>GreaterThan</operator>
-            <value>
-                <elementReference>EffectiveLastInteractionDate</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>false</getFirstRecordOnly>
-        <limit>
-            <numberValue>50.0</numberValue>
-        </limit>
-        <object>FinclAcctAssetUndMgmtSnpsht_std__dlm</object>
-        <sortField>AsOfDate__c</sortField>
-        <sortOrder>Desc</sortOrder>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
-        <description>BULK fetch: gets up to 50 Financial Performance snapshots from FinancialAccountPerformanceSnapshot_std__dlm whose FinancialAccountId__c is in FinancialAccountIdsForCurrentMember (collected during Iterate_Over_Financial_Account_Roles) AND whose AsOfDate__c is more recent than EffectiveLastInteractionDate. Runs ONCE after Get_AUM. Filter assumes the DMO's FinancialAccountId__c values match the FSC managed FinServ__FinancialAccount__c IDs in this org's Data Cloud bundle.</description>
-        <name>Get_Financial_Performance</name>
-        <label>Get Financial Performance</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Has_AUM_Decision</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>Set_Get_Financial_Performance_Error_Message</targetReference>
-        </faultConnector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>FinancialAccountId__c</field>
-            <operator>In</operator>
-            <value>
-                <elementReference>FinancialAccountIdsForCurrentMember</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>AsOfDate__c</field>
-            <operator>GreaterThan</operator>
-            <value>
-                <elementReference>EffectiveLastInteractionDate</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>false</getFirstRecordOnly>
-        <limit>
-            <numberValue>50.0</numberValue>
-        </limit>
-        <object>FinancialAccountPerformanceSnapshot_std__dlm</object>
-        <sortField>AsOfDate__c</sortField>
-        <sortOrder>Desc</sortOrder>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
     <start>
         <locationX>0</locationX>
         <locationY>0</locationY>
@@ -1132,14 +849,6 @@
         <name>PermanentAccountId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <description>String collection of FinServ__FinancialAccount__c Ids built up during Iterate_Over_Financial_Account_Roles. Used as the IN-filter value for the bulk Get_AUM and Get_Financial_Performance lookups so they each run ONCE after the FA-Roles loop instead of once per role.</description>
-        <name>FinancialAccountIdsForCurrentMember</name>
-        <dataType>String</dataType>
-        <isCollection>true</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
