@@ -186,26 +186,6 @@ Financial Plan Details:
         </connector>
     </assignments>
     <assignments>
-        <name>AddInteractionSummaryToPrompt</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Add Interaction Summary to Prompt</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>===============================
-Past Interactions:
-{!InteractionSummaryTextTemplate}
-</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>IterateOverInteractionSummaries</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
         <description>Adds the ID of the current meeting playbook record in the loop to the PriorMeetingPlaybookIds collection.</description>
         <name>AddMeetingPlaybookIdToCollection</name>
         <label>Add Meeting Playbook ID to Collection</label>
@@ -394,22 +374,6 @@ Task Details:
             <operator>Add</operator>
             <value>
                 <stringValue>An error has occurred retrieving Financial Plan:{!$Flow.FaultMessage}
-</stringValue>
-            </value>
-        </assignmentItems>
-    </assignments>
-    <assignments>
-        <description>Set Get Interaction Summary Error Message</description>
-        <name>SetGetInteractionSummaryErrorMessage</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Set Get Interaction Summary Error Message</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>An error has occurred retrieving Interaction Summary:{!$Flow.FaultMessage}
 </stringValue>
             </value>
         </assignmentItems>
@@ -701,7 +665,7 @@ Task Details:
             <targetReference>Add_Financial_Holding_to_Prompt</targetReference>
         </nextValueConnector>
         <noMoreValuesConnector>
-            <targetReference>GetInteractionSummaries</targetReference>
+            <targetReference>GetMeetingPlaybooks</targetReference>
         </noMoreValuesConnector>
     </loops>
     <loops>
@@ -729,21 +693,6 @@ Task Details:
         </nextValueConnector>
         <noMoreValuesConnector>
             <targetReference>Get_Financial_Holdings</targetReference>
-        </noMoreValuesConnector>
-    </loops>
-    <loops>
-        <description>Repeats an action for each record in the Interaction Summaries from GetInteractionSummaries record collection.</description>
-        <name>IterateOverInteractionSummaries</name>
-        <label>Iterate Over Interaction Summaries</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <collectionReference>GetInteractionSummaries</collectionReference>
-        <iterationOrder>Asc</iterationOrder>
-        <nextValueConnector>
-            <targetReference>AddInteractionSummaryToPrompt</targetReference>
-        </nextValueConnector>
-        <noMoreValuesConnector>
-            <targetReference>GetMeetingPlaybooks</targetReference>
         </noMoreValuesConnector>
     </loops>
     <loops>
@@ -975,38 +924,6 @@ Task Details:
         <queriedFields>Type</queriedFields>
         <queriedFields>Status</queriedFields>
         <queriedFields>LastModifiedDate</queriedFields>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
-        <description>Gets the interaction summary records related to the account ID stored in PrimaryMemberAccountId, sorted by created date with the most recent first. Stores the results in the Interaction Summaries from GetInteractionSummaries record collection.</description>
-        <name>GetInteractionSummaries</name>
-        <label>Get Interaction Summaries</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>IterateOverInteractionSummaries</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>SetGetInteractionSummaryErrorMessage</targetReference>
-        </faultConnector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>AccountId</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>PrimaryMemberAccountId</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>false</getFirstRecordOnly>
-        <object>InteractionSummary</object>
-        <queriedFields>Id</queriedFields>
-        <queriedFields>Name</queriedFields>
-        <queriedFields>InteractionId</queriedFields>
-        <queriedFields>MeetingNotes</queriedFields>
-        <queriedFields>CreatedDate</queriedFields>
-        <sortField>CreatedDate</sortField>
-        <sortOrder>Desc</sortOrder>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
@@ -1320,12 +1237,6 @@ Task Details:
         <name>FinancialPlanTextTemplate</name>
         <isViewedAsPlainText>false</isViewedAsPlainText>
         <text>&lt;p&gt;Financial Plan : {!IterateOverFinancialPlans.Name} [ SourceId : {!IterateOverFinancialPlans.Id} ]&lt;/p&gt;&lt;p&gt;Type: {!IterateOverFinancialPlans.Type}&lt;/p&gt;&lt;p&gt;Status: {!IterateOverFinancialPlans.Status}&lt;/p&gt;&lt;p&gt;Last Modified: {!IterateOverFinancialPlans.LastModifiedDate}&lt;/p&gt;</text>
-    </textTemplates>
-    <textTemplates>
-        <description>Stores the formatted meeting notes and interaction details.</description>
-        <name>InteractionSummaryTextTemplate</name>
-        <isViewedAsPlainText>false</isViewedAsPlainText>
-        <text>&lt;p&gt;Interaction: {!IterateOverInteractionSummaries.InteractionId} [SourceId: {!IterateOverInteractionSummaries.Id}]&lt;/p&gt;&lt;p&gt;Date: {!IterateOverInteractionSummaries.CreatedDate}&lt;/p&gt;&lt;p&gt;Meeting Notes: {!IterateOverInteractionSummaries.MeetingNotes}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</text>
     </textTemplates>
     <textTemplates>
         <description>Stores the formatted basic details of a meeting playbook.</description>

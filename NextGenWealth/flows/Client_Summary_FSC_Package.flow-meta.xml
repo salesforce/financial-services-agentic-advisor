@@ -133,47 +133,6 @@
         </connector>
     </assignments>
     <assignments>
-        <description>Adds the Interaction Summaries heading to the prompt instructions.</description>
-        <name>Add_Interaction_Summaries_Heading</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Add Interaction Summaries Heading</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>## PAST INTERACTIONS
-                
-</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Loop_Through_Interaction_Summaries</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <description>Adds the value interaction summary detail to the prompt instructions.</description>
-        <name>Add_Interaction_Summary_Details_to_Prompt_Text</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Add Interaction Summary Details to Prompt Text</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>Interaction: {!Loop_Through_Interaction_Summaries.Interaction.Name} [SourceId: {!Loop_Through_Interaction_Summaries.Id}]
-- Date: {!Loop_Through_Interaction_Summaries.CreatedDate}
-- Meeting Notes: {!Loop_Through_Interaction_Summaries.MeetingNotes}
-</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Loop_Through_Interaction_Summaries</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
         <description>Adds the value of life event details to the prompt instructions.</description>
         <name>Add_Life_Event_Details_to_Prompt_Instructions</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
@@ -444,22 +403,6 @@
         </assignmentItems>
     </assignments>
     <assignments>
-        <description>Adds the flow error message to the promptText variable when there&apos;s an error getting the Interaction Summary record.</description>
-        <name>Set_Get_Interaction_Summaries_Error</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Set Get Interaction Summary Error Message</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>{!$Flow.FaultMessage}
-</stringValue>
-            </value>
-        </assignmentItems>
-    </assignments>
-    <assignments>
         <description>Adds the flow error message to the prompt instructions  when there&apos;s an error getting the Lead record.</description>
         <name>Set_Get_Lead_Error_Message</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
@@ -630,7 +573,7 @@ No associated related record on the meeting playbook to generate a client summar
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Get_Interaction_Summaries</targetReference>
+            <targetReference>Get_Upcoming_Life_Events</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -697,31 +640,6 @@ No associated related record on the meeting playbook to generate a client summar
                 <targetReference>Add_Followup_Summary_to_Prompt_Instructions</targetReference>
             </connector>
             <label>Has Followup Summary</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <name>Has_Interaction_Summaries</name>
-        <label>Has Interaction Summaries</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>Get_Upcoming_Life_Events</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>Has_Interaction</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Get_Interaction_Summaries</leftValueReference>
-                <operator>IsEmpty</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Add_Interaction_Summaries_Heading</targetReference>
-            </connector>
-            <label>Has Interaction</label>
         </rules>
     </decisions>
     <decisions>
@@ -902,7 +820,7 @@ No associated related record on the meeting playbook to generate a client summar
             <targetReference>Add_Financial_Account_Details_to_Prompt_Text</targetReference>
         </nextValueConnector>
         <noMoreValuesConnector>
-            <targetReference>Get_Interaction_Summaries</targetReference>
+            <targetReference>Get_Upcoming_Life_Events</targetReference>
         </noMoreValuesConnector>
     </loops>
     <loops>
@@ -933,21 +851,6 @@ No associated related record on the meeting playbook to generate a client summar
         </nextValueConnector>
         <noMoreValuesConnector>
             <targetReference>Get_Past_Meetings</targetReference>
-        </noMoreValuesConnector>
-    </loops>
-    <loops>
-        <description>Repeats an action for each interaction summary record in Interaction Summaries from Get_Interaction_Summaries.</description>
-        <name>Loop_Through_Interaction_Summaries</name>
-        <label>Iterate Over Interaction Summaries</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <collectionReference>Get_Interaction_Summaries</collectionReference>
-        <iterationOrder>Asc</iterationOrder>
-        <nextValueConnector>
-            <targetReference>Add_Interaction_Summary_Details_to_Prompt_Text</targetReference>
-        </nextValueConnector>
-        <noMoreValuesConnector>
-            <targetReference>Get_Upcoming_Life_Events</targetReference>
         </noMoreValuesConnector>
     </loops>
     <loops>
@@ -1219,36 +1122,6 @@ No associated related record on the meeting playbook to generate a client summar
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>MeetingPlaybookStageText</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
-        <description>Gets up to three interaction summary records with an account ID that matches PrimaryMemberAccountId. Records are sorted by CreatedDate in descending order (most recent first). Stores the results in the Interaction Summaries from Get_Interaction_Summaries record collection.</description>
-        <name>Get_Interaction_Summaries</name>
-        <label>Get Interaction Summaries</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Has_Interaction_Summaries</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>Set_Get_Interaction_Summaries_Error</targetReference>
-        </faultConnector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>AccountId</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>primaryMemberAccountId</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>false</getFirstRecordOnly>
-        <limit>
-            <numberValue>3.0</numberValue>
-        </limit>
-        <object>InteractionSummary</object>
-        <sortField>CreatedDate</sortField>
-        <sortOrder>Desc</sortOrder>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
