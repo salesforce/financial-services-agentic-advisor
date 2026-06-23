@@ -83,7 +83,7 @@
         </mtgPlbkDefStgCapability>
         <mtgPlbkDefStgCapability>
             <capabilityOrder>4</capabilityOrder>
-            <flow>meetingcenter_wealth__PrdCreaLifeEvnt</flow>
+            <flow>Create_Person_Life_Event_FSC_Package</flow>
             <isAllowMultipleUse>false</isAllowMultipleUse>
             <masterLabel>Create Life Event</masterLabel>
             <promptGeneratedTextType>PostMeetingActionPrompt</promptGeneratedTextType>

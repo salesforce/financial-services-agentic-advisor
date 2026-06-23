@@ -81,7 +81,7 @@
             <assignToReference>$Output.Prompt</assignToReference>
             <operator>Add</operator>
             <value>
-                <stringValue>FINANCIAL GOAL: {!Iterate_Over_Financial_Goals.Name}
+                <stringValue>FINANCIAL GOAL: {!Iterate_Over_Financial_Goals.Name} [SourceId: {!Iterate_Over_Financial_Goals.Id}]
 - Target Amount: {!Iterate_Over_Financial_Goals.FinServ__TargetValue__c}
 - Actual Amount: {!Iterate_Over_Financial_Goals.FinServ__ActualValue__c}
 - Target Date: {!Iterate_Over_Financial_Goals.FinServ__TargetDate__c}
