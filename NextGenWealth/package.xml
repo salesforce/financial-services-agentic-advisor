@@ -11,6 +11,7 @@
         <members>GetAcctDtlClntPulsePkg</members>
         <members>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</members>
         <members>Prep_Brief_Summary_FSC_Package</members>
+        <members>Create_Person_Life_Event_FSC_Package</members>
         <name>Flow</name>
     </types>
     <types>
