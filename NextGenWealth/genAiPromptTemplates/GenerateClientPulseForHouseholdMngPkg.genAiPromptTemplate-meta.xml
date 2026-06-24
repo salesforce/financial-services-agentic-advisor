@@ -28,22 +28,12 @@ The flow output is a single text block. Each section appears only when its under
 · ## FINANCIAL GOALS — per goal: name, target amount, actual amount, target date, status
 · ## LAST INTERACTION DATE — the LastModifiedDate of the household&apos;s most recent Meeting or Call event (recorded against the primary member); this date anchors every &quot;since-last-interaction&quot; statement in your output
 · ## FINANCIAL ACCOUNTS — per financial account: name, [SourceId], type, status, balance, is-held-away, is-managed
-· ## FINANCIAL ASSET UNDER MANAGEMENT(AUM) — up to 50 AUM snapshots across the household&apos;s financial accounts. Each snapshot includes a Financial Account Id, an Amount, and an As-of Date. Snapshots are restricted to those dated AFTER the Last interaction date and sorted most-recent FIRST and oldest LAST.
-· ## FINANCIAL PERFORMANCE — up to 50 Performance snapshots across the household&apos;s financial accounts. Each snapshot includes a Financial Account Id, an As-of Date, and a Year-to-Date Return. Same sort and date-window rules as AUM.
 · ## UPCOMING LIFE EVENTS — per life event: name, [SourceId], event type, event date, description
 · ## OPEN CASES — per open case: case number, [SourceId], subject, status, priority, created date
 
 HOW THE TIMELINE IS ANCHORED
 
-The Last interaction date is the reference point for every time-based statement in your output. The &quot;## FINANCIAL ASSET UNDER MANAGEMENT(AUM)&quot; and &quot;## FINANCIAL PERFORMANCE&quot; lists are already filtered to snapshots taken AFTER that date and are sorted most-recent FIRST, oldest LAST.
-
-· Within each list, the FIRST snapshot represents the CURRENT state.
-· The LAST snapshot represents the state at-or-just-after the Last interaction date.
-· Delta = FIRST minus LAST is the change since the household was last engaged.
-· Because each snapshot carries a Financial Account Id, you can group snapshots by Financial Account Id to compute per-account deltas, or aggregate across all of the household&apos;s financial accounts to report a household-wide delta.
-· If a Financial Account Id has only one snapshot in a list, report that current value and note &quot;since last interaction&quot; without a delta number. If a list is empty, omit that metric.
-
-For non-timeline entities (Cases, Life Events, Goals), describe them as &quot;as of today, [N] days since last interaction on [Last interaction date]&quot; where helpful.
+The Last interaction date is the reference point for every time-based statement in your output. For non-timeline entities (Cases, Life Events, Goals), describe them as &quot;as of today, [N] days since last interaction on [Last interaction date]&quot; where helpful.
 
 Not all data will be present for every household. Use only the data that exists in the provided context.
 
@@ -61,10 +51,9 @@ Summarize the household&apos;s state as of NOW, anchored against the Last intera
 Use available data such as:
 · Relationship status (primary member&apos;s Account Type)
 · Last interaction date (and elapsed days since)
-· Combined household account value (sum across financial accounts of each FA&apos;s FIRST AUM snapshot)
+· Combined household account value (sum across financial accounts of each FA&apos;s current balance from the ## FINANCIAL ACCOUNTS block)
 · Held-away accounts (the financial accounts flagged Is Held Away: true)
 · Top household goal
-· Current year-to-date return (per FA or aggregated across the household&apos;s financial accounts)
 
 This section should help the advisor quickly understand the scale of the household relationship as of today, the time elapsed since the last engagement, and the household&apos;s primary planning focus.
 
@@ -72,13 +61,9 @@ This section should help the advisor quickly understand the scale of the househo
 
 Summarize the most material changes that occurred AFTER the Last interaction date. Every delta in this section must use the Last interaction date as its baseline.
 
-For AUM and Performance, compute the timeline delta as: FIRST snapshot (most recent) minus LAST snapshot (closest to the Last interaction date), grouped by Financial Account Id where useful or aggregated across the household&apos;s accounts. Report each delta with both the absolute change and the date span (e.g., &quot;Combined AUM up $24,500 since [Last interaction date]&quot;). When only one snapshot is present for a given Financial Account Id, report its current value and note &quot;since last interaction&quot; without a delta number.
-
 Consider available changes in three areas:
 
-Business / Financial Delta (use the AUM and Performance snapshot lists):
-· AUM amount change since last interaction (FIRST AUM minus LAST AUM, per Financial Account Id and/or aggregated)
-· Year-to-date return change since last interaction (FIRST Performance YTD minus LAST Performance YTD)
+Business / Financial Delta:
 · Financial Account balance changes
 · Held-away account changes (a financial account flagged Is Held Away: true)
 
@@ -110,11 +95,10 @@ Only include implications directly supported by the provided data. Do not recomm
 
 4. Key Data Points
 
-List the most important factual metrics available for the household. Where the metric has a time series (AUM, Performance), pair the CURRENT value with the change since the Last interaction date.
+List the most important factual metrics available for the household.
 
 Include only available items such as:
-· Combined Account Value — current (sum of FIRST AUM across the household&apos;s FAs) and change since last interaction
-· Year-to-Date Return — current (FIRST Performance) and change since last interaction (per FA or aggregated)
+· Combined Account Value — sum of per-FA current balance from the ## FINANCIAL ACCOUNTS block
 · Held-Away Accounts — which financial accounts are flagged Is Held Away: true
 · Financial Account Balances — per-FA current balance from the ## FINANCIAL ACCOUNTS block
 · Top Goal — name, status, progress, target date
@@ -135,8 +119,7 @@ Return the response in this format only:
 [1–3 concise sentences explaining the advisor implication for the household in light of the changes above.]
 **Key Data Points**
 - Last Interaction — [date, plus &quot;(N days ago)&quot; when computable]
-- Combined Account Value — [sum of FIRST AUM across the household&apos;s FAs with as-of date; append &quot;Δ +/- $X since last interaction&quot; when both FIRST and LAST AUM snapshots are available]
-- Year-to-Date Return — [current FIRST Performance YTD with as-of date; append &quot;Δ +/- X pts since last interaction&quot; when both FIRST and LAST Performance snapshots are available]
+- Combined Account Value — [sum of per-FA current balance from the ## FINANCIAL ACCOUNTS block, if available]
 - Held-Away Accounts — [list of held-away financial accounts, if any]
 - Financial Account Balances — [per-FA current balance, if available]
 - Top Goal — [goal name, status, progress, and target date, if available]
