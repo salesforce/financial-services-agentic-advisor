@@ -108,7 +108,7 @@
         </connector>
     </assignments>
     <assignments>
-        <description>Adds details of the current financial account role record in the loop to the prompt instructions. Adds the financial account ID of the current record to the FinancialAccountIds collection.</description>
+        <description>Adds details of the current financial account role record in the loop to the prompt instructions.</description>
         <name>AddFinancialAccountDetailsPromptInstructions</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
         <label>Add Financial Account Details Prompt Instructions</label>
@@ -128,13 +128,6 @@
 - Is Managed: {!IterateOverFinancialAccountRoles.FinServ__FinancialAccount__r.FinServ__Managed__c}
 ====
 </stringValue>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>FinancialAccountIds</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <elementReference>IterateOverFinancialAccountRoles.FinServ__FinancialAccount__c</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -377,124 +370,10 @@
         </connector>
     </assignments>
     <assignments>
-        <description>Adds the financial asset under management heading to the prompt instructions.</description>
-        <name>AddAssetUnderMgmtHeadingPromptInstructions</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Add Asset Under Management Heading Prompt Instructions</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>## FINANCIAL ASSET UNDER MANAGEMENT(AUM)
-</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>IterateOverFinancialAcctAssetUnderMgmtSnapshots</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <description>Adds details of the current financial account asset under management snapshot record in the loop to the prompt instructions.</description>
-        <name>AddFinancialAcctAssetUnderMgmtDetailsPromptInstructions</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Add Financial Acct Asset Under Management Details Prompt Instructions</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>AUM:
-- Financial Account Id: {!IterateOverFinancialAcctAssetUnderMgmtSnapshots.FinancialAccountId__c}
-- Amount: {!IterateOverFinancialAcctAssetUnderMgmtSnapshots.AssetUnderManagementAmount__c}
-- As of Date: {!IterateOverFinancialAcctAssetUnderMgmtSnapshots.AsOfDate__c}
-</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>IterateOverFinancialAcctAssetUnderMgmtSnapshots</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <description>Adds the financial performance heading to the prompt instructions.</description>
-        <name>AddFinancialPerformanceHeadingPromptInst</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Add Financial Performance Heading Prompt Instructions</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>## FINANCIAL PERFORMANCE
-</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>IterateOverFinancialAccountPerformanceSnapshots</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <description>Adds details of the current financial account performance snapshot record in the loop to the prompt instructions.</description>
-        <name>AddFinPerformanceDetailsPromptInstructions</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Add Financial Performance Details Prompt Instructions</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>Financial Performance:
-- Financial Account Id: {!IterateOverFinancialAccountPerformanceSnapshots.FinancialAccountId__c}
-- As of Date: {!IterateOverFinancialAccountPerformanceSnapshots.AsOfDate__c}
-- Year To Date Return: {!IterateOverFinancialAccountPerformanceSnapshots.YearToDateReturnNetAmt__c}
-</stringValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>IterateOverFinancialAccountPerformanceSnapshots</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
         <description>Adds the error message returned by the flow to the prompt instructions.</description>
         <name>AddGetPersonLifeEventErrorPromptInstructions</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
         <label>Add Get Person Life Event Error Prompt Instructions</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>{!$Flow.FaultMessage}
-</stringValue>
-            </value>
-        </assignmentItems>
-    </assignments>
-    <assignments>
-        <description>Adds the error message returned by the flow to the prompt instructions.</description>
-        <name>AddGetFinancialAcctAssetUnderManagementErrorPromptInst</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Add Get Financial Acct Asset Under Management Error Prompt Instructions</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Output.Prompt</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <stringValue>{!$Flow.FaultMessage}
-</stringValue>
-            </value>
-        </assignmentItems>
-    </assignments>
-    <assignments>
-        <description>Adds the error message returned by the flow to the prompt instructions.</description>
-        <name>AddGetFinancialAccountPerformanceErrorPromptInst</name>
-        <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Add Get Financial Account Performance Error Prompt Instructions</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
@@ -645,66 +524,8 @@
             <label>No (Default)</label>
         </rules>
     </decisions>
-    <decisions>
-        <description>Determines whether financial account asset under management snapshot records were found by checking if the Financial Account Asset Under Management Snapshots from GetFinancialAcctAssetUnderManagementSnapshots record collection contains a record.</description>
-        <name>HaveFinancialAcctAssetUnderManagementSnapshotRecords</name>
-        <label>Have Financial Acct Asset Under Management Snapshot Records?</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>HaveFinancialAccountPerformanceSnapshotRecords</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Yes</defaultConnectorLabel>
-        <rules>
-            <name>HasFinancialAcctAssesUnderManagementSnapshotRecords</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>GetFinancialAcctAssetUnderManagementSnapshots</leftValueReference>
-                <operator>IsEmpty</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>AddAssetUnderMgmtHeadingPromptInstructions</targetReference>
-            </connector>
-            <label>No (Default)</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <description>Determines whether financial account performance snapshot records were found by checking if the Financial Account Performance Snapshots from GetFinancialAccountPerformanceSnapshots record collection contains a record.</description>
-        <name>HaveFinancialAccountPerformanceSnapshotRecords</name>
-        <label>Have Financial Account Performance Snapshot Records?</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>GetPersonLifeEvents</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Yes</defaultConnectorLabel>
-        <rules>
-            <name>HasFinancialAccountPerformanceSnapshotRecords</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>GetFinancialAccountPerformanceSnapshots</leftValueReference>
-                <operator>IsEmpty</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>AddFinancialPerformanceHeadingPromptInst</targetReference>
-            </connector>
-            <label>No (Default)</label>
-        </rules>
-    </decisions>
     <description>Gets the details of a household account or a person account record and sends those details to the associated prompt template as prompt instructions.</description>
     <environments>Default</environments>
-    <formulas>
-        <description>Calculates a date that is 60 days before the current date if the last modified date of Event from GetEvent is empty, or the date of the event if it is not empty.</description>
-        <name>EffectiveLastInteractionDateFormula</name>
-        <dataType>Date</dataType>
-        <expression>IF(ISNULL({!GetEvent.LastModifiedDate}), TODAY() - 60, DATEVALUE({!GetEvent.LastModifiedDate}))</expression>
-    </formulas>
     <interviewLabel>Get Managed Package Account Details for Client Pulse {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Get Managed Package Account Details for Client Pulse</label>
     <loops>
@@ -734,7 +555,7 @@
             <targetReference>AddFinancialAccountDetailsPromptInstructions</targetReference>
         </nextValueConnector>
         <noMoreValuesConnector>
-            <targetReference>GetFinancialAcctAssetUnderManagementSnapshots</targetReference>
+            <targetReference>GetPersonLifeEvents</targetReference>
         </noMoreValuesConnector>
     </loops>
     <loops>
@@ -763,36 +584,6 @@
         <nextValueConnector>
             <targetReference>AddCaseDetailsPromptInstructions</targetReference>
         </nextValueConnector>
-    </loops>
-    <loops>
-        <description>Repeats actions for each financial account asset under management snapshot record in Financial Account Asset Under Management Snapshots from GetFinancialAcctAssetUnderManagementSnapshots.</description>
-        <name>IterateOverFinancialAcctAssetUnderMgmtSnapshots</name>
-        <label>Iterate Over Financial Acct Asset Under Management Snapshots</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <collectionReference>GetFinancialAcctAssetUnderManagementSnapshots</collectionReference>
-        <iterationOrder>Asc</iterationOrder>
-        <nextValueConnector>
-            <targetReference>AddFinancialAcctAssetUnderMgmtDetailsPromptInstructions</targetReference>
-        </nextValueConnector>
-        <noMoreValuesConnector>
-            <targetReference>HaveFinancialAccountPerformanceSnapshotRecords</targetReference>
-        </noMoreValuesConnector>
-    </loops>
-    <loops>
-        <description>Repeats an action for each financial account performance snapshot record in Financial Account Performance Snapshots from GetFinancialAccountPerformanceSnapshots record collection.</description>
-        <name>IterateOverFinancialAccountPerformanceSnapshots</name>
-        <label>Iterate Over Financial Account Performance Snapshots</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <collectionReference>GetFinancialAccountPerformanceSnapshots</collectionReference>
-        <iterationOrder>Asc</iterationOrder>
-        <nextValueConnector>
-            <targetReference>AddFinPerformanceDetailsPromptInstructions</targetReference>
-        </nextValueConnector>
-        <noMoreValuesConnector>
-            <targetReference>GetPersonLifeEvents</targetReference>
-        </noMoreValuesConnector>
     </loops>
     <processMetadataValues>
         <name>BuilderType</name>
@@ -1041,80 +832,6 @@
         <sortOrder>Desc</sortOrder>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
-    <recordLookups>
-        <description>Gets up to 50 financial account asset under management snapshot records with an As Of Date greater than EffectiveLastInteractionDateFormula and a financial account ID in FinancialAccountIds collection. Stores the results in the Financial Acct Asset Under Management Snapshots from GetFinancialAcctAssetUnderManagementSnapshots record collection.</description>
-        <name>GetFinancialAcctAssetUnderManagementSnapshots</name>
-        <label>Get Financial Acct Asset Under Management Snapshots</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>GetFinancialAccountPerformanceSnapshots</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>AddGetFinancialAcctAssetUnderManagementErrorPromptInst</targetReference>
-        </faultConnector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>FinancialAccountId__c</field>
-            <operator>In</operator>
-            <value>
-                <elementReference>FinancialAccountIds</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>AsOfDate__c</field>
-            <operator>GreaterThan</operator>
-            <value>
-                <elementReference>EffectiveLastInteractionDateFormula</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>false</getFirstRecordOnly>
-        <limit>
-            <numberValue>50.0</numberValue>
-        </limit>
-        <object>FinclAcctAssetUndMgmtSnpsht_std__dlm</object>
-        <sortField>AsOfDate__c</sortField>
-        <sortOrder>Desc</sortOrder>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
-        <description>Gets up to 50 financial account performance snapshot records with an As Of Date greater than EffectiveLastInteractionDateFormula and a financial account ID in FinancialAccountIds collection. Stores the results in the Financial Account Performance Snapshots from GetFinancialAccountPerformanceSnapshots record collection.</description>
-        <name>GetFinancialAccountPerformanceSnapshots</name>
-        <label>Get Financial Account Performance Snapshots</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>HaveFinancialAcctAssetUnderManagementSnapshotRecords</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>AddGetFinancialAccountPerformanceErrorPromptInst</targetReference>
-        </faultConnector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>FinancialAccountId__c</field>
-            <operator>In</operator>
-            <value>
-                <elementReference>FinancialAccountIds</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>AsOfDate__c</field>
-            <operator>GreaterThan</operator>
-            <value>
-                <elementReference>EffectiveLastInteractionDateFormula</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>false</getFirstRecordOnly>
-        <limit>
-            <numberValue>50.0</numberValue>
-        </limit>
-        <object>FinancialAccountPerformanceSnapshot_std__dlm</object>
-        <sortField>AsOfDate__c</sortField>
-        <sortOrder>Desc</sortOrder>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
     <start>
         <locationX>0</locationX>
         <locationY>0</locationY>
@@ -1139,14 +856,6 @@
         <name>TargetAccountId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <description>Stores a collection of financial account IDs.</description>
-        <name>FinancialAccountIds</name>
-        <dataType>String</dataType>
-        <isCollection>true</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
