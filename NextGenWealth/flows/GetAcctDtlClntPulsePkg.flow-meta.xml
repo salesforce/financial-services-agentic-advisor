@@ -385,6 +385,54 @@
             </value>
         </assignmentItems>
     </assignments>
+    <assignments>
+        <description>Adds the error message returned by the flow to the prompt instructions.</description>
+        <name>AddGetInputAccountErrorPromptInst</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Get Input Account Error Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the error message returned by the flow to the prompt instructions.</description>
+        <name>AddGetInputAccountRecordTypeErrorPromptInst</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Get Input Account Record Type Error Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the error message returned by the flow to the prompt instructions.</description>
+        <name>AddGetFscHouseholdRecordTypeMappingErrorPromptInst</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Get FSC Household Record Type Mapping Error Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
     <decisions>
         <description>Determines whether the account record passed into the flow is a household account or a person account.</description>
         <name>WhichAccountType</name>
@@ -403,7 +451,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>GetAccountContactRelationshipPrimHshldMbr</targetReference>
+                <targetReference>GetInputAccountRecordType</targetReference>
             </connector>
             <label>Household</label>
         </rules>
@@ -522,6 +570,52 @@
                 <targetReference>AddOpenCasesHeadingPromptInstructions</targetReference>
             </connector>
             <label>No (Default)</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether the account ID passed into the flow resolves to an accessible Account record. If GetInputAccount returned no row (record-not-found or insufficient sharing access), the flow exits silently &mdash; equivalent to AccountResolutionResult.invalidAccount in AccountResolutionService. Otherwise control passes to WhichAccountType for kind classification.</description>
+        <name>IsInputAccountValid</name>
+        <label>Is Input Account Valid?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>HasInputAccount</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetInputAccount</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>WhichAccountType</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether the input Account&apos;s RecordType is registered as a household type in the FSC FinServ__GroupRecordTypeMapper__mdt custom-metadata type. When a mapping row was returned by GetFscHouseholdRecordTypeMapping, the account is treated as a household and control passes to GetAccountContactRelationshipPrimHshldMbr. Otherwise the flow exits silently (matches the BUSINESS default in AccountResolutionService.resolve, package-world branch).</description>
+        <name>IsHouseholdAccount</name>
+        <label>Is Household Account?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>HasFscHouseholdRecordTypeMapping</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetFscHouseholdRecordTypeMapping</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>GetAccountContactRelationshipPrimHshldMbr</targetReference>
+            </connector>
+            <label>Yes</label>
         </rules>
     </decisions>
     <description>Gets the details of a household account or a person account record and sends those details to the associated prompt template as prompt instructions.</description>
@@ -832,6 +926,81 @@
         <sortOrder>Desc</sortOrder>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
+    <recordLookups>
+        <description>Verifies that the account ID passed into the flow resolves to an accessible Account record. Mirrors the &quot;Account row lookup&quot; guard in AccountResolutionService.resolve: if no row is returned (record missing or sharing-restricted), the downstream IsInputAccountValid decision terminates the flow &mdash; equivalent to AccountResolutionResult.invalidAccount. Stores the result in the Account from GetInputAccount record variable.</description>
+        <name>GetInputAccount</name>
+        <label>Get Input Account</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IsInputAccountValid</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddGetInputAccountErrorPromptInst</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Input.objectToSummarize.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the Account RecordType row that matches the input Account&apos;s RecordTypeId. The resolved DeveloperName is later joined against FinServ__GroupRecordTypeMapper__mdt to determine whether the record type is registered as an FSC household type. Returns null if the input Account has no RecordTypeId or the RecordType is inaccessible &mdash; in either case the downstream IsHouseholdAccount decision will treat the account as non-household, matching AccountResolutionService.isFscHouseholdRecordType.</description>
+        <name>GetInputAccountRecordType</name>
+        <label>Get Input Account Record Type</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>GetFscHouseholdRecordTypeMapping</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddGetInputAccountRecordTypeErrorPromptInst</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Input.objectToSummarize.RecordTypeId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>RecordType</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the first FinServ__GroupRecordTypeMapper__mdt row whose FinServ__AccountRecordType__c (DeveloperName of the Account RecordType registered as a household type) matches the input Account&apos;s RecordType DeveloperName. Package-world equivalent of AccountResolutionService.isFscHouseholdRecordType. If a row is returned, the input Account is a household; if none is returned, the IsHouseholdAccount decision terminates the flow.</description>
+        <name>GetFscHouseholdRecordTypeMapping</name>
+        <label>Get FSC Household Record Type Mapping</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IsHouseholdAccount</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddGetFscHouseholdRecordTypeMappingErrorPromptInst</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>FinServ__AccountRecordType__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>GetInputAccountRecordType.DeveloperName</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>FinServ__GroupRecordTypeMapper__mdt</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <start>
         <locationX>0</locationX>
         <locationY>0</locationY>
@@ -846,7 +1015,7 @@
             </inputs>
         </capabilityTypes>
         <connector>
-            <targetReference>WhichAccountType</targetReference>
+            <targetReference>GetInputAccount</targetReference>
         </connector>
         <triggerType>Capability</triggerType>
     </start>
