@@ -573,7 +573,7 @@
         </rules>
     </decisions>
     <decisions>
-        <description>Determines whether the account ID passed into the flow resolves to an accessible Account record. If GetInputAccount returned no row (record-not-found or insufficient sharing access), the flow exits silently &mdash; equivalent to AccountResolutionResult.invalidAccount in AccountResolutionService. Otherwise control passes to WhichAccountType for kind classification.</description>
+        <description>Determines whether the account ID passed into the flow resolves to an accessible Account record. If GetInputAccount returned no row (record-not-found or insufficient sharing access), the flow exits silently -- equivalent to AccountResolutionResult.invalidAccount in AccountResolutionService. Otherwise control passes to WhichAccountType for kind classification.</description>
         <name>IsInputAccountValid</name>
         <label>Is Input Account Valid?</label>
         <locationX>0</locationX>
@@ -927,7 +927,7 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Verifies that the account ID passed into the flow resolves to an accessible Account record. Mirrors the &quot;Account row lookup&quot; guard in AccountResolutionService.resolve: if no row is returned (record missing or sharing-restricted), the downstream IsInputAccountValid decision terminates the flow &mdash; equivalent to AccountResolutionResult.invalidAccount. Stores the result in the Account from GetInputAccount record variable.</description>
+        <description>Verifies that the account ID passed into the flow resolves to an accessible Account record. Mirrors the &quot;Account row lookup&quot; guard in AccountResolutionService.resolve: if no row is returned (record missing or sharing-restricted), the downstream IsInputAccountValid decision terminates the flow -- equivalent to AccountResolutionResult.invalidAccount. Stores the result in the Account from GetInputAccount record variable.</description>
         <name>GetInputAccount</name>
         <label>Get Input Account</label>
         <locationX>0</locationX>
@@ -952,7 +952,7 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets the Account RecordType row that matches the input Account&apos;s RecordTypeId. The resolved DeveloperName is later joined against FinServ__GroupRecordTypeMapper__mdt to determine whether the record type is registered as an FSC household type. Returns null if the input Account has no RecordTypeId or the RecordType is inaccessible &mdash; in either case the downstream IsHouseholdAccount decision will treat the account as non-household, matching AccountResolutionService.isFscHouseholdRecordType.</description>
+        <description>Gets the Account RecordType row that matches the input Account&apos;s RecordTypeId. The resolved DeveloperName is later joined against FinServ__GroupRecordTypeMapper__mdt to determine whether the record type is registered as an FSC household type. Returns null if the input Account has no RecordTypeId or the RecordType is inaccessible -- in either case the downstream IsHouseholdAccount decision will treat the account as non-household, matching AccountResolutionService.isFscHouseholdRecordType.</description>
         <name>GetInputAccountRecordType</name>
         <label>Get Input Account Record Type</label>
         <locationX>0</locationX>
