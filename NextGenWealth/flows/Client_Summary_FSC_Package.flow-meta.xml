@@ -28,6 +28,32 @@
         </connector>
     </assignments>
     <assignments>
+        <description>Adds the client (person account) header section to the prompt instructions, including the account name, age, and risk tolerance.</description>
+        <name>Add_Client_Details_to_Prompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Client Details to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## CLIENT:
+
+{!Get_Account.Name} [SourceId: {!Get_Account.Id}]
+- Age: {!Get_Account.FinServ__Age__pc}
+- Risk Tolerance: {!Get_Account.FinServ__RiskTolerance__c}
+====
+
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Contact_Accounts</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the current financial account&apos;s details (name, type, status, total balance, held-away and managed flags) to the prompt instructions.</description>
         <name>Add_Financial_Account_Details_to_Prompt_Text</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
         <label>Add Financial Account Details to Prompt Text</label>
@@ -37,18 +63,34 @@
             <assignToReference>$Output.Prompt</assignToReference>
             <operator>Add</operator>
             <value>
-                <stringValue>Financial Account: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.Name} 
-[SourceId: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.Id}]
-- Type: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__FinancialAccountType__c}
-- Status: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__Status__c}
-- Balance: $ {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__Balance__c}
-- Is Held Away: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__HeldAway__c}
-- Is Managed:{!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__Managed__c}
+                <stringValue>Financial Account: {!Loop_Through_Financial_Accounts.Name} [SourceId: {!Loop_Through_Financial_Accounts.Id}]
+- Type: {!Loop_Through_Financial_Accounts.FinServ__FinancialAccountType__c}
+- Status: {!Loop_Through_Financial_Accounts.FinServ__Status__c}
+- Total Balance: $ {!Loop_Through_Financial_Accounts.FinServ__Balance__c}
+- Is Held Away: {!Loop_Through_Financial_Accounts.FinServ__HeldAway__c}
+- Is Managed: {!Loop_Through_Financial_Accounts.FinServ__Managed__c}
 </stringValue>
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Iterate_Over_Financial_Account_Roles</targetReference>
+            <targetReference>Loop_Through_Financial_Accounts</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds each financial account role&apos;s financial account ID to the financialAccountIds collection.</description>
+        <name>Add_Financial_Account_Id_To_Collection</name>
+        <label>Add Financial Account Id To Collection</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>financialAccountIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Loop_Collect_Financial_Account_Ids.FinServ__FinancialAccount__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Collect_Financial_Account_Ids</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -67,7 +109,7 @@
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Iterate_Over_Financial_Account_Roles</targetReference>
+            <targetReference>Loop_Through_Financial_Accounts</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -115,6 +157,7 @@
         </connector>
     </assignments>
     <assignments>
+        <description>Adds the prior meeting&apos;s followup summary text to the prompt instructions.</description>
         <name>Add_Followup_Summary_to_Prompt_Instructions</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
         <label>Add Followup Summary to Prompt Instructions</label>
@@ -130,6 +173,90 @@
         </assignmentItems>
         <connector>
             <targetReference>Get_Tasks_for_Stages</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the household account ID to the householdMemberAccountIds collection so household-level records are included alongside member records.</description>
+        <name>Add_Household_Account_To_Collection</name>
+        <label>Add Household Account To Collection</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>householdMemberAccountIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Get_Account.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Household_Members</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds a non-primary household member&apos;s details to the prompt instructions. Name and birthdate come from the matched contact account (Loop_Match_Account); the role and primary fields come from the account contact relation (Loop_Render_Members).</description>
+        <name>Add_Household_Member_Details_to_Prompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Household Member Details to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Member: {!Loop_Match_Account.Name} [SourceId: {!Loop_Match_Account.Id}]
+- Is Primary Group: {!Loop_Render_Members.FinServ__PrimaryGroup__c}
+- Roles: {!Loop_Render_Members.Roles}
+- Age: {!Loop_Match_Account.FinServ__Age__pc}
+====
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Match_Account</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds each household member&apos;s person account ID to the householdMemberAccountIds and contactAccountIds collections.</description>
+        <name>Add_Household_Member_To_Collection</name>
+        <label>Add Household Member To Collection</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>householdMemberAccountIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Loop_Through_Household_Members.Contact.AccountId</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>contactAccountIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Loop_Through_Household_Members.Contact.AccountId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Household_Members</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the Household Members heading to the prompt instructions.</description>
+        <name>Add_Household_Members_Heading</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Household Members Heading</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## HOUSEHOLD MEMBERS:
+
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Render_Members</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -157,6 +284,7 @@
         </connector>
     </assignments>
     <assignments>
+        <description>Adds the current prior meeting playbook&apos;s name and created date to the prompt instructions.</description>
         <name>Add_Meeting_Playbook_Details_to_Prompt_Instructions</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
         <label>Add Meeting Playbook Details to Prompt Instructions</label>
@@ -196,6 +324,50 @@
         </connector>
     </assignments>
     <assignments>
+        <description>Adds the Opportunities heading to the prompt instructions.</description>
+        <name>Add_Opportunities_Heading</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Opportunities Heading</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>## OPPORTUNITIES
+
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Opportunities</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the opportunity details to the prompt instructions.</description>
+        <name>Add_Opportunity_Details_to_Prompt_Text</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Opportunity Details to Prompt Text</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>OPPORTUNITY: {!Loop_Through_Opportunities.Name} [SourceId: {!Loop_Through_Opportunities.Id}]
+- Stage: {!Loop_Through_Opportunities.StageName}
+- Amount: {!Loop_Through_Opportunities.Amount}
+- Close Date: {!Loop_Through_Opportunities.CloseDate}
+- Probability: {!Loop_Through_Opportunities.Probability}
+====
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Opportunities</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <description>Adds the prior Meetings heading to the prompt instruction</description>
         <name>Add_Past_Meeting_Playbooks</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
@@ -216,6 +388,23 @@
         </connector>
     </assignments>
     <assignments>
+        <description>Adds each contact account&apos;s person contact ID to the personContactIds collection for use in person-based queries.</description>
+        <name>Add_Person_Account_Id</name>
+        <label>Add Person Account Id</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>personContactIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Loop_for_Person_Contact_Ids.PersonContactId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_for_Person_Contact_Ids</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <description>Adds the Person Life Events heading to the prompt instructions.</description>
         <name>Add_Person_Life_Events_Heading</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
@@ -233,6 +422,29 @@
         </assignmentItems>
         <connector>
             <targetReference>Loop_Through_Life_Events</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the primary household member&apos;s details to the prompt instructions, labelling them as the primary member. Name and birthdate come from the matched contact account (Loop_Match_Account); the role and primary fields come from the account contact relation (Loop_Render_Members).</description>
+        <name>Add_Primary_Member_Details_to_Prompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Primary Member Details to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Primary Member: {!Loop_Match_Account.Name} [SourceId: {!Loop_Match_Account.Id}]
+- Is Primary Group: {!Loop_Render_Members.FinServ__PrimaryGroup__c}
+- Roles: {!Loop_Render_Members.Roles}
+- Age: {!Loop_Match_Account.FinServ__Age__pc}
+====
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Match_Account</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -355,10 +567,10 @@
         </assignmentItems>
     </assignments>
     <assignments>
-        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Financial Account Party record.</description>
+        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Financial Account Role record.</description>
         <name>Set_Get_Financial_Account_Parties_Error</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Set Get Financial Account Party Error Message</label>
+        <label>Set Get Financial Account Role Error Message</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
@@ -371,10 +583,10 @@
         </assignmentItems>
     </assignments>
     <assignments>
-        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Financial Goal Party record.</description>
+        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Financial Goal record.</description>
         <name>Set_Get_Financial_Goal_Parties_Error</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Set Get Financial Goal Party Error Message</label>
+        <label>Set Get Financial Goal Error Message</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
@@ -451,10 +663,10 @@
         </assignmentItems>
     </assignments>
     <assignments>
-        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Meeting Playbook record.</description>
-        <name>Set_Get_Past_Meetings_Error</name>
+        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Opportunity record.</description>
+        <name>Set_Get_Opportunities_Error</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Set Get Meeting Playbook Error Message</label>
+        <label>Set Get Opportunity Error Message</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
@@ -467,18 +679,17 @@
         </assignmentItems>
     </assignments>
     <assignments>
-        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Account record.</description>
-        <name>Set_Get_Primary_Household_Member_Error_Message</name>
+        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the Meeting Playbook record.</description>
+        <name>Set_Get_Past_Meetings_Error</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
-        <label>Set Get Primary Household Member Error Message</label>
+        <label>Set Get Meeting Playbook Error Message</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
             <assignToReference>$Output.Prompt</assignToReference>
             <operator>Add</operator>
             <value>
-                <stringValue>An error has occurred in the flow:
-{!$Flow.FaultMessage}
+                <stringValue>{!$Flow.FaultMessage}
 </stringValue>
             </value>
         </assignmentItems>
@@ -534,46 +745,37 @@ No associated related record on the meeting playbook to generate a client summar
         </assignmentItems>
     </assignments>
     <assignments>
-        <description>Sets PrimaryMemberAccountId to the account ID of the contact from Get_Primary_Household_Member.</description>
-        <name>Store_Household_Member_Contact</name>
-        <label>Set Primary Member Account ID for Household Account</label>
+        <description>Adds the person account&apos;s ID to the householdMemberAccountIds and contactAccountIds collections.</description>
+        <name>Store_Person_Account_In_Collection</name>
+        <label>Store Person Account In Collection</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>primaryMemberAccountId</assignToReference>
-            <operator>Assign</operator>
+            <assignToReference>householdMemberAccountIds</assignToReference>
+            <operator>Add</operator>
             <value>
-                <elementReference>Get_Primary_Household_Member.Contact.AccountId</elementReference>
+                <elementReference>Get_Account.Id</elementReference>
             </value>
         </assignmentItems>
-        <connector>
-            <targetReference>Get_Account_2</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <description>Sets PrimaryMemberAccountId to the person contact ID of the account from Get_Account.</description>
-        <name>Store_Person_Account_Contact</name>
-        <label>Set Primary Member Account ID for Person Account</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>primaryMemberAccountId</assignToReference>
-            <operator>Assign</operator>
+            <assignToReference>contactAccountIds</assignToReference>
+            <operator>Add</operator>
             <value>
                 <elementReference>Get_Account.Id</elementReference>
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Get_Account_2</targetReference>
+            <targetReference>Add_Client_Details_to_Prompt</targetReference>
         </connector>
     </assignments>
     <decisions>
+        <description>Determines whether any financial account roles were found for the household. If so, collects and de-duplicates the financial accounts; otherwise skips to opportunities.</description>
         <name>Has_Financial_Account_Roles_Decision</name>
         <label>Has Financial Account Roles Decision</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Get_Upcoming_Life_Events</targetReference>
+            <targetReference>Get_Opportunities</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -587,12 +789,13 @@ No associated related record on the meeting playbook to generate a client summar
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Add_Financial_Accounts_Heading</targetReference>
+                <targetReference>Loop_Collect_Financial_Account_Ids</targetReference>
             </connector>
             <label>Has Financial Account Roles</label>
         </rules>
     </decisions>
     <decisions>
+        <description>Determines whether any financial goals were found for the household. If so, renders the financial goals section; otherwise skips to financial account roles.</description>
         <name>Has_Financial_Goals</name>
         <label>Has Financial Goals</label>
         <locationX>0</locationX>
@@ -618,6 +821,7 @@ No associated related record on the meeting playbook to generate a client summar
         </rules>
     </decisions>
     <decisions>
+        <description>Determines whether the prior meeting has a followup summary. If so, adds it to the prompt; otherwise skips to the meeting&apos;s tasks.</description>
         <name>Has_Followup_Summary_Decision</name>
         <label>Has Followup Summary Decision</label>
         <locationX>0</locationX>
@@ -643,6 +847,7 @@ No associated related record on the meeting playbook to generate a client summar
         </rules>
     </decisions>
     <decisions>
+        <description>Determines whether the meeting playbook&apos;s related record is a Lead, an Account, or a Contact, and routes accordingly. If none resolved, adds the no-related-record message to the prompt.</description>
         <name>Has_Lead_or_Account_Related_Record</name>
         <label>Has Lead, Account, or Contact Related Record</label>
         <locationX>0</locationX>
@@ -692,6 +897,7 @@ No associated related record on the meeting playbook to generate a client summar
         </rules>
     </decisions>
     <decisions>
+        <description>Determines whether any open cases were found for the household. If so, renders the open cases section; otherwise skips to past meetings.</description>
         <name>Has_Open_Cases_Decision</name>
         <label>Has Open Cases Decision</label>
         <locationX>0</locationX>
@@ -717,6 +923,33 @@ No associated related record on the meeting playbook to generate a client summar
         </rules>
     </decisions>
     <decisions>
+        <description>Determines whether any open opportunities were found.</description>
+        <name>Has_Opportunities</name>
+        <label>Has Opportunities</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Loop_for_Person_Contact_Ids</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Has_Opportunities_Rule</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Opportunities</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Opportunities_Heading</targetReference>
+            </connector>
+            <label>Has Opportunities</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether any past meeting playbooks were found for the account. If so, renders the prior meetings section (and their stages, tasks, and followup summaries).</description>
         <name>Has_Past_Meeting_Playbooks_Decision</name>
         <label>Has Past Meeting Playbooks Decision</label>
         <locationX>0</locationX>
@@ -739,6 +972,7 @@ No associated related record on the meeting playbook to generate a client summar
         </rules>
     </decisions>
     <decisions>
+        <description>Determines whether any upcoming person life events were found for the household members. If so, renders the upcoming life events section; otherwise skips to open cases.</description>
         <name>Has_Upcoming_Person_Live_Events_Decision</name>
         <label>Has Upcoming Person Live Events Decision</label>
         <locationX>0</locationX>
@@ -764,13 +998,39 @@ No associated related record on the meeting playbook to generate a client summar
         </rules>
     </decisions>
     <decisions>
+        <description>Determines whether the current contact account matches the current household member (account contact relation) by comparing the account Id to the relation&apos;s Contact.AccountId.</description>
+        <name>Is_Matching_Account</name>
+        <label>Is Matching Account</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Loop_Match_Account</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>Matches_Member</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Loop_Match_Account.Id</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>Loop_Render_Members.Contact.AccountId</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Is_Primary_Member</targetReference>
+            </connector>
+            <label>Matches Member</label>
+        </rules>
+    </decisions>
+    <decisions>
         <description>Determines whether the account found by Get_Account is a person account.</description>
         <name>Is_Person_or_Household_Account</name>
         <label>Is Person or Household</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Get_Account_2</targetReference>
+            <targetReference>Get_Contact_Accounts</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
         <rules>
@@ -784,7 +1044,7 @@ No associated related record on the meeting playbook to generate a client summar
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Store_Person_Account_Contact</targetReference>
+                <targetReference>Store_Person_Account_In_Collection</targetReference>
             </connector>
             <label>Is Person Account</label>
         </rules>
@@ -799,30 +1059,73 @@ No associated related record on the meeting playbook to generate a client summar
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Get_Primary_Household_Member</targetReference>
+                <targetReference>Add_Household_Account_To_Collection</targetReference>
             </connector>
             <label>Is Household</label>
         </rules>
     </decisions>
-    <environments>Default</environments>
-    <interviewLabel>Client Summary FSC Use Case {!$Flow.CurrentDateTime}</interviewLabel>
-    <isOverridable>true</isOverridable>
-    <label>Client Summary FSC Package</label>
-    <loops>
-        <description>Repeats an action for each financial account role record in Financial Account Roles from Get_Financial_Account_Roles.</description>
-        <name>Iterate_Over_Financial_Account_Roles</name>
-        <label>Iterate Over Financial Account Roles</label>
+    <decisions>
+        <description>Determines whether the matched household member is the primary member, so the correct label (Primary Member vs Member) is used in the prompt.</description>
+        <name>Is_Primary_Member</name>
+        <label>Is Primary Member</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <collectionReference>Get_Financial_Account_Roles</collectionReference>
-        <iterationOrder>Asc</iterationOrder>
-        <nextValueConnector>
-            <targetReference>Add_Financial_Account_Details_to_Prompt_Text</targetReference>
-        </nextValueConnector>
-        <noMoreValuesConnector>
-            <targetReference>Get_Upcoming_Life_Events</targetReference>
-        </noMoreValuesConnector>
-    </loops>
+        <defaultConnector>
+            <targetReference>Add_Household_Member_Details_to_Prompt</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>Is_Primary</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Loop_Render_Members.FinServ__Primary__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Primary_Member_Details_to_Prompt</targetReference>
+            </connector>
+            <label>Is Primary</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether to render a household members section. Only households (accounts with active account contact relations) print members; single person accounts and other accounts skip straight to the financial queries.</description>
+        <name>Render_Members</name>
+        <label>Render Members</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Financial_Goals</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>Has_Household_Members</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Account_Contact_Relationship</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Household_Members_Heading</targetReference>
+            </connector>
+            <label>Has Household Members</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <description>The datetime exactly one year (365 days) before now, used to limit cases, opportunities, and other activity to the last 12 months.</description>
+        <name>Formula_OneYearAgo</name>
+        <dataType>DateTime</dataType>
+        <expression>NOW() - 365</expression>
+    </formulas>
+    <interviewLabel>Meeting Concierge: Client Summary FSC Use Case {!$Flow.CurrentDateTime}</interviewLabel>
+    <isOverridable>true</isOverridable>
+    <label>Meeting Concierge: Client Summary FSC Package</label>
     <loops>
         <description>Repeats an action for each financial goal record in Financial Goals from Get_Financial_Goals</description>
         <name>Iterate_Over_Financial_Goals</name>
@@ -839,6 +1142,51 @@ No associated related record on the meeting playbook to generate a client summar
         </noMoreValuesConnector>
     </loops>
     <loops>
+        <description>Collects each financial account role&apos;s financial account ID into the financialAccountIds collection so the accounts can be re-queried and de-duplicated (joint accounts shared by multiple household members otherwise appear once per owner).</description>
+        <name>Loop_Collect_Financial_Account_Ids</name>
+        <label>Collect Financial Account Ids</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Financial_Account_Roles</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Financial_Account_Id_To_Collection</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Financial_Accounts</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Inner loop over the contact accounts to find the one matching the current household member (account contact relation), so the member&apos;s name and birthdate can be read from the account.</description>
+        <name>Loop_Match_Account</name>
+        <label>Match Account To Member</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Contact_Accounts</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Is_Matching_Account</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Loop_Render_Members</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Iterates over the active account contact relations of the household to render each member&apos;s details, correlating each relation with its contact account for name and birthdate.</description>
+        <name>Loop_Render_Members</name>
+        <label>Render Household Members</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Account_Contact_Relationship</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Loop_Match_Account</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Financial_Goals</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
         <description>Repeats an action for each case record in Cases from Get_Open_Cases.</description>
         <name>Loop_Through_Cases</name>
         <label>Iterate Over Cases</label>
@@ -851,6 +1199,36 @@ No associated related record on the meeting playbook to generate a client summar
         </nextValueConnector>
         <noMoreValuesConnector>
             <targetReference>Get_Past_Meetings</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each distinct financial account record in Financial Accounts from Get_Financial_Accounts.</description>
+        <name>Loop_Through_Financial_Accounts</name>
+        <label>Iterate Over Financial Accounts</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Financial_Accounts</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Financial_Account_Details_to_Prompt_Text</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Opportunities</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Iterates over the active account contact relations of the household to collect each member&apos;s person account ID.</description>
+        <name>Loop_Through_Household_Members</name>
+        <label>Loop Through Household Members</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Account_Contact_Relationship</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Household_Member_To_Collection</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Contact_Accounts</targetReference>
         </noMoreValuesConnector>
     </loops>
     <loops>
@@ -881,6 +1259,21 @@ No associated related record on the meeting playbook to generate a client summar
         </nextValueConnector>
     </loops>
     <loops>
+        <description>Repeats an action for each open opportunity record in Get_Opportunities.</description>
+        <name>Loop_Through_Opportunities</name>
+        <label>Iterate Over Opportunities</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Opportunities</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Opportunity_Details_to_Prompt_Text</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Loop_for_Person_Contact_Ids</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
         <description>Repeats an action for each meeting playbook stage record in Meeting Playbook Stages from Get_Meeting_Playbook_Stages.</description>
         <name>Loop_Through_Stages_to_Collect_IDs</name>
         <label>Iterate Over Meeting Playbook Stages</label>
@@ -908,6 +1301,21 @@ No associated related record on the meeting playbook to generate a client summar
         </nextValueConnector>
         <noMoreValuesConnector>
             <targetReference>Loop_Through_Meeting_Playbooks</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Iterates over the contact accounts to collect each person contact ID.</description>
+        <name>Loop_for_Person_Contact_Ids</name>
+        <label>Loop for Person Contact Ids</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Contact_Accounts</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Person_Account_Id</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Upcoming_Life_Events</targetReference>
         </noMoreValuesConnector>
     </loops>
     <processMetadataValues>
@@ -955,32 +1363,7 @@ No associated related record on the meeting playbook to generate a client summar
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets the primary member of a household or directly the person account.</description>
-        <name>Get_Account_2</name>
-        <label>Get Account</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Get_Financial_Goals</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>Set_Get_Account_Error_Message</targetReference>
-        </faultConnector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>primaryMemberAccountId</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>Account</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
-        <description>Get Account Contact Relationship to check if it&apos;s a household account</description>
+        <description>Get Account Contact Relationship to check if it&apos;s a household account. Sorted by FinServ__Primary__c descending so the primary member is rendered at the top of the Household Members section.</description>
         <name>Get_Account_Contact_Relationship</name>
         <label>Get All Account Contact Relationship</label>
         <locationX>0</locationX>
@@ -1009,6 +1392,8 @@ No associated related record on the meeting playbook to generate a client summar
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
         <object>AccountContactRelation</object>
+        <sortField>FinServ__Primary__c</sortField>
+        <sortOrder>Desc</sortOrder>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
@@ -1037,7 +1422,32 @@ No associated related record on the meeting playbook to generate a client summar
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets the active financial account role records with an account ID that matches PrimaryMemberAccountId. Stores the results in the Financial Account Roles from Get_Financial_Account_Roles record collection.</description>
+        <description>Gets the contact-side account records (household members or the single person account) whose IDs are in the contactAccountIds collection. Stores the results in the Get_Contact_Accounts record collection.</description>
+        <name>Get_Contact_Accounts</name>
+        <label>Get Contact Accounts</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Render_Members</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Account_Error_Message</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>contactAccountIds</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the active financial account role records with a related account ID in the householdMemberAccountIds collection. Stores the results in the Financial Account Roles from Get_Financial_Account_Roles record collection.</description>
         <name>Get_Financial_Account_Roles</name>
         <label>Get Financial Account Roles</label>
         <locationX>0</locationX>
@@ -1059,9 +1469,9 @@ No associated related record on the meeting playbook to generate a client summar
         </filters>
         <filters>
             <field>FinServ__RelatedAccount__c</field>
-            <operator>EqualTo</operator>
+            <operator>In</operator>
             <value>
-                <elementReference>primaryMemberAccountId</elementReference>
+                <elementReference>householdMemberAccountIds</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
@@ -1069,7 +1479,46 @@ No associated related record on the meeting playbook to generate a client summar
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets the financial goal records with an primary owner ID that matches PrimaryMemberAccountId. Stores the results in the Financial Goals from Get_Financial_Goals record collection.</description>
+        <description>Gets the distinct financial account records whose IDs are in the financialAccountIds collection and whose status is Open or Active. Re-querying the accounts by ID de-duplicates joint accounts that would otherwise appear once per owning household member. Stores the results in the Get_Financial_Accounts record collection.</description>
+        <name>Get_Financial_Accounts</name>
+        <label>Get Financial Accounts</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Add_Financial_Accounts_Heading</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Financial_Account_Parties_Error</targetReference>
+        </faultConnector>
+        <filterLogic>1 AND (2 OR 3)</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>financialAccountIds</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>FinServ__Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Open</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>FinServ__Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Active</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>FinServ__FinancialAccount__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the financial goal records with a primary owner ID in the householdMemberAccountIds collection that are not yet Completed. Stores the results in the Financial Goals from Get_Financial_Goals record collection.</description>
         <name>Get_Financial_Goals</name>
         <label>Get Financial Goals</label>
         <locationX>0</locationX>
@@ -1084,9 +1533,16 @@ No associated related record on the meeting playbook to generate a client summar
         <filterLogic>and</filterLogic>
         <filters>
             <field>FinServ__PrimaryOwner__c</field>
-            <operator>EqualTo</operator>
+            <operator>In</operator>
             <value>
-                <elementReference>primaryMemberAccountId</elementReference>
+                <elementReference>householdMemberAccountIds</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>FinServ__Status__c</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Completed</stringValue>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
@@ -1094,6 +1550,7 @@ No associated related record on the meeting playbook to generate a client summar
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
+        <description>Gets the followup summary text for the current meeting playbook&apos;s stages by matching MeetingPlaybookStageText of type FollowupSummaryPrompt against the stage IDs in the stageIdsForTasks collection.</description>
         <name>Get_Followup_Summary_Text</name>
         <label>Get Followup Summary Text</label>
         <locationX>0</locationX>
@@ -1175,7 +1632,7 @@ No associated related record on the meeting playbook to generate a client summar
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets up to three case records with an account ID that matches PrimaryMemberAccountId and any status except Closed. Records are sorted by CreatedDate in descending order (most recent first). Stores the results in the Cases from Get_Open_Cases record collection.</description>
+        <description>Gets up to 15 case records with an account ID in the householdMemberAccountIds collection and any status except Closed. Records are sorted by LastModifiedDate in descending order (most recently updated first). Stores the results in the Cases from Get_Open_Cases record collection.</description>
         <name>Get_Open_Cases</name>
         <label>Get Open Cases</label>
         <locationX>0</locationX>
@@ -1197,22 +1654,66 @@ No associated related record on the meeting playbook to generate a client summar
         </filters>
         <filters>
             <field>AccountId</field>
-            <operator>EqualTo</operator>
+            <operator>In</operator>
             <value>
-                <elementReference>primaryMemberAccountId</elementReference>
+                <elementReference>householdMemberAccountIds</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
         <limit>
-            <numberValue>3.0</numberValue>
+            <numberValue>15.0</numberValue>
         </limit>
         <object>Case</object>
-        <sortField>CreatedDate</sortField>
+        <sortField>LastModifiedDate</sortField>
         <sortOrder>Desc</sortOrder>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets up to three meeting playbook records with a related record ID that matches the ID of the account from Get_Account. Records are sorted by CreatedDate in descending order (most recent first). Stores the results in the Meeting Playbooks from Get_Past_Meetings record collection.</description>
+        <description>Gets up to 15 open opportunity records with an account ID in the householdMemberAccountIds collection and modified within the last year. Records are sorted by LastModifiedDate in descending order (most recently updated first). Stores the results in the Get_Opportunities record collection.</description>
+        <name>Get_Opportunities</name>
+        <label>Get Opportunities</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Has_Opportunities</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Opportunities_Error</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AccountId</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>householdMemberAccountIds</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>IsClosed</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>LastModifiedDate</field>
+            <operator>GreaterThanOrEqualTo</operator>
+            <value>
+                <elementReference>Formula_OneYearAgo</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <limit>
+            <numberValue>15.0</numberValue>
+        </limit>
+        <object>Opportunity</object>
+        <sortField>LastModifiedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets up to 3 meeting playbook records with a related record ID that matches the ID of the account from Get_Account. Records are sorted by CreatedDate in descending order (most recent first). Stores the results in the Meeting Playbooks from Get_Past_Meetings record collection.</description>
         <name>Get_Past_Meetings</name>
         <label>Get Past Meeting Playbooks</label>
         <locationX>0</locationX>
@@ -1263,45 +1764,6 @@ No associated related record on the meeting playbook to generate a client summar
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets the active account contact relation record for the primary member with an account ID that matches the ID of the account from Get_Account. Stores the result in the Primary Household Member from Get_Primary_Household_Member record variable.</description>
-        <name>Get_Primary_Household_Member</name>
-        <label>Get Primary Household Member</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Store_Household_Member_Contact</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>Set_Get_Primary_Household_Member_Error_Message</targetReference>
-        </faultConnector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>AccountId</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>Get_Account.Id</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>IsActive</field>
-            <operator>EqualTo</operator>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </filters>
-        <filters>
-            <field>FinServ__Primary__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>AccountContactRelation</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
         <description>Gets the task records with an ID that matches any ID in the stageIdsForTasks collection. Stores the results in the Tasks from Get_Tasks_for_Stages record collection.</description>
         <name>Get_Tasks_for_Stages</name>
         <label>Get Tasks</label>
@@ -1327,7 +1789,7 @@ No associated related record on the meeting playbook to generate a client summar
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets up to three person life event records with a primary person ID that matches the contact ID of Primary Household Member from Get_Primary_Household_Member record collection and an event date that is the current date or one in the future. Records are sorted by EventDate in ascending order. Stores the results in the Person Life Events from Get_Upcoming_Life_Events record collection.</description>
+        <description>Gets up to 15 person life event records with a primary person ID in the personContactIds collection and an event date that is the current date or one in the future. Records are sorted by EventDate in ascending order. Stores the results in the Person Life Events from Get_Upcoming_Life_Events record collection.</description>
         <name>Get_Upcoming_Life_Events</name>
         <label>Get Person Life Events</label>
         <locationX>0</locationX>
@@ -1342,9 +1804,9 @@ No associated related record on the meeting playbook to generate a client summar
         <filterLogic>and</filterLogic>
         <filters>
             <field>PrimaryPersonId</field>
-            <operator>EqualTo</operator>
+            <operator>In</operator>
             <value>
-                <elementReference>Get_Account_2.PersonContactId</elementReference>
+                <elementReference>personContactIds</elementReference>
             </value>
         </filters>
         <filters>
@@ -1356,7 +1818,7 @@ No associated related record on the meeting playbook to generate a client summar
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
         <limit>
-            <numberValue>3.0</numberValue>
+            <numberValue>15.0</numberValue>
         </limit>
         <object>PersonLifeEvent</object>
         <sortField>EventDate</sortField>
@@ -1383,10 +1845,34 @@ No associated related record on the meeting playbook to generate a client summar
     </start>
     <status>Active</status>
     <variables>
-        <description>Stores the ID of the primary member&apos;s account.</description>
-        <name>primaryMemberAccountId</name>
+        <description>Collection of contact-side account IDs (household members or the single person account, excluding the household account) used to re-query the person accounts for member name, birthdate, and person contact IDs.</description>
+        <name>contactAccountIds</name>
         <dataType>String</dataType>
-        <isCollection>false</isCollection>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Collection of financial account IDs gathered from the financial account roles, used to re-query and de-duplicate joint accounts.</description>
+        <name>financialAccountIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Collection of account IDs (household members and the household itself) used as join keys for downstream financial-entity queries.</description>
+        <name>householdMemberAccountIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Collection of person contact IDs for the household members.</description>
+        <name>personContactIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>

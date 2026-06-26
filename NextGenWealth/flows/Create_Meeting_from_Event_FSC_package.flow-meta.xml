@@ -164,9 +164,9 @@
         </rules>
     </decisions>
     <environments>Default</environments>
-    <interviewLabel>Create Meeting from Event FSC package {!$Flow.CurrentDateTime}</interviewLabel>
+    <interviewLabel>Meeting Concierge: Create Meeting from Event FSC package {!$Flow.CurrentDateTime}</interviewLabel>
     <isTemplate>true</isTemplate>
-    <label>Create Meeting from Event FSC package</label>
+    <label>Meeting Concierge: Create Meeting from Event FSC package</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
