@@ -195,11 +195,10 @@ The Data Cloud kit feeds the same FSC objects via `Account_Data_Stream`, `Financ
 Both packages are metadata-API format with a top-level `package.xml`. Deploy each from the repo root with the Salesforce CLI:
 
 ```bash
-# Salesforce metadata package
-sf project deploy start --metadata-dir NextGenWealth
-
 # Data Cloud data kit (requires a Data Cloud-enabled org)
 sf project deploy start --metadata-dir NextGenWealthDataKit
+# Salesforce metadata package
+sf project deploy start --metadata-dir NextGenWealth
 ```
 
 Notes:
