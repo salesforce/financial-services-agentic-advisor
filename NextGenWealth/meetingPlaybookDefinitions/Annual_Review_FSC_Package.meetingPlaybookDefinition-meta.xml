@@ -33,12 +33,6 @@
             <promptTemplate>meetingcenter_wealth__PeriodicDiscussionGuidePrompt</promptTemplate>
         </mtgPlbkDefStgCapability>
         <mtgPlbkDefStgCapability>
-            <capabilityOrder>-12</capabilityOrder>
-            <isAllowMultipleUse>false</isAllowMultipleUse>
-            <promptGeneratedTextType>VoiceRecordPrompt</promptGeneratedTextType>
-            <promptTemplate>meetingcenter__TranscriptSummaryPrompt</promptTemplate>
-        </mtgPlbkDefStgCapability>
-        <mtgPlbkDefStgCapability>
             <capabilityOrder>-13</capabilityOrder>
             <isAllowMultipleUse>false</isAllowMultipleUse>
             <promptGeneratedTextType>DocumentSummaryPrompt</promptGeneratedTextType>
