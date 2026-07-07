@@ -26,6 +26,25 @@
         <name>MeetingPlaybookDefinition</name>
     </types>
     <types>
+        <members>FinServ__FinancialAccount__c.FSC_Client_AutoLoan</members>
+        <members>FinServ__FinancialAccount__c.FSC_Client_CheckingAccount</members>
+        <members>FinServ__FinancialAccount__c.FSC_Client_CreditCard</members>
+        <members>FinServ__FinancialAccount__c.FSC_Client_HELOC</members>
+        <members>FinServ__FinancialAccount__c.FSC_Client_LoanAccount</members>
+        <members>FinServ__FinancialAccount__c.FSC_Client_MortgageAccount</members>
+        <members>FinServ__FinancialAccount__c.FSC_Client_SavingsAccount</members>
+        <members>FinServ__FinancialAccount__c.FSC_Client_TreasuryService</members>
+        <members>FinServ__FinancialAccount__c.FSC_Group_AutoLoan</members>
+        <members>FinServ__FinancialAccount__c.FSC_Group_CheckingAccount</members>
+        <members>FinServ__FinancialAccount__c.FSC_Group_CreditCard</members>
+        <members>FinServ__FinancialAccount__c.FSC_Group_HELOC</members>
+        <members>FinServ__FinancialAccount__c.FSC_Group_LoanAccount</members>
+        <members>FinServ__FinancialAccount__c.FSC_Group_MortgageAccount</members>
+        <members>FinServ__FinancialAccount__c.FSC_Group_SavingsAccount</members>
+        <members>FinServ__FinancialAccount__c.FSC_Group_TreasuryService</members>
+        <name>FieldSet</name>
+    </types>
+    <types>
         <members>Household_Graph_for_Managed_Package</members>
         <name>RelationshipGraphDefinition</name>
     </types>
