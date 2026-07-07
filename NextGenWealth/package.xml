@@ -26,7 +26,7 @@
         <name>MeetingPlaybookDefinition</name>
     </types>
     <types>
-        <members>FinServ__FinancialAccount__c.WM_Client_AgenticAdvisor</members>
+        <members>FinServ__FinancialAccount__c.WlthMgmtFinancialAccountFieldSet</members>
         <name>FieldSet</name>
     </types>
     <types>

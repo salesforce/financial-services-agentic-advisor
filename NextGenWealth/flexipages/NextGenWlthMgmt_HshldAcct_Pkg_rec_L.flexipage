@@ -262,11 +262,11 @@
             <componentInstance>
                 <componentInstanceProperties>
                     <name>faFieldSet</name>
-                    <value>WM_Client_AgenticAdvisor</value>
+                    <value>WlthMgmtFinancialAccountFieldSet</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>title</name>
-                    <value>Agentic Advisor</value>
+                    <value>Financial Accounts</value>
                 </componentInstanceProperties>
                 <componentName>FinServ:FinancialAccountList</componentName>
                 <identifier>c_FinancialAccountList</identifier>
