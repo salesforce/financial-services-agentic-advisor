@@ -266,7 +266,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>title</name>
-                    <value>Financial Accounts</value>
+                    <value>Standard.Tab.financialAccount</value>
                 </componentInstanceProperties>
                 <componentName>FinServ:FinancialAccountList</componentName>
                 <identifier>c_FinancialAccountList</identifier>
