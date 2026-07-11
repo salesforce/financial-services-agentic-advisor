@@ -1939,22 +1939,6 @@
         <versionNumber xsi:nil="true"/>
     </dataSourceFields>
     <dataSourceFields>
-        <fullName>FormattedE164PhoneNumber</fullName>
-        <datatype>S</datatype>
-        <definitionCreationType>Custom</definitionCreationType>
-        <externalName>FormattedE164PhoneNumber</externalName>
-        <fieldFormula>sourceField[&apos;FormattedE164PhoneNumber&apos;]</fieldFormula>
-        <isDataRequired>false</isDataRequired>
-        <isEventDate>false</isEventDate>
-        <isFormula>false</isFormula>
-        <isRecordModified>false</isRecordModified>
-        <keyQualifierName>KQ_FormattedE164PhoneNumber</keyQualifierName>
-        <masterLabel>Formatted E164 Phone Number</masterLabel>
-        <sequence xsi:nil="true"/>
-        <usageTag>NONE</usageTag>
-        <versionNumber xsi:nil="true"/>
-    </dataSourceFields>
-    <dataSourceFields>
         <fullName>PhotoUrl</fullName>
         <datatype>S</datatype>
         <definitionCreationType>Custom</definitionCreationType>
