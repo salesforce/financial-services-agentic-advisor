@@ -147,7 +147,7 @@ ______________________________________________________________________________
             <required>true</required>
         </inputs>
         <isCitationEnabled>false</isCitationEnabled>
-        <primaryModel>sfdc_ai__DefaultBedrockAnthropicClaude45Sonnet</primaryModel>
+        <primaryModel>sfdc_ai__DefaultBedrockAmazonNovaLite</primaryModel>
         <status>Published</status>
         <templateDataProviders>
             <definition>flow://GetAcctDtlClntPulsePkg</definition>
