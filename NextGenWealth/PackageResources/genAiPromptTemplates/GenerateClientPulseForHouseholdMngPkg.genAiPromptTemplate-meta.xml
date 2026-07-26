@@ -149,7 +149,7 @@ ______________________________________________________________________________
             <required>true</required>
         </inputs>
         <isCitationEnabled>false</isCitationEnabled>
-        <primaryModel>sfdc_ai__DefaultBedrockAmazonNovaLite</primaryModel>
+        <primaryModel>sfdc_ai__DefaultBedrockAmazonNovaPro</primaryModel>
         <status>Published</status>
         <templateDataProviders>
             <definition>flow://GetAcctDtlClntPulsePkg</definition>
