@@ -64,7 +64,7 @@ After every deploy step, verify it succeeded before moving on — look for `Stat
 2. Log in to your org:
 
    ```bash
-   sf org login web -d -a myalias -r https://login.salesforce.com
+   sf org login web --instance-url 'https://login.salesforce.com' --alias myalias
    ```
 
    Replace `myalias` with a name you'll remember (like `fsc-sandbox`). Start with a sandbox before deploying to production — for a sandbox, use `-r https://test.salesforce.com`; for a custom My Domain, use `-r https://<mydomain>.my.salesforce.com`.
@@ -142,11 +142,7 @@ In Data Cloud, manually map the `FinAssetPortfolioTgtAlloc` DMO and the `Financi
 
 The Meeting Playbook Definition (`Annual_Review_FSC_Package`) doesn't include action plan templates by default. Add them manually:
 
-1. Go to **Setup > Action Plan Template Settings**
-2. Deploy these templates:
-   - `Annual Review Pre Meeting Template`
-   - `Annual Review Post Meeting Template`
-3. Edit the `Annual_Review_FSC_Package` meeting playbook definition
-4. Attach the templates:
+1. Edit the `Annual_Review_FSC_Package` meeting playbook definition
+2. Attach the templates:
    - **Meeting Preparation Tasks**: Choose "Annual Review Pre Meeting Template"
    - **Meeting Follow-Up Tasks**: Choose "Annual Review Post Meeting Template"
