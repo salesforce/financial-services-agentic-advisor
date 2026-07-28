@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>NextGenWlthMgmt_HshldAcct_Pkg_rec_L</members>
+        <members>NextGenWlthMgmt_PersonAcct_Pkg_rec_L</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>Client_Summary_FSC_Package</members>
+        <members>Create_Meeting_from_Event_FSC_package</members>
+        <members>GetAcctDtlClntPulsePkg</members>
+        <members>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</members>
+        <members>Prep_Brief_Summary_FSC_Package</members>
+        <members>Create_Person_Life_Event_FSC_Package</members>
+        <name>Flow</name>
+    </types>
+    <types>
+        <members>Create_Annual_Review_Client_Summary_FSC_Package</members>
+        <members>Create_Annual_Review_Preparation_Brief_FSC_Package</members>
+        <members>GenerateClientPulseForHouseholdMngPkg</members>
+        <members>GenerateClientPulseForPersonAccountMngPkg</members>
+        <name>GenAiPromptTemplate</name>
+    </types>
+    <types>
+        <members>Annual_Review_FSC_Package</members>
+        <name>MeetingPlaybookDefinition</name>
+    </types>
+    <types>
+        <members>FinServ__FinancialAccount__c.WlthMgmtFinancialAccountFieldSet</members>
+        <name>FieldSet</name>
+    </types>
+    <types>
+        <members>Household_Graph_for_Managed_Package</members>
+        <name>RelationshipGraphDefinition</name>
+    </types>
+    <version>67.0</version>
+</Package>
