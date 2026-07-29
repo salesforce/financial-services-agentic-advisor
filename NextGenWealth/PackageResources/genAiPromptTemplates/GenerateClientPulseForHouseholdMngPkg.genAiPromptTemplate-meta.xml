@@ -37,6 +37,10 @@ The Last interaction date is the reference point for every time-based statement 
 
 Not all data will be present for every household. Use only the data that exists in the provided context.
 
+If the flow returned no data at all, or returned an error with no usable output, respond with exactly:
+We couldn't generate this summary because you don't have the required permissions to view some client information. Contact your Salesforce admin for help.
+Do not produce any other output in this case.            
+
 ______________________________________________________________________________
 
 TASK
