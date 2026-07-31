@@ -42,8 +42,6 @@ Every deployment method follows the same three-step sequence:
 2. Enable the data streams in Setup
 3. Deploy the package resources
 
-> **TODO:** Add instructions for step 2 (enabling the data streams in Setup).
-
 Pick the method that fits your environment:
 
 - **[Salesforce CLI](#option-1-salesforce-cli-recommended)** — fastest if you already have `sf`; recommended for developers.
@@ -75,7 +73,7 @@ After every deploy step, verify it succeeded before moving on — look for `Stat
    sf project deploy start --metadata-dir DataKit --target-org myalias --ignore-warnings --wait 30
    ```
 
-4. Enable the data streams in Setup (see TODO above).
+4. Click on Data Cloud Setup (from the Setup gear icon menu).  Navigate to **Data Spaces > Developer Tools > Data Kits** in the left panel.  Click on "FSC Agentic Advisor Package Data Kit", then click the Data Kit Deploy button.
 
 5. Deploy the package resources:
 
@@ -142,7 +140,12 @@ In Data Cloud, manually map the `FinAssetPortfolioTgtAlloc` DMO and the `Financi
 
 The Meeting Playbook Definition (`Annual_Review_FSC_Package`) doesn't include action plan templates by default. Add them manually:
 
-1. Edit the `Annual_Review_FSC_Package` meeting playbook definition
-2. Attach the templates:
+1. Go to **Setup > Action Plan Template Settings**
+2. Deploy these templates:
+   - `Annual Review Pre Meeting Template`
+   - `Annual Review Post Meeting Template`
+3. Click each of these 2 templates and press the Publish button.
+4. Edit the `Annual_Review_FSC_Package` meeting playbook definition
+5. Attach the templates:
    - **Meeting Preparation Tasks**: Choose "Annual Review Pre Meeting Template"
    - **Meeting Follow-Up Tasks**: Choose "Annual Review Post Meeting Template"
