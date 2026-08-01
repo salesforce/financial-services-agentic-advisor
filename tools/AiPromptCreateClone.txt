@@ -1,0 +1,24 @@
+Write a python script CreateClone.py
+cd into the folder that is the parent of CreateClone.py (using the __file__ keyword).
+
+Use argparse to make this script accept the following arguments
+- namespace (string, optional, defaults to "FinServ")
+- target-directory (string, defaults to $TMPDIR or the equivalent in Windows)
+- help
+The comment for the the entire parser is "Create an sf project called ClonedAgenticAdvisorForFinancialServices to deploy artifacts needed for agentic advisor on the financial services wealth package."
+
+Error out if <target-directory>/ClonedAgenticAdvisorForFinancialServices exists
+Call the equivalent of `cp -r AgenticAdvisor <target-directory>`
+
+Now cd to the ClonedAgenticAdvisorForFinancialServices folder you created above.
+
+If namespace is anything other than "FinServ" the replace "FinServ__" in all files with the value of namespace + "__".
+
+Zip everything in DataKit into a file DataKitSinglePackage.zip sich that package.xml is at the root level.
+Zip everything in PackageResources into a file PackageResourcesSinglePackage.zip sich that package.xml is at the root level.
+
+Write to stdout "Created sf project: " full path of ClonedAgenticAdvisorForFinancialServices, 
+followed by "DataKit Zip file: " full path of SinglePackage.zip,
+followed by "PackageResources Zip file: " full path of SinglePackage.zip,
+followed by "namespace: " namespace.
+Each is on a separate line
