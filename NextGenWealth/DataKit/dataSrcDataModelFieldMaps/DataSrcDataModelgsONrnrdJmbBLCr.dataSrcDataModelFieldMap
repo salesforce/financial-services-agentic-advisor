@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSrcDataModelFieldMap xmlns="http://soap.sforce.com/2006/04/metadata">
+    <filterApplied>false</filterApplied>
+    <filterOperationType>Equal</filterOperationType>
+    <masterLabel>DataSrcDataModelgsONrnrdJmbBLCr</masterLabel>
+    <sourceField>Financial_Plan_Data_Stream5.Description__c</sourceField>
+    <targetField>ssot__FinancialPlan__dlm.ssot__Description__c</targetField>
+    <templateVersion>1</templateVersion>
+    <versionNumber>1.0</versionNumber>
+</DataSrcDataModelFieldMap>

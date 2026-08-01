@@ -1,0 +1,1299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <description>Add Financial Holding to Prompt</description>
+        <name>Add_Financial_Holding_to_Prompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Holding to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>===============================
+Financial Holding Details:
+
+Financial Holding Name:{!Iterate_Over_Financial_Holdings.Name}
+Asset Category:{!Iterate_Over_Financial_Holdings.FinServ__AssetCategoryName__c}
+Asset Class:{!Iterate_Over_Financial_Holdings.FinServ__AssetClass__c}
+Shares:{!Iterate_Over_Financial_Holdings.FinServ__Shares__c}
+Price:{!Iterate_Over_Financial_Holdings.FinServ__Price__c}
+Market Value:{!Iterate_Over_Financial_Holdings.FinServ__MarketValue__c}
+Purchase Price:{!Iterate_Over_Financial_Holdings.FinServ__PurchasePrice__c}
+Gain/Loss:{!Iterate_Over_Financial_Holdings.FinServ__GainLoss__c}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Iterate_Over_Financial_Holdings</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Add_to_list_of_Financial_Account_Ids</name>
+        <label>Add to list of Financial Account Ids</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>FinancialAccountIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>AddFinancialAccountToPrompt</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add Case to Prompt</description>
+        <name>AddCaseToPrompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Case to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>================================
+Case Details:
+{!CaseTextTemplate}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverCases</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add Client Summary to the Prompt</description>
+        <name>AddClientSummaryToPrompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Client Summary to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>===============================
+Client Summary:
+{!GetMeetingPlaybookStageText.Text}
+
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetMeetingPlaybookStageContentDoc</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the extracted text from each meeting playbook stage content document to the prompt instructions.</description>
+        <name>AddDocSumToPromptText</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Document Summary to Prompt Text</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>===============================
+&quot;{!IterateOverMeetingPlaybookStageContentDocs.ContentDocument.Title}&quot; Summary :
+{!IterateOverMeetingPlaybookStageContentDocs.AiSummary}
+
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverMeetingPlaybookStageContentDocs</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add Financial Account to Prompt</description>
+        <name>AddFinancialAccountToPrompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Account to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Financial Account: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.Name}
+- Type: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__FinancialAccountType__c}
+- Status: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__Status__c}
+- Balance: $ {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__Balance__c}
+- Is Held Away: {!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__HeldAway__c}
+- Is Managed:{!Iterate_Over_Financial_Account_Roles.FinServ__FinancialAccount__r.FinServ__Managed__c}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Iterate_Over_Financial_Account_Roles</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add Financial Goal to Prompt</description>
+        <name>AddFinancialGoalToPrompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Goal to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>================================
+Financial Goal Details:
+
+Financial Goal:{!Iterate_Over_Financial_Goals.Name}
+[SourceId:{!Iterate_Over_Financial_Goals.Id}]
+Status:{!Iterate_Over_Financial_Goals.FinServ__Status__c}
+Target Amount:{!Iterate_Over_Financial_Goals.FinServ__TargetValue__c}
+Actual Amount:{!Iterate_Over_Financial_Goals.FinServ__ActualValue__c}
+Target Date:{!Iterate_Over_Financial_Goals.FinServ__TargetDate__c}
+Last Modified:{!Iterate_Over_Financial_Goals.LastModifiedDate}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Iterate_Over_Financial_Goals</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add Financial Plan to Prompt</description>
+        <name>AddFinancialPlanToPrompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Financial Plan to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>===============================
+Financial Plan Details:
+{!FinancialPlanTextTemplate}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverFinancialPlans</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the ID of the current meeting playbook record in the loop to the PriorMeetingPlaybookIds collection.</description>
+        <name>AddMeetingPlaybookIdToCollection</name>
+        <label>Add Meeting Playbook ID to Collection</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>PriorMeetingPlaybookIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>IterateOverMeetingPlaybooks.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>AddMeetingPlaybookToPrompt</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add Meeting Playbook to Prompt</description>
+        <name>AddMeetingPlaybookToPrompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Meeting Playbook to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>================================
+Prior Meetings:
+{!MeetingPlaybookTextTemplate}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverMeetingPlaybooks</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add Person Life Event to Prompt</description>
+        <name>AddPersonLifeEventToPrompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Person Life Event to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>====================================
+Person Life Event Details:
+{!PersonLifeEventTextTemplate}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverPersonLifeEvents</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the ID of the current meeting playbook stage record in the loop to the StageIdsForTasks collection.</description>
+        <name>AddStageIdToCollection</name>
+        <label>Add Stage ID to Collection</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>StageIdsForTasks</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>IterateOverMeetingPlaybookStages.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverMeetingPlaybookStages</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>AddTaskToPrompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Task to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>=====================================
+Task Details:
+{!TaskTextTemplate}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverTasks</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Set Get Primary Household Member Error Message</description>
+        <name>SetGetAccountContactRelationErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Primary Household Member Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred retrieving primary member of the household account:
+{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Set Get Account Error Message</description>
+        <name>SetGetAccountErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Account Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred retrieving Account related to MeetingPlaybook:{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Set Get Open Case Error Message</description>
+        <name>SetGetCaseErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Open Case Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred retrieving open cases:{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Set Get Financial Account Party Error Message</description>
+        <name>SetGetFinancialAccountPartyErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Financial Account Party Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred retrieving Financial Account Party:{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Set Get Financial Goal Party Error Message</description>
+        <name>SetGetFinancialGoalPartyErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Financial Goal Party Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred retrieving Financial Goal Party:{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Set Get Financial Plan Error Message</description>
+        <name>SetGetFinancialPlanErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Financial Plan Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred retrieving Financial Plan:{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Set Get Meeting Playbook Error Message</description>
+        <name>SetGetMeetingPlaybookErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Meeting Playbook Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred retrieving MeetingPlaybook:{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Set Get Meeting Playbook Error Message</description>
+        <name>SetGetMeetingPlaybooksErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Meeting Playbook Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred retrieving prior Meetings:{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds the flow fault message to the prompt instructions when an error occurs while retrieving the meeting playbook stage content document records.</description>
+        <name>SetGetMeetingPlaybookStageContentDocErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Meeting Playbook Stage Content Document Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error occurred while retrieving the document summaries:
+{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Set Get Meeting Playbook Stage Error Message</description>
+        <name>SetGetMeetingPlaybookStageErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Meeting Playbook Stage Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred retrieving MeetingPlaybookStages:{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Set Get Meeting Playbook Stage Error Message</description>
+        <name>SetGetMeetingPlaybookStageTextErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Meeting Playbook Stage Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred retrieving MeetingPlayBookStage:{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>SetGetOpenTaskErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Open Task Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred retrieving open Tasks:{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Set Get Person Life Event Error Message</description>
+        <name>SetGetPersonLifeEventErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Person Life Event Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred retrieving Person Life Event:
+{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Set Get Securities Holding Error Message</description>
+        <name>SetGetSecuritiesHoldingErrorMessage</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Securities Holding Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>An error has occurred retrieving Security Holdings:{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Sets PrimaryMemberAccountId to the account ID of the primary household member found by GetPrimaryHouseholdMember.</description>
+        <name>SetPrimaryMemberAccountIdHousehold</name>
+        <label>Set Primary Member Account ID for Household</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>PrimaryMemberAccountId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>GetPrimaryHouseholdMember.Contact.AccountId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Financial_Account_Roles</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets PrimaryMemberAccountId to the person contact ID of the Account from GetAccount.</description>
+        <name>SetPrimaryMemberAccountIdPersonAcct</name>
+        <label>Set Primary Member Account ID for Person Account</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>PrimaryMemberAccountId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>GetAccount.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Financial_Account_Roles</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <description>Determines whether the AiSummary of the current meeting playbook stage content document record in IterateOverMeetingPlaybookStageContentDocs isn&apos;t false.</description>
+        <name>HaveAiSummary</name>
+        <label>Have AI Summary?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>IterateOverMeetingPlaybookStageContentDocs</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Yes (Default)</defaultConnectorLabel>
+        <rules>
+            <name>HasAiSummary</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IterateOverMeetingPlaybookStageContentDocs.AiSummary</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>AddDocSumToPromptText</targetReference>
+            </connector>
+            <label>No</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether a client summary text was found by checking if the text from GetMeetingPlaybookStageText isn&apos;t false.</description>
+        <name>HaveClientSummaryText</name>
+        <label>Have Client Summary Text?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>GetMeetingPlaybookStageContentDoc</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>HasClientSummaryText</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetMeetingPlaybookStageText.Text</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>AddClientSummaryToPrompt</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether the account found by GetAccount is a person or household account.</description>
+        <name>IsPersonOrHouseholdAccount</name>
+        <label>Is Person or Household Account?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>GetPrimaryHouseholdMember</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Household Account</defaultConnectorLabel>
+        <rules>
+            <name>PersonAccount</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetAccount.IsPersonAccount</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SetPrimaryMemberAccountIdPersonAcct</targetReference>
+            </connector>
+            <label>Person Account</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>Meeting Concierge: Prep Brief Summary FSC Package {!$Flow.CurrentDateTime}</interviewLabel>
+    <isOverridable>true</isOverridable>
+    <label>Meeting Concierge: Prep Brief Summary FSC Package</label>
+    <loops>
+        <description>Repeats an action for each financial account role record in Financial Account Roles from Get_Financial_Account_Roles.</description>
+        <name>Iterate_Over_Financial_Account_Roles</name>
+        <label>Iterate Over Financial Account Roles</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Financial_Account_Roles</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_to_list_of_Financial_Account_Ids</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Financial_Goals</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each financial goal record in Financial Goals from Get_Financial_Goals.</description>
+        <name>Iterate_Over_Financial_Goals</name>
+        <label>Iterate Over Financial Goals</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Financial_Goals</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AddFinancialGoalToPrompt</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>GetFinancialPlans</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each record in the Financial Holdings from Get_Financial_Holdings record collection.</description>
+        <name>Iterate_Over_Financial_Holdings</name>
+        <label>Iterate Over Financial Holdings</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Financial_Holdings</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Financial_Holding_to_Prompt</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>GetMeetingPlaybooks</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each record in the Cases from GetOpenCases record collection.</description>
+        <name>IterateOverCases</name>
+        <label>Iterate Over Cases</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetOpenCases</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AddCaseToPrompt</targetReference>
+        </nextValueConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each record in the Financial Plans from GetFinancialPlans record collection.</description>
+        <name>IterateOverFinancialPlans</name>
+        <label>Iterate Over Financial Plans</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetFinancialPlans</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AddFinancialPlanToPrompt</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Financial_Holdings</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each meeting playbook record in Meeting Playbooks from GetMeetingPlaybooks.</description>
+        <name>IterateOverMeetingPlaybooks</name>
+        <label>Iterate Over Meeting Playbooks</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetMeetingPlaybooks</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AddMeetingPlaybookIdToCollection</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>GetMeetingPlaybookStages</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each meeting playbook stage content document record in Meeting Playbook Stage Content Documents from GetMeetingPlaybookStageContentDoc.</description>
+        <name>IterateOverMeetingPlaybookStageContentDocs</name>
+        <label>Iterate Over Meeting Playbook Stage Content Documents</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetMeetingPlaybookStageContentDoc</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>HaveAiSummary</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>GetAccount</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each meeting playbook stage record in Meeting Playbook Stages from GetMeetingPlaybookStages.</description>
+        <name>IterateOverMeetingPlaybookStages</name>
+        <label>Iterate Over Meeting Playbook Stages</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetMeetingPlaybookStages</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AddStageIdToCollection</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>GetTasks</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each record in the Person Life Events from GetPersonLifeEvents record collection.</description>
+        <name>IterateOverPersonLifeEvents</name>
+        <label>Iterate Over Person Life Events</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetPersonLifeEvents</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AddPersonLifeEventToPrompt</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>GetOpenCases</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Repeats an action for each record in the Tasks from GetTasks record collection.</description>
+        <name>IterateOverTasks</name>
+        <label>Iterate Over Tasks</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>GetTasks</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AddTaskToPrompt</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>GetPersonLifeEvents</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>PromptFlow</processType>
+    <recordLookups>
+        <description>Gets the active financial account role records with an account ID that matches PrimaryMemberAccountId. Stores the results in the Financial Account Roles from Get_Financial_Account_Roles record collection.</description>
+        <name>Get_Financial_Account_Roles</name>
+        <label>Get Financial Account Roles</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Iterate_Over_Financial_Account_Roles</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetFinancialAccountPartyErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>FinServ__Active__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>FinServ__RelatedAccount__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>PrimaryMemberAccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>FinServ__FinancialAccountRole__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the financial goal records related to the primary owner ID stored in PrimaryMemberAccountId. Stores the results in the Financial Goals from GetFinancialGoals record collection.</description>
+        <name>Get_Financial_Goals</name>
+        <label>Get Financial Goals</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Iterate_Over_Financial_Goals</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetFinancialGoalPartyErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>FinServ__PrimaryOwner__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>PrimaryMemberAccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>FinServ__FinancialGoal__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the financial holding records for all the financial accounts.</description>
+        <name>Get_Financial_Holdings</name>
+        <label>Get Financial Holdings</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Iterate_Over_Financial_Holdings</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetSecuritiesHoldingErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>FinServ__FinancialAccount__c</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>FinancialAccountIds</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>FinServ__FinancialHolding__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the account record that matches the related record ID from the Meeting Playbook from GetMeetingPlaybook record variable. Stores the result in the Account from GetAccount record variable.</description>
+        <name>GetAccount</name>
+        <label>Get Account</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IsPersonOrHouseholdAccount</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetAccountErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>GetMeetingPlaybook.RelatedRecordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the ID, name, type, status, and last modified date for the financial plan records related to the account ID stored in PrimaryMemberAccountId. Stores the results in the Financial Plans from GetFinancialPlans record collection.</description>
+        <name>GetFinancialPlans</name>
+        <label>Get Financial Plans</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IterateOverFinancialPlans</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetFinancialPlanErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>PrimaryMemberAccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>FinancialPlan</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>Type</queriedFields>
+        <queriedFields>Status</queriedFields>
+        <queriedFields>LastModifiedDate</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the meeting playbook record that matches the meeting playbook ID passed into the flow as part of the prompt template input. Stores the result in the Meeting Playbook from GetMeetingPlaybook record variable.</description>
+        <name>GetMeetingPlaybook</name>
+        <label>Get Meeting Playbook</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>GetMeetingPlaybookStageText</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetMeetingPlaybookErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Input.MeetingPlaybookStage.MeetingPlaybookId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>MeetingPlaybook</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the meeting playbook records related to the account found by GetAccount, sorted by created date with the most recent first. Stores the results in the Meeting Playbooks from GetMeetingPlaybooks record collection.</description>
+        <name>GetMeetingPlaybooks</name>
+        <label>Get Meeting Playbooks</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IterateOverMeetingPlaybooks</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetMeetingPlaybooksErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>RelatedRecordId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>GetAccount.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>MeetingPlaybook</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>CreatedDate</queriedFields>
+        <queriedFields>EventId</queriedFields>
+        <sortField>CreatedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the meeting playbook stage content document records with a meeting playbook stage ID that matches the ID of the meeting playbook stage passed into the flow. Stores the results in the Meeting Playbook Stage Content Documents from GetMeetingPlaybookStageContentDoc record collection.</description>
+        <name>GetMeetingPlaybookStageContentDoc</name>
+        <label>Get Meeting Playbook Stage Content Document</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IterateOverMeetingPlaybookStageContentDocs</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetMeetingPlaybookStageContentDocErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>MeetingPlaybookStageId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Input.MeetingPlaybookStage.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>MeetingPlbkStageContentDoc</object>
+        <sortField>CreatedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the meeting playbook stage records with a meeting playbook ID that matches an ID in the PriorMeetingPlaybookIds collection. Stores the results in the Meeting Playbook Stages from GetMeetingPlaybookStages record collection.</description>
+        <name>GetMeetingPlaybookStages</name>
+        <label>Get Meeting Playbook Stages</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IterateOverMeetingPlaybookStages</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetMeetingPlaybookStageErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>MeetingPlaybookId</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>PriorMeetingPlaybookIds</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>MeetingPlaybookStage</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the meeting playbook stage text record that matches the meeting playbook stage ID passed into the flow and has a type of ClientSummary. Stores the result in the Meeting Playbook Stage Text from GetMeetingPlaybookStageText record variable.</description>
+        <name>GetMeetingPlaybookStageText</name>
+        <label>Get Meeting Playbook Stage Text</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>HaveClientSummaryText</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetMeetingPlaybookStageTextErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>MeetingPlaybookStageId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Input.MeetingPlaybookStage.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Type</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>ClientSummary</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>MeetingPlaybookStageText</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the case records with a status that does not equal Closed and an account ID that matches PrimaryMemberAccountId, sorted by created date with the most recent first. Stores the results in the Cases from GetOpenCases record collection.</description>
+        <name>GetOpenCases</name>
+        <label>Get Open Cases</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IterateOverCases</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetCaseErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Closed</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>PrimaryMemberAccountId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Case</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>CaseNumber</queriedFields>
+        <queriedFields>Subject</queriedFields>
+        <queriedFields>Priority</queriedFields>
+        <queriedFields>Status</queriedFields>
+        <queriedFields>CreatedDate</queriedFields>
+        <sortField>CreatedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the person life event records with a Contact ID that matches the contact found by GetPrimaryHouseholdMember, sorted by created date with the most recent first. Stores the results in the Person Life Events from GetPersonLifeEvents record collection.</description>
+        <name>GetPersonLifeEvents</name>
+        <label>Get Person Life Events</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IterateOverPersonLifeEvents</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetPersonLifeEventErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>PrimaryPersonId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>GetPrimaryHouseholdMember.ContactId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>PersonLifeEvent</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>EventType</queriedFields>
+        <queriedFields>EventDate</queriedFields>
+        <queriedFields>EventDescription</queriedFields>
+        <sortField>CreatedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the active account contact relation record for the account found by GetAccount where the member is marked as the primary member. Stores the result in the Account Contact Relation from GetPrimaryHouseholdMember record variable.</description>
+        <name>GetPrimaryHouseholdMember</name>
+        <label>Get Primary Household Member</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>SetPrimaryMemberAccountIdHousehold</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetAccountContactRelationErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>GetAccount.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>FinServ__Primary__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>AccountContactRelation</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the task records with an ID that matches an ID in the StageIdsForTasks collection. Stores the results in the Tasks from GetTasks record collection.</description>
+        <name>GetTasks</name>
+        <label>Get Tasks</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IterateOverTasks</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetGetOpenTaskErrorMessage</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>WhatId</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>StageIdsForTasks</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Task</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Subject</queriedFields>
+        <queriedFields>Status</queriedFields>
+        <queriedFields>Priority</queriedFields>
+        <queriedFields>ActivityDate</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <capabilityTypes>
+            <name>PromptTemplateType://meetingcenter__prepBrief</name>
+            <capabilityName>PromptTemplateType://meetingcenter__prepBrief</capabilityName>
+            <inputs>
+                <name>MeetingPlaybookStage</name>
+                <capabilityInputName>MeetingPlaybookStage</capabilityInputName>
+                <dataType>SOBJECT://MeetingPlaybookStage</dataType>
+                <isCollection>false</isCollection>
+            </inputs>
+        </capabilityTypes>
+        <connector>
+            <targetReference>GetMeetingPlaybook</targetReference>
+        </connector>
+        <triggerType>Capability</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <description>Stores the formatted details of an open case.</description>
+        <name>CaseTextTemplate</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Case: {!IterateOverCases.CaseNumber} [SourceId: {!IterateOverCases.Id}]&lt;/p&gt;&lt;p&gt;Subject: {!IterateOverCases.Subject}&lt;/p&gt;&lt;p&gt;Status:{!IterateOverCases.Status}&lt;/p&gt;&lt;p&gt;Priority:{!IterateOverCases.Priority}&lt;/p&gt;&lt;p&gt;Created Date: {!IterateOverCases.CreatedDate}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Stores the formatted details of a financial plan.</description>
+        <name>FinancialPlanTextTemplate</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Financial Plan : {!IterateOverFinancialPlans.Name} [ SourceId : {!IterateOverFinancialPlans.Id} ]&lt;/p&gt;&lt;p&gt;Type: {!IterateOverFinancialPlans.Type}&lt;/p&gt;&lt;p&gt;Status: {!IterateOverFinancialPlans.Status}&lt;/p&gt;&lt;p&gt;Last Modified: {!IterateOverFinancialPlans.LastModifiedDate}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Stores the formatted basic details of a meeting playbook.</description>
+        <name>MeetingPlaybookTextTemplate</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Meeting: {!IterateOverMeetingPlaybooks.Name} [SourceId: {!IterateOverMeetingPlaybooks.Id}]&lt;/p&gt;&lt;p&gt;Date: {!IterateOverMeetingPlaybooks.CreatedDate}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Stores the formatted details of a life event.</description>
+        <name>PersonLifeEventTextTemplate</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Life Event: {!IterateOverPersonLifeEvents.Name} [SourceId: {!IterateOverPersonLifeEvents.Id}]&lt;/p&gt;&lt;p&gt;Event Type: {!IterateOverPersonLifeEvents.EventType}&lt;/p&gt;&lt;p&gt;Event Date:{!IterateOverPersonLifeEvents.EventDate}&lt;/p&gt;&lt;p&gt;Description:{!IterateOverPersonLifeEvents.EventDescription}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Stores the formatted details of a task, including status and due date.</description>
+        <name>TaskTextTemplate</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Task: {!IterateOverTasks.Subject} [SourceId : {!IterateOverTasks.Id}]&lt;/p&gt;&lt;p&gt;Status: {!IterateOverTasks.Status}&lt;/p&gt;&lt;p&gt;Priority: {!IterateOverTasks.Priority}&lt;/p&gt;&lt;p&gt;DueDate: {!IterateOverTasks.ActivityDate}&lt;/p&gt;</text>
+    </textTemplates>
+    <variables>
+        <description>A list of Financial Account Ids</description>
+        <name>FinancialAccountIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores the ID of the account for the primary household member or person account.</description>
+        <name>PrimaryMemberAccountId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores the collection of meeting playbook IDs to retrieve related stages.</description>
+        <name>PriorMeetingPlaybookIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores the accumulated text for the prompt instructions.</description>
+        <name>promptText</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores the collection of stage IDs to retrieve related tasks.</description>
+        <name>StageIdsForTasks</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

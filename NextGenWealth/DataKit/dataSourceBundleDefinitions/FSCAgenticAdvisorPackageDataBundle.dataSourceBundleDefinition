@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSourceBundleDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
+    <dataPlatform>Salesforce_Sales_and_Service_Cloud</dataPlatform>
+    <description>This data bundle includes data streams for Financial Services Cloud.</description>
+    <isMultiDeploymentSupported>false</isMultiDeploymentSupported>
+    <masterLabel>FSCAgenticAdvisorPackageDataBundle</masterLabel>
+</DataSourceBundleDefinition>
