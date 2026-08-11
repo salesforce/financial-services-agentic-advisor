@@ -58,6 +58,7 @@
             <capabilityOrder>1</capabilityOrder>
             <isAllowMultipleUse>false</isAllowMultipleUse>
             <masterLabel>Generate Follow-up Email</masterLabel>
+            <description>Generates a professional follow-up email from post-meeting notes</description>
             <promptGeneratedTextType>PostMeetingActionPrompt</promptGeneratedTextType>
             <promptTemplate>meetingcenter_wealth__PeriodicClientEmailPrompt</promptTemplate>
         </mtgPlbkDefStgCapability>
@@ -66,6 +67,7 @@
             <flow>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</flow>
             <isAllowMultipleUse>true</isAllowMultipleUse>
             <masterLabel>Create or Update Goal</masterLabel>
+            <description>Creates new financial goals or updates existing ones based on meeting notes</description>
             <promptGeneratedTextType>PostMeetingActionPrompt</promptGeneratedTextType>
         </mtgPlbkDefStgCapability>
         <mtgPlbkDefStgCapability>
@@ -73,6 +75,7 @@
             <flow>meetingcenter_wealth__PrdCreateTask</flow>
             <isAllowMultipleUse>false</isAllowMultipleUse>
             <masterLabel>Create Tasks</masterLabel>
+            <description>Creates tasks for each action item identified in the meeting notes</description>
             <promptGeneratedTextType>PostMeetingActionPrompt</promptGeneratedTextType>
         </mtgPlbkDefStgCapability>
         <mtgPlbkDefStgCapability>
@@ -80,6 +83,7 @@
             <flow>Create_Person_Life_Event_FSC_Package</flow>
             <isAllowMultipleUse>false</isAllowMultipleUse>
             <masterLabel>Create Life Event</masterLabel>
+            <description>Creates a life event from post-meeting notes</description>
             <promptGeneratedTextType>PostMeetingActionPrompt</promptGeneratedTextType>
         </mtgPlbkDefStgCapability>
         <mtgPlbkDefStgCapability>
@@ -87,6 +91,7 @@
             <flow>meetingcenter_wealth__GetHshldUpdtMtg</flow>
             <isAllowMultipleUse>false</isAllowMultipleUse>
             <masterLabel>Update Household</masterLabel>
+            <description>Reviews household match candidates from post-meeting notes and updates the household</description>
             <promptGeneratedTextType>PostMeetingActionPrompt</promptGeneratedTextType>
         </mtgPlbkDefStgCapability>
         <stageOrder>3</stageOrder>
