@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <flowDefinitions>
+        <flows>
+            <fullName>Client_Summary_FSC_Package</fullName>
+            <label>Vergaderingsconciërge: FSC-pakket voor klantoverzicht</label>
+        </flows>
+        <fullName>Client_Summary_FSC_Package</fullName>
+        <label>Vergaderingsconciërge: FSC-pakket voor klantoverzicht</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <fullName>Create_Meeting_from_Event_FSC_package</fullName>
+            <label>Vergaderingsconciërge: FSC-pakket voor vergaderingen op basis van events</label>
+        </flows>
+        <fullName>Create_Meeting_from_Event_FSC_package</fullName>
+        <label>Vergaderingsconciërge: FSC-pakket voor vergaderingen op basis van events</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <choices>
+                <choiceText>Baby</choiceText>
+                <name>ChoiceBaby</name>
+            </choices>
+            <choices>
+                <choiceText>Geboorte</choiceText>
+                <name>ChoiceBirth</name>
+            </choices>
+            <choices>
+                <choiceText>Auto</choiceText>
+                <name>ChoiceCar</name>
+            </choices>
+            <choices>
+                <choiceText>Diagnose</choiceText>
+                <name>ChoiceDiagnosis</name>
+            </choices>
+            <choices>
+                <choiceText>Diploma-uitreiking</choiceText>
+                <name>ChoiceGraduation</name>
+            </choices>
+            <choices>
+                <choiceText>Thuis</choiceText>
+                <name>ChoiceHome</name>
+            </choices>
+            <choices>
+                <choiceText>Werk</choiceText>
+                <name>ChoiceJob</name>
+            </choices>
+            <choices>
+                <choiceText>Huwelijk</choiceText>
+                <name>ChoiceMarriage</name>
+            </choices>
+            <fullName>Create_Person_Life_Event_FSC_Package</fullName>
+            <label>Vergaderingsconciërge: FSC-pakket voor levensgebeurtenissen van personen</label>
+            <screens>
+                <fields>
+                    <fieldText>Naam van event</fieldText>
+                    <name>EventNameText</name>
+                </fields>
+                <fields>
+                    <fieldText>Eventtype</fieldText>
+                    <name>EventTypePicklist</name>
+                </fields>
+                <fields>
+                    <fieldText>Datum van event</fieldText>
+                    <name>EventDateText</name>
+                </fields>
+                <fields>
+                    <fieldText>Beschrijving van event</fieldText>
+                    <name>EventDescLongTextArea</name>
+                </fields>
+                <name>ScreenCreaPersonLifeEvnt</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;Er is iets verkeerd gegaan bij het maken van de record voor de levensgebeurtenis van een persoon. {!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+                    <name>CreaPersnLifeEvntErrorDisplayText</name>
+                </fields>
+                <name>ScreenDisplayErrorCreaPersnLifeEvnt</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;De levensgebeurtenis {!EventNameText} van de persoon is gemaakt.&lt;/p&gt;</fieldText>
+                    <name>CreaSuccessDisplayText</name>
+                </fields>
+                <name>ScreenLifeEvntSaved</name>
+            </screens>
+        </flows>
+        <fullName>Create_Person_Life_Event_FSC_Package</fullName>
+        <label>Vergaderingsconciërge: FSC-pakket voor levensgebeurtenissen van personen</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <choices>
+                <choiceText>VOLTOOID</choiceText>
+                <name>ChoiceCompleted</name>
+            </choices>
+            <choices>
+                <choiceText>Opleiding/studie</choiceText>
+                <name>ChoiceEducation</name>
+            </choices>
+            <choices>
+                <choiceText>Noodgeval</choiceText>
+                <name>ChoiceEmergency</name>
+            </choices>
+            <choices>
+                <choiceText>Hoog</choiceText>
+                <name>ChoiceHigh</name>
+            </choices>
+            <choices>
+                <choiceText>IN_PROGRESS</choiceText>
+                <name>ChoiceInProgress</name>
+            </choices>
+            <choices>
+                <choiceText>Laag</choiceText>
+                <name>ChoiceLow</name>
+            </choices>
+            <choices>
+                <choiceText>Normaal</choiceText>
+                <name>ChoiceMedium</name>
+            </choices>
+            <choices>
+                <choiceText>NOT_STARTED</choiceText>
+                <name>ChoiceNotStarted</name>
+            </choices>
+            <choices>
+                <choiceText>Overig</choiceText>
+                <name>ChoiceOther</name>
+            </choices>
+            <choices>
+                <choiceText>Schuld aflossen</choiceText>
+                <name>ChoicePayOffDebt</name>
+            </choices>
+            <choices>
+                <choiceText>Pensioen</choiceText>
+                <name>ChoiceRetirement</name>
+            </choices>
+            <choices>
+                <choiceText>Vakantie</choiceText>
+                <name>ChoiceVacation</name>
+            </choices>
+            <choices>
+                <choiceText>Voertuig</choiceText>
+                <name>ChoiceVehicle</name>
+            </choices>
+            <fullName>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</fullName>
+            <label>Vergaderingsconciërge: FSC-pakket voor periodiek nieuwe doelen maken of bestaande doelen bijwerken</label>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;✅ Bestaande doelen zijn bijgewerkt!&lt;/p&gt;&lt;p&gt;Uw wijzigingen zijn opgeslagen. &lt;/p&gt;&lt;p&gt;We gaan nu uw notulen analyseren, waaruit nieuwe financiële doelen naar voren komen.&lt;/p&gt;&lt;p&gt;Klik op 'Notulen analyseren' om door te gaan; dit kan tot 30 seconden duren.&lt;/p&gt;</fieldText>
+                    <name>UpdatedExistingGoals</name>
+                </fields>
+                <name>DisplayMessage</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;Er is iets verkeerd gegaan bij het uitvoeren van de stroom &lt;/p&gt;&lt;p&gt;Details: {!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+                    <name>ErrorMessage</name>
+                </fields>
+                <name>Error_Screen</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;Alle doelen zijn beoordeeld en opgeslagen.&lt;/p&gt;</fieldText>
+                    <name>SavedGoalScreen</name>
+                </fields>
+                <name>Goals_Saved</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;h5&gt;Bestaand doel bijwerken&lt;/h5&gt;</fieldText>
+                    <name>GoalDetails</name>
+                </fields>
+                <fields>
+                    <fieldText>Doelnaam</fieldText>
+                    <name>Goal_Name</name>
+                </fields>
+                <fields>
+                    <fieldText>Doelbedrag</fieldText>
+                    <name>Target_Amount</name>
+                </fields>
+                <fields>
+                    <fieldText>Doeldatum</fieldText>
+                    <name>Target_Date</name>
+                </fields>
+                <fields>
+                    <fieldText>Status</fieldText>
+                    <name>Status</name>
+                </fields>
+                <fields>
+                    <fieldText>Beschrijving</fieldText>
+                    <name>Description</name>
+                </fields>
+                <name>Review_Existing_Goal</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;h5&gt;Nieuw doel voorgesteld&lt;/h5&gt;</fieldText>
+                    <name>CreatingNewGoal</name>
+                </fields>
+                <fields>
+                    <fieldText>Doelnaam</fieldText>
+                    <name>scr_GoalName</name>
+                </fields>
+                <fields>
+                    <fieldText>Doeltype</fieldText>
+                    <name>scr_GoalType</name>
+                </fields>
+                <fields>
+                    <fieldText>Doelstatus</fieldText>
+                    <name>scr_GoalStatus</name>
+                </fields>
+                <fields>
+                    <fieldText>Doelbedrag</fieldText>
+                    <name>scr_GoalAmount</name>
+                </fields>
+                <fields>
+                    <fieldText>Doeldatum</fieldText>
+                    <name>scr_GoalTargetDate</name>
+                </fields>
+                <fields>
+                    <fieldText>Beschrijving</fieldText>
+                    <name>scr_GoalDescription</name>
+                </fields>
+                <fields>
+                    <fieldText>Dit doel overslaan</fieldText>
+                    <name>scr_SkipGoal</name>
+                </fields>
+                <name>Review_New_Goal</name>
+            </screens>
+        </flows>
+        <fullName>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</fullName>
+        <label>Vergaderingsconciërge: FSC-pakket voor periodiek nieuwe doelen maken of bestaande doelen bijwerken</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <fullName>Prep_Brief_Summary_FSC_Package</fullName>
+            <label>Vergaderingsconciërge: FSC-pakket voor korte samenvattingen</label>
+        </flows>
+        <fullName>Prep_Brief_Summary_FSC_Package</fullName>
+        <label>Vergaderingsconciërge: FSC-pakket voor korte samenvattingen</label>
+    </flowDefinitions>
+</Translations>

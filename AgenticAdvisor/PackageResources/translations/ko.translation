@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <flowDefinitions>
+        <flows>
+            <fullName>Client_Summary_FSC_Package</fullName>
+            <label>Meeting Concierge: 클라이언트 요약 FSC 패키지</label>
+        </flows>
+        <fullName>Client_Summary_FSC_Package</fullName>
+        <label>Meeting Concierge: 클라이언트 요약 FSC 패키지</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <fullName>Create_Meeting_from_Event_FSC_package</fullName>
+            <label>Meeting Concierge: 이벤트에서 미팅 생성 FSC 패키지</label>
+        </flows>
+        <fullName>Create_Meeting_from_Event_FSC_package</fullName>
+        <label>Meeting Concierge: 이벤트에서 미팅 생성 FSC 패키지</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <choices>
+                <choiceText>아기</choiceText>
+                <name>ChoiceBaby</name>
+            </choices>
+            <choices>
+                <choiceText>출산</choiceText>
+                <name>ChoiceBirth</name>
+            </choices>
+            <choices>
+                <choiceText>자동차</choiceText>
+                <name>ChoiceCar</name>
+            </choices>
+            <choices>
+                <choiceText>진단</choiceText>
+                <name>ChoiceDiagnosis</name>
+            </choices>
+            <choices>
+                <choiceText>졸업</choiceText>
+                <name>ChoiceGraduation</name>
+            </choices>
+            <choices>
+                <choiceText>주택</choiceText>
+                <name>ChoiceHome</name>
+            </choices>
+            <choices>
+                <choiceText>직장</choiceText>
+                <name>ChoiceJob</name>
+            </choices>
+            <choices>
+                <choiceText>결혼</choiceText>
+                <name>ChoiceMarriage</name>
+            </choices>
+            <fullName>Create_Person_Life_Event_FSC_Package</fullName>
+            <label>Meeting Concierge: 개인 라이프 이벤트 생성 FSC 패키지</label>
+            <screens>
+                <fields>
+                    <fieldText>이벤트 이름</fieldText>
+                    <name>EventNameText</name>
+                </fields>
+                <fields>
+                    <fieldText>이벤트 유형</fieldText>
+                    <name>EventTypePicklist</name>
+                </fields>
+                <fields>
+                    <fieldText>이벤트 날짜</fieldText>
+                    <name>EventDateText</name>
+                </fields>
+                <fields>
+                    <fieldText>이벤트 설명</fieldText>
+                    <name>EventDescLongTextArea</name>
+                </fields>
+                <name>ScreenCreaPersonLifeEvnt</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;개인 라이프 이벤트 레코드를 생성하는 중에 문제가 발생했습니다. {!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+                    <name>CreaPersnLifeEvntErrorDisplayText</name>
+                </fields>
+                <name>ScreenDisplayErrorCreaPersnLifeEvnt</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;개인 라이프 이벤트 {!EventNameText}이(가) 생성되었습니다.&lt;/p&gt;</fieldText>
+                    <name>CreaSuccessDisplayText</name>
+                </fields>
+                <name>ScreenLifeEvntSaved</name>
+            </screens>
+        </flows>
+        <fullName>Create_Person_Life_Event_FSC_Package</fullName>
+        <label>Meeting Concierge: 개인 라이프 이벤트 생성 FSC 패키지</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <choices>
+                <choiceText>완료</choiceText>
+                <name>ChoiceCompleted</name>
+            </choices>
+            <choices>
+                <choiceText>교육</choiceText>
+                <name>ChoiceEducation</name>
+            </choices>
+            <choices>
+                <choiceText>긴급</choiceText>
+                <name>ChoiceEmergency</name>
+            </choices>
+            <choices>
+                <choiceText>높음</choiceText>
+                <name>ChoiceHigh</name>
+            </choices>
+            <choices>
+                <choiceText>진행 중</choiceText>
+                <name>ChoiceInProgress</name>
+            </choices>
+            <choices>
+                <choiceText>낮음</choiceText>
+                <name>ChoiceLow</name>
+            </choices>
+            <choices>
+                <choiceText>보통</choiceText>
+                <name>ChoiceMedium</name>
+            </choices>
+            <choices>
+                <choiceText>시작 전</choiceText>
+                <name>ChoiceNotStarted</name>
+            </choices>
+            <choices>
+                <choiceText>기타</choiceText>
+                <name>ChoiceOther</name>
+            </choices>
+            <choices>
+                <choiceText>부채 상환</choiceText>
+                <name>ChoicePayOffDebt</name>
+            </choices>
+            <choices>
+                <choiceText>은퇴</choiceText>
+                <name>ChoiceRetirement</name>
+            </choices>
+            <choices>
+                <choiceText>휴가</choiceText>
+                <name>ChoiceVacation</name>
+            </choices>
+            <choices>
+                <choiceText>자동차</choiceText>
+                <name>ChoiceVehicle</name>
+            </choices>
+            <fullName>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</fullName>
+            <label>Meeting Concierge: 주기적인 새 목표 생성 또는 기존 목표 업데이트 FSC 패키지</label>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;✅ 기존 목표가 성공적으로 업데이트되었습니다!&lt;/p&gt;&lt;p&gt;변경 사항이 저장되었습니다. &lt;/p&gt;&lt;p&gt;다음으로, 미팅 노트를 분석하여 새로운 재무 목표를 제안합니다.&lt;/p&gt;&lt;p&gt;계속하려면 "미팅 노트 분석"을 클릭하세요. 이 작업은 최대 30초 정도 소요될 수 있습니다.&lt;/p&gt;</fieldText>
+                    <name>UpdatedExistingGoals</name>
+                </fields>
+                <name>DisplayMessage</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;플로를 실행하는 중에 문제가 발생했습니다.&lt;/p&gt;&lt;p&gt;세부 사항: {!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+                    <name>ErrorMessage</name>
+                </fields>
+                <name>Error_Screen</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;모든 목표를 검토했으며 성공적으로 저장했습니다.&lt;/p&gt;</fieldText>
+                    <name>SavedGoalScreen</name>
+                </fields>
+                <name>Goals_Saved</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;h5&gt;기존 목표 업데이트&lt;/h5&gt;</fieldText>
+                    <name>GoalDetails</name>
+                </fields>
+                <fields>
+                    <fieldText>목표 이름</fieldText>
+                    <name>Goal_Name</name>
+                </fields>
+                <fields>
+                    <fieldText>목표 금액</fieldText>
+                    <name>Target_Amount</name>
+                </fields>
+                <fields>
+                    <fieldText>목표 마감일</fieldText>
+                    <name>Target_Date</name>
+                </fields>
+                <fields>
+                    <fieldText>상태</fieldText>
+                    <name>Status</name>
+                </fields>
+                <fields>
+                    <fieldText>설명</fieldText>
+                    <name>Description</name>
+                </fields>
+                <name>Review_Existing_Goal</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;h5&gt;새로운 목표 제안&lt;/h5&gt;</fieldText>
+                    <name>CreatingNewGoal</name>
+                </fields>
+                <fields>
+                    <fieldText>목표 이름</fieldText>
+                    <name>scr_GoalName</name>
+                </fields>
+                <fields>
+                    <fieldText>목표 유형</fieldText>
+                    <name>scr_GoalType</name>
+                </fields>
+                <fields>
+                    <fieldText>목표 상태</fieldText>
+                    <name>scr_GoalStatus</name>
+                </fields>
+                <fields>
+                    <fieldText>목표 금액</fieldText>
+                    <name>scr_GoalAmount</name>
+                </fields>
+                <fields>
+                    <fieldText>목표 마감일</fieldText>
+                    <name>scr_GoalTargetDate</name>
+                </fields>
+                <fields>
+                    <fieldText>설명</fieldText>
+                    <name>scr_GoalDescription</name>
+                </fields>
+                <fields>
+                    <fieldText>이 목표 건너뛰기</fieldText>
+                    <name>scr_SkipGoal</name>
+                </fields>
+                <name>Review_New_Goal</name>
+            </screens>
+        </flows>
+        <fullName>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</fullName>
+        <label>Meeting Concierge: 주기적인 새 목표 생성 또는 기존 목표 업데이트 FSC 패키지</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <fullName>Prep_Brief_Summary_FSC_Package</fullName>
+            <label>Meeting Concierge: 사전 브리핑 요약 FSC 패키지</label>
+        </flows>
+        <fullName>Prep_Brief_Summary_FSC_Package</fullName>
+        <label>Meeting Concierge: 사전 브리핑 요약 FSC 패키지</label>
+    </flowDefinitions>
+</Translations>
