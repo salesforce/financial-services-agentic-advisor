@@ -140,7 +140,7 @@
                 <name>ChoiceVacation</name>
             </choices>
             <choices>
-                <choiceText>购车</choiceText>
+                <choiceText>车辆</choiceText>
                 <name>ChoiceVehicle</name>
             </choices>
             <fullName>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</fullName>
