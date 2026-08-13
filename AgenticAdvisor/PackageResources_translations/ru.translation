@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <flowDefinitions>
+        <flows>
+            <fullName>Client_Summary_FSC_Package</fullName>
+            <label>Консьерж встреч: пакет FSC для сводки клиента</label>
+        </flows>
+        <fullName>Client_Summary_FSC_Package</fullName>
+        <label>Консьерж встреч: пакет FSC для сводки клиента</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <fullName>Create_Meeting_from_Event_FSC_package</fullName>
+            <label>Консьерж встреч: пакет FSC для создания встречи из события</label>
+        </flows>
+        <fullName>Create_Meeting_from_Event_FSC_package</fullName>
+        <label>Консьерж встреч: пакет FSC для создания встречи из события</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <choices>
+                <choiceText>Ребенок</choiceText>
+                <name>ChoiceBaby</name>
+            </choices>
+            <choices>
+                <choiceText>Рождение</choiceText>
+                <name>ChoiceBirth</name>
+            </choices>
+            <choices>
+                <choiceText>Машина</choiceText>
+                <name>ChoiceCar</name>
+            </choices>
+            <choices>
+                <choiceText>Диагноз</choiceText>
+                <name>ChoiceDiagnosis</name>
+            </choices>
+            <choices>
+                <choiceText>Окончание учебы</choiceText>
+                <name>ChoiceGraduation</name>
+            </choices>
+            <choices>
+                <choiceText>Дом</choiceText>
+                <name>ChoiceHome</name>
+            </choices>
+            <choices>
+                <choiceText>Работа</choiceText>
+                <name>ChoiceJob</name>
+            </choices>
+            <choices>
+                <choiceText>Брак</choiceText>
+                <name>ChoiceMarriage</name>
+            </choices>
+            <fullName>Create_Person_Life_Event_FSC_Package</fullName>
+            <label>Консьерж встреч: пакет FSC для создания события из личной жизни</label>
+            <screens>
+                <fields>
+                    <fieldText>Имя события</fieldText>
+                    <name>EventNameText</name>
+                </fields>
+                <fields>
+                    <fieldText>Тип события</fieldText>
+                    <name>EventTypePicklist</name>
+                </fields>
+                <fields>
+                    <fieldText>Дата события</fieldText>
+                    <name>EventDateText</name>
+                </fields>
+                <fields>
+                    <fieldText>Описание события</fieldText>
+                    <name>EventDescLongTextArea</name>
+                </fields>
+                <name>ScreenCreaPersonLifeEvnt</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;При создании записи события из личной жизни произошла ошибка. {!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+                    <name>CreaPersnLifeEvntErrorDisplayText</name>
+                </fields>
+                <name>ScreenDisplayErrorCreaPersnLifeEvnt</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;Событие из личной жизни "{!EventNameText}" создано.&lt;/p&gt;</fieldText>
+                    <name>CreaSuccessDisplayText</name>
+                </fields>
+                <name>ScreenLifeEvntSaved</name>
+            </screens>
+        </flows>
+        <fullName>Create_Person_Life_Event_FSC_Package</fullName>
+        <label>Консьерж встреч: пакет FSC для создания события из личной жизни</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <choices>
+                <choiceText>ВЫПОЛНЕНО</choiceText>
+                <name>ChoiceCompleted</name>
+            </choices>
+            <choices>
+                <choiceText>Образование</choiceText>
+                <name>ChoiceEducation</name>
+            </choices>
+            <choices>
+                <choiceText>Экстренная ситуация</choiceText>
+                <name>ChoiceEmergency</name>
+            </choices>
+            <choices>
+                <choiceText>Высокое значение</choiceText>
+                <name>ChoiceHigh</name>
+            </choices>
+            <choices>
+                <choiceText>ВЫПОЛНЯЕТСЯ</choiceText>
+                <name>ChoiceInProgress</name>
+            </choices>
+            <choices>
+                <choiceText>Низкое значение</choiceText>
+                <name>ChoiceLow</name>
+            </choices>
+            <choices>
+                <choiceText>Среднее значение</choiceText>
+                <name>ChoiceMedium</name>
+            </choices>
+            <choices>
+                <choiceText>НЕ_НАЧАТО</choiceText>
+                <name>ChoiceNotStarted</name>
+            </choices>
+            <choices>
+                <choiceText>Другое</choiceText>
+                <name>ChoiceOther</name>
+            </choices>
+            <choices>
+                <choiceText>Выплата долга</choiceText>
+                <name>ChoicePayOffDebt</name>
+            </choices>
+            <choices>
+                <choiceText>Пенсия</choiceText>
+                <name>ChoiceRetirement</name>
+            </choices>
+            <choices>
+                <choiceText>Отпуск</choiceText>
+                <name>ChoiceVacation</name>
+            </choices>
+            <choices>
+                <choiceText>Транспортное средство</choiceText>
+                <name>ChoiceVehicle</name>
+            </choices>
+            <fullName>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</fullName>
+            <label>Консьерж встреч: пакет FSC для периодического создания новой цели или обновления существующей</label>
+            <screens>
+                <fields>
+                    <fieldText>&lt;P&gt;✅ Существующие цели успешно обновлены!&lt;/p&gt;&lt;p&gt;Изменения сохранены. &lt;/p&gt;&lt;p&gt;Далее будут проанализированы примечания к встрече для предложения новых финансовых целей.&lt;/p&gt;&lt;p&gt;Чтобы продолжить, нажмите "Проанализировать примечания к встрече". Это может занять до 30 секунд.&lt;/p&gt;</fieldText>
+                    <name>UpdatedExistingGoals</name>
+                </fields>
+                <name>DisplayMessage</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;При выполнении потока произошла ошибка &lt;/p&gt;&lt;p&gt;Сведения: {!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+                    <name>ErrorMessage</name>
+                </fields>
+                <name>Error_Screen</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;Все цели были просмотрены и сохранены.&lt;/p&gt;</fieldText>
+                    <name>SavedGoalScreen</name>
+                </fields>
+                <name>Goals_Saved</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;h5&gt;Обновление существующей цели&lt;/h5&gt;</fieldText>
+                    <name>GoalDetails</name>
+                </fields>
+                <fields>
+                    <fieldText>Имя цели</fieldText>
+                    <name>Goal_Name</name>
+                </fields>
+                <fields>
+                    <fieldText>Целевая сумма</fieldText>
+                    <name>Target_Amount</name>
+                </fields>
+                <fields>
+                    <fieldText>Целевая дата</fieldText>
+                    <name>Target_Date</name>
+                </fields>
+                <fields>
+                    <fieldText>Статус</fieldText>
+                    <name>Status</name>
+                </fields>
+                <fields>
+                    <fieldText>Описание</fieldText>
+                    <name>Description</name>
+                </fields>
+                <name>Review_Existing_Goal</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;h5&gt;Предложена новая цель&lt;/h5&gt;</fieldText>
+                    <name>CreatingNewGoal</name>
+                </fields>
+                <fields>
+                    <fieldText>Имя цели</fieldText>
+                    <name>scr_GoalName</name>
+                </fields>
+                <fields>
+                    <fieldText>Тип цели</fieldText>
+                    <name>scr_GoalType</name>
+                </fields>
+                <fields>
+                    <fieldText>Статус цели</fieldText>
+                    <name>scr_GoalStatus</name>
+                </fields>
+                <fields>
+                    <fieldText>Целевая сумма</fieldText>
+                    <name>scr_GoalAmount</name>
+                </fields>
+                <fields>
+                    <fieldText>Целевая дата</fieldText>
+                    <name>scr_GoalTargetDate</name>
+                </fields>
+                <fields>
+                    <fieldText>Описание</fieldText>
+                    <name>scr_GoalDescription</name>
+                </fields>
+                <fields>
+                    <fieldText>Пропустить эту цель</fieldText>
+                    <name>scr_SkipGoal</name>
+                </fields>
+                <name>Review_New_Goal</name>
+            </screens>
+        </flows>
+        <fullName>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</fullName>
+        <label>Консьерж встреч: пакет FSC для периодического создания новой цели или обновления существующей</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <fullName>Prep_Brief_Summary_FSC_Package</fullName>
+            <label>Консьерж встреч: пакет FSC для подготовки краткой сводки</label>
+        </flows>
+        <fullName>Prep_Brief_Summary_FSC_Package</fullName>
+        <label>Консьерж встреч: пакет FSC для подготовки краткой сводки</label>
+    </flowDefinitions>
+</Translations>

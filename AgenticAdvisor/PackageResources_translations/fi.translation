@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <flowDefinitions>
+        <flows>
+            <fullName>Client_Summary_FSC_Package</fullName>
+            <label>Meeting Concierge: Asiakkaan yhteenveto (FSC-paketti)</label>
+        </flows>
+        <fullName>Client_Summary_FSC_Package</fullName>
+        <label>Meeting Concierge: Asiakkaan yhteenveto (FSC-paketti)</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <fullName>Create_Meeting_from_Event_FSC_package</fullName>
+            <label>Meeting Concierge: Luo kokous tapahtumasta (FSC-paketti)</label>
+        </flows>
+        <fullName>Create_Meeting_from_Event_FSC_package</fullName>
+        <label>Meeting Concierge: Luo kokous tapahtumasta (FSC-paketti)</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <choices>
+                <choiceText>Vauva</choiceText>
+                <name>ChoiceBaby</name>
+            </choices>
+            <choices>
+                <choiceText>Syntymä</choiceText>
+                <name>ChoiceBirth</name>
+            </choices>
+            <choices>
+                <choiceText>Auto</choiceText>
+                <name>ChoiceCar</name>
+            </choices>
+            <choices>
+                <choiceText>Diagnoosi</choiceText>
+                <name>ChoiceDiagnosis</name>
+            </choices>
+            <choices>
+                <choiceText>Koulusta valmistuminen</choiceText>
+                <name>ChoiceGraduation</name>
+            </choices>
+            <choices>
+                <choiceText>Koti</choiceText>
+                <name>ChoiceHome</name>
+            </choices>
+            <choices>
+                <choiceText>Työ</choiceText>
+                <name>ChoiceJob</name>
+            </choices>
+            <choices>
+                <choiceText>Avioliitto</choiceText>
+                <name>ChoiceMarriage</name>
+            </choices>
+            <fullName>Create_Person_Life_Event_FSC_Package</fullName>
+            <label>Meeting Concierge: Luo henkilön elämäntapahtuma FSC-paketista</label>
+            <screens>
+                <fields>
+                    <fieldText>Tapahtuman nimi</fieldText>
+                    <name>EventNameText</name>
+                </fields>
+                <fields>
+                    <fieldText>Tapahtuman tyyppi</fieldText>
+                    <name>EventTypePicklist</name>
+                </fields>
+                <fields>
+                    <fieldText>Tapahtuman päivämäärä</fieldText>
+                    <name>EventDateText</name>
+                </fields>
+                <fields>
+                    <fieldText>Tapahtuman kuvaus</fieldText>
+                    <name>EventDescLongTextArea</name>
+                </fields>
+                <name>ScreenCreaPersonLifeEvnt</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;Jokin meni vikaan henkilön elämäntapahtuman tietuetta luotaessa. {!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+                    <name>CreaPersnLifeEvntErrorDisplayText</name>
+                </fields>
+                <name>ScreenDisplayErrorCreaPersnLifeEvnt</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;Henkilön elämäntapahtuma {!EventNameText} luotiin.&lt;/p&gt;</fieldText>
+                    <name>CreaSuccessDisplayText</name>
+                </fields>
+                <name>ScreenLifeEvntSaved</name>
+            </screens>
+        </flows>
+        <fullName>Create_Person_Life_Event_FSC_Package</fullName>
+        <label>Meeting Concierge: Luo henkilön elämäntapahtuma (FSC-paketti)</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <choices>
+                <choiceText>SUORITETTU</choiceText>
+                <name>ChoiceCompleted</name>
+            </choices>
+            <choices>
+                <choiceText>Koulutus</choiceText>
+                <name>ChoiceEducation</name>
+            </choices>
+            <choices>
+                <choiceText>Hätätilanne</choiceText>
+                <name>ChoiceEmergency</name>
+            </choices>
+            <choices>
+                <choiceText>Korkea</choiceText>
+                <name>ChoiceHigh</name>
+            </choices>
+            <choices>
+                <choiceText>IN_PROGRESS</choiceText>
+                <name>ChoiceInProgress</name>
+            </choices>
+            <choices>
+                <choiceText>Matala</choiceText>
+                <name>ChoiceLow</name>
+            </choices>
+            <choices>
+                <choiceText>Keskitaso</choiceText>
+                <name>ChoiceMedium</name>
+            </choices>
+            <choices>
+                <choiceText>NOT_STARTED</choiceText>
+                <name>ChoiceNotStarted</name>
+            </choices>
+            <choices>
+                <choiceText>Muu</choiceText>
+                <name>ChoiceOther</name>
+            </choices>
+            <choices>
+                <choiceText>Velan pois maksu</choiceText>
+                <name>ChoicePayOffDebt</name>
+            </choices>
+            <choices>
+                <choiceText>Eläkkeelle jäänti</choiceText>
+                <name>ChoiceRetirement</name>
+            </choices>
+            <choices>
+                <choiceText>Loma</choiceText>
+                <name>ChoiceVacation</name>
+            </choices>
+            <choices>
+                <choiceText>Ajoneuvo</choiceText>
+                <name>ChoiceVehicle</name>
+            </choices>
+            <fullName>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</fullName>
+            <label>Meeting Concierge: Luo uusia tavoitteita säännöllisesti tai päivitä nykyiset tavoitteet (FSC-paketti)</label>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;✅ Nykyiset tavoitteet päivitettiin onnistuneesti!&lt;/p&gt;&lt;p&gt;Muutoksesi tallennettiin. &lt;/p&gt;&lt;p&gt;Seuraavaksi analysoimme kokouksesi muistiinpanot ja ehdotamme uusia liiketoimintatavoitteita.&lt;/p&gt;&lt;p&gt;Napsauta ”Analysoi kokouksen muistiinpanot” jatkaaksesi — tämä voi kestää 30 sekuntia.&lt;/p&gt;</fieldText>
+                    <name>UpdatedExistingGoals</name>
+                </fields>
+                <name>DisplayMessage</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;Jokin meni vikaan kulkua suoritettaessa &lt;/p&gt;&lt;p&gt;Lisätiedot: {!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+                    <name>ErrorMessage</name>
+                </fields>
+                <name>Error_Screen</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;Kaikki tavoitteet on tarkistettu ja tallennettu onnistuneesti.&lt;/p&gt;</fieldText>
+                    <name>SavedGoalScreen</name>
+                </fields>
+                <name>Goals_Saved</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;h5&gt;Päivitä nykyinen tavoite&lt;/h5&gt;</fieldText>
+                    <name>GoalDetails</name>
+                </fields>
+                <fields>
+                    <fieldText>Tavoitteen nimi</fieldText>
+                    <name>Goal_Name</name>
+                </fields>
+                <fields>
+                    <fieldText>Tavoitesumma</fieldText>
+                    <name>Target_Amount</name>
+                </fields>
+                <fields>
+                    <fieldText>Tavoitepäivämäärä</fieldText>
+                    <name>Target_Date</name>
+                </fields>
+                <fields>
+                    <fieldText>Tila</fieldText>
+                    <name>Status</name>
+                </fields>
+                <fields>
+                    <fieldText>Kuvaus</fieldText>
+                    <name>Description</name>
+                </fields>
+                <name>Review_Existing_Goal</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;h5&gt;Uusi ehdotettu tavoite&lt;/h5&gt;</fieldText>
+                    <name>CreatingNewGoal</name>
+                </fields>
+                <fields>
+                    <fieldText>Tavoitteen nimi</fieldText>
+                    <name>scr_GoalName</name>
+                </fields>
+                <fields>
+                    <fieldText>Tavoitteen tyyppi</fieldText>
+                    <name>scr_GoalType</name>
+                </fields>
+                <fields>
+                    <fieldText>Tavoitteen tila</fieldText>
+                    <name>scr_GoalStatus</name>
+                </fields>
+                <fields>
+                    <fieldText>Tavoitesumma</fieldText>
+                    <name>scr_GoalAmount</name>
+                </fields>
+                <fields>
+                    <fieldText>Tavoitepäivämäärä</fieldText>
+                    <name>scr_GoalTargetDate</name>
+                </fields>
+                <fields>
+                    <fieldText>Kuvaus</fieldText>
+                    <name>scr_GoalDescription</name>
+                </fields>
+                <fields>
+                    <fieldText>Ohita tämä tavoite</fieldText>
+                    <name>scr_SkipGoal</name>
+                </fields>
+                <name>Review_New_Goal</name>
+            </screens>
+        </flows>
+        <fullName>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</fullName>
+        <label>Meeting Concierge: Luo uusia tavoitteita säännöllisesti tai päivitä nykyiset tavoitteet (FSC-paketti)</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <fullName>Prep_Brief_Summary_FSC_Package</fullName>
+            <label>Meeting Concierge: Valmistele lyhyt yhteenveto (FSC-paketti)</label>
+        </flows>
+        <fullName>Prep_Brief_Summary_FSC_Package</fullName>
+        <label>Meeting Concierge: Valmistele lyhyt yhteenveto (FSC-paketti)</label>
+    </flowDefinitions>
+</Translations>

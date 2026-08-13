@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+    <flowDefinitions>
+        <flows>
+            <fullName>Client_Summary_FSC_Package</fullName>
+            <label>Meeting Concierge: Paquete FSC Resumen del cliente</label>
+        </flows>
+        <fullName>Client_Summary_FSC_Package</fullName>
+        <label>Meeting Concierge: Paquete FSC Resumen del cliente</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <fullName>Create_Meeting_from_Event_FSC_package</fullName>
+            <label>Meeting Concierge: Paquete FSC Crear reunión a partir de un evento</label>
+        </flows>
+        <fullName>Create_Meeting_from_Event_FSC_package</fullName>
+        <label>Meeting Concierge: Paquete FSC Crear reunión a partir de un evento</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <choices>
+                <choiceText>Bebé</choiceText>
+                <name>ChoiceBaby</name>
+            </choices>
+            <choices>
+                <choiceText>Nacimiento</choiceText>
+                <name>ChoiceBirth</name>
+            </choices>
+            <choices>
+                <choiceText>Coche</choiceText>
+                <name>ChoiceCar</name>
+            </choices>
+            <choices>
+                <choiceText>Diagnóstico</choiceText>
+                <name>ChoiceDiagnosis</name>
+            </choices>
+            <choices>
+                <choiceText>Graduación</choiceText>
+                <name>ChoiceGraduation</name>
+            </choices>
+            <choices>
+                <choiceText>Inicio</choiceText>
+                <name>ChoiceHome</name>
+            </choices>
+            <choices>
+                <choiceText>Trabajo</choiceText>
+                <name>ChoiceJob</name>
+            </choices>
+            <choices>
+                <choiceText>Matrimonio</choiceText>
+                <name>ChoiceMarriage</name>
+            </choices>
+            <fullName>Create_Person_Life_Event_FSC_Package</fullName>
+            <label>Meeting Concierge: Paquete FSC Crear evento de vida de una persona</label>
+            <screens>
+                <fields>
+                    <fieldText>Nombre del evento de vida</fieldText>
+                    <name>EventNameText</name>
+                </fields>
+                <fields>
+                    <fieldText>Tipo de evento</fieldText>
+                    <name>EventTypePicklist</name>
+                </fields>
+                <fields>
+                    <fieldText>Fecha del evento</fieldText>
+                    <name>EventDateText</name>
+                </fields>
+                <fields>
+                    <fieldText>Descripción del evento de vida</fieldText>
+                    <name>EventDescLongTextArea</name>
+                </fields>
+                <name>ScreenCreaPersonLifeEvnt</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;Se ha producido un error al crear el registro del evento de vida de una persona. {!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+                    <name>CreaPersnLifeEvntErrorDisplayText</name>
+                </fields>
+                <name>ScreenDisplayErrorCreaPersnLifeEvnt</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;Se ha creado el evento de vida {!EventNameText} de una persona.&lt;/p&gt;</fieldText>
+                    <name>CreaSuccessDisplayText</name>
+                </fields>
+                <name>ScreenLifeEvntSaved</name>
+            </screens>
+        </flows>
+        <fullName>Create_Person_Life_Event_FSC_Package</fullName>
+        <label>Meeting Concierge: Paquete FSC Crear evento de vida de una persona</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <choices>
+                <choiceText>COMPLETADO</choiceText>
+                <name>ChoiceCompleted</name>
+            </choices>
+            <choices>
+                <choiceText>Educación</choiceText>
+                <name>ChoiceEducation</name>
+            </choices>
+            <choices>
+                <choiceText>Emergencia</choiceText>
+                <name>ChoiceEmergency</name>
+            </choices>
+            <choices>
+                <choiceText>Alta</choiceText>
+                <name>ChoiceHigh</name>
+            </choices>
+            <choices>
+                <choiceText>EN_CURSO</choiceText>
+                <name>ChoiceInProgress</name>
+            </choices>
+            <choices>
+                <choiceText>Baja</choiceText>
+                <name>ChoiceLow</name>
+            </choices>
+            <choices>
+                <choiceText>Media</choiceText>
+                <name>ChoiceMedium</name>
+            </choices>
+            <choices>
+                <choiceText>NO_INICIADO</choiceText>
+                <name>ChoiceNotStarted</name>
+            </choices>
+            <choices>
+                <choiceText>Otro</choiceText>
+                <name>ChoiceOther</name>
+            </choices>
+            <choices>
+                <choiceText>Saldar la deuda</choiceText>
+                <name>ChoicePayOffDebt</name>
+            </choices>
+            <choices>
+                <choiceText>Jubilación</choiceText>
+                <name>ChoiceRetirement</name>
+            </choices>
+            <choices>
+                <choiceText>Vacaciones</choiceText>
+                <name>ChoiceVacation</name>
+            </choices>
+            <choices>
+                <choiceText>Vehículo</choiceText>
+                <name>ChoiceVehicle</name>
+            </choices>
+            <fullName>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</fullName>
+            <label>Meeting Concierge: Paquete FSC Creación periódica de nuevos objetivos o actualización de los existentes</label>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;✅ Objetivos existentes actualizados correctamente.&lt;/p&gt;&lt;p&gt;Sus cambios se han guardado. &lt;/p&gt;&lt;p&gt;A continuación, analizaremos sus notas de la reunión para sugerirle nuevos objetivos financieros. &lt;/p&gt;&lt;p&gt;Haga clic en "Analizar notas de la reunión" para continuar; esto puede tardar hasta 30 segundos.&lt;/p&gt;</fieldText>
+                    <name>UpdatedExistingGoals</name>
+                </fields>
+                <name>DisplayMessage</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;Se ha producido un error al ejecutar el flujo &lt;/p&gt;&lt;p&gt;Detalles: {!$Flow.FaultMessage}&lt;/p&gt;</fieldText>
+                    <name>ErrorMessage</name>
+                </fields>
+                <name>Error_Screen</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;p&gt;Se han revisado y guardado correctamente todos los objetivos.&lt;/p&gt;</fieldText>
+                    <name>SavedGoalScreen</name>
+                </fields>
+                <name>Goals_Saved</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;h5&gt;Actualizar objetivo existente&lt;/h5&gt;</fieldText>
+                    <name>GoalDetails</name>
+                </fields>
+                <fields>
+                    <fieldText>Nombre del objetivo</fieldText>
+                    <name>Goal_Name</name>
+                </fields>
+                <fields>
+                    <fieldText>Importe del objetivo</fieldText>
+                    <name>Target_Amount</name>
+                </fields>
+                <fields>
+                    <fieldText>Fecha objetivo</fieldText>
+                    <name>Target_Date</name>
+                </fields>
+                <fields>
+                    <fieldText>Estado</fieldText>
+                    <name>Status</name>
+                </fields>
+                <fields>
+                    <fieldText>Descripción</fieldText>
+                    <name>Description</name>
+                </fields>
+                <name>Review_Existing_Goal</name>
+            </screens>
+            <screens>
+                <fields>
+                    <fieldText>&lt;h5&gt;Se sugiere un nuevo objetivo&lt;/h5&gt;</fieldText>
+                    <name>CreatingNewGoal</name>
+                </fields>
+                <fields>
+                    <fieldText>Nombre del objetivo</fieldText>
+                    <name>scr_GoalName</name>
+                </fields>
+                <fields>
+                    <fieldText>Tipo de objetivo</fieldText>
+                    <name>scr_GoalType</name>
+                </fields>
+                <fields>
+                    <fieldText>Estado del objetivo</fieldText>
+                    <name>scr_GoalStatus</name>
+                </fields>
+                <fields>
+                    <fieldText>Importe del objetivo</fieldText>
+                    <name>scr_GoalAmount</name>
+                </fields>
+                <fields>
+                    <fieldText>Fecha objetivo</fieldText>
+                    <name>scr_GoalTargetDate</name>
+                </fields>
+                <fields>
+                    <fieldText>Descripción</fieldText>
+                    <name>scr_GoalDescription</name>
+                </fields>
+                <fields>
+                    <fieldText>Omitir este objetivo</fieldText>
+                    <name>scr_SkipGoal</name>
+                </fields>
+                <name>Review_New_Goal</name>
+            </screens>
+        </flows>
+        <fullName>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</fullName>
+        <label>Meeting Concierge: Paquete FSC Creación periódica de nuevos objetivos o actualización de los existentes</label>
+    </flowDefinitions>
+    <flowDefinitions>
+        <flows>
+            <fullName>Prep_Brief_Summary_FSC_Package</fullName>
+            <label>Meeting Concierge: Paquete FSC Resumen preparatorio</label>
+        </flows>
+        <fullName>Prep_Brief_Summary_FSC_Package</fullName>
+        <label>Meeting Concierge: Paquete FSC Resumen preparatorio</label>
+    </flowDefinitions>
+</Translations>
