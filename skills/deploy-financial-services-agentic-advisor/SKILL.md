@@ -34,13 +34,14 @@ Confirm `sf --version` returns @salesforce/cli/2.137.7 or higher. If the version
 
 ```bash
 cd $TMPDIR
-git clone https://github.com/salesforce/next-gen-wealth.git
-cd next-gen-wealth/AgenticAdvisor
+git clone https://github.com/salesforce/financial-services-agentic-advisor.git
+cd financial-services-agentic-advisor/AgenticAdvisor
 ```
 
 If you get an error that the repository already exists, then
 ```bash
-cd $TMPDIR/next-gen-wealth/AgenticAdvisor
+cd $TMPDIR/financial-services-agentic-advisor/AgenticAdvisor
+git checkout main
 git pull
 ```
 
@@ -56,7 +57,7 @@ If the alias does not exist in `sf org list`, then ask the user for **Instance U
 Before deploying for real, run a validation-only deploy to check for errors without writing changes to the org. This prevents partial deploys that leave the org in a broken state.
 
 ```bash
-cd $TMPDIR/next-gen-wealth/AgenticAdvisor
+cd $TMPDIR/financial-services-agentic-advisor/AgenticAdvisor
 sf project deploy start --metadata-dir DataKit --target-org <Alias> --ignore-warnings --wait 30 --dry-run
 ```
 
@@ -83,7 +84,7 @@ Run `sf org open --target-org <Alias>` to open the URL so that the user can comp
 Before deploying for real, run a validation-only deploy to check for errors without writing changes to the org. This prevents partial deploys that leave the org in a broken state.
 
 ```bash
-cd $TMPDIR/next-gen-wealth/AgenticAdvisor
+cd $TMPDIR/financial-services-agentic-advisor/AgenticAdvisor
 sf project deploy start --metadata-dir PackageResources --target-org <Alias> --ignore-warnings --wait 30 --dry-run
 ```
 
@@ -103,5 +104,5 @@ If there are errors or failures abort the agent workflow.
 After successful deployment, optionally clean up temporary files. This is how to do it on Linux/macOS, figure out the equivalent if on Windows:
 
 ```bash
-rm -rf $TMPDIR/next-gen-wealth
+rm -rf $TMPDIR/financial-services-agentic-advisor
 ```

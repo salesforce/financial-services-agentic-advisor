@@ -56,8 +56,8 @@ After every deploy step, verify it succeeded before moving on — look for `Stat
 1. Download this repository to your computer:
 
    ```bash
-   git clone https://github.com/salesforce/next-gen-wealth.git
-   cd next-gen-wealth/AgenticAdvisor
+   git clone https://github.com/salesforce/financial-services-agentic-advisor.git
+   cd financial-services-agentic-advisor/AgenticAdvisor
    ```
 
 2. Log in to your org:
@@ -84,7 +84,7 @@ After every deploy step, verify it succeeded before moving on — look for `Stat
 
 ### Option 2: Claude Skill
 
-Add the [deploy-financial-services-agentic-advisor](https://github.com/salesforce/next-gen-wealth/blob/main/skills/deploy-financial-services-agentic-advisor/SKILL.md) skill to an AI tool like Claude Code or Cursor or AI Suite, or simply ask the AI tool to read this file, then run:
+Add the [deploy-financial-services-agentic-advisor](https://github.com/salesforce/financial-services-agentic-advisor/blob/main/skills/deploy-financial-services-agentic-advisor/SKILL.md) skill to an AI tool like Claude Code or Cursor or AI Suite, or simply ask the AI tool to read this file, then run:
 
 > Deploy the agentic advisor for the financial services package
 
@@ -96,8 +96,8 @@ After every deploy step, verify it succeeded before moving on — look for a `Su
 1. Download or clone this repository to your computer.
 
    ```bash
-   git clone https://github.com/salesforce/next-gen-wealth.git
-   cd next-gen-wealth
+   git clone https://github.com/salesforce/financial-services-agentic-advisor.git
+   cd financial-services-agentic-advisor
    ```
 2. Prepare the deployment package:
 
