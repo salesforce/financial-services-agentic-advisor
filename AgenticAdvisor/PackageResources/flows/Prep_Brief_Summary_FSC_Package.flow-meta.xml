@@ -508,33 +508,64 @@ Task Details:
         </assignmentItems>
     </assignments>
     <assignments>
-        <description>Sets PrimaryMemberAccountId to the account ID of the primary household member found by GetPrimaryHouseholdMember.</description>
-        <name>SetPrimaryMemberAccountIdHousehold</name>
-        <label>Set Primary Member Account ID for Household</label>
+        <description>Adds the household account ID to the householdMemberAccountIds collection so household-level records are included alongside member records.</description>
+        <name>Add_Household_Account_To_Collection</name>
+        <label>Add Household Account To Collection</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>PrimaryMemberAccountId</assignToReference>
-            <operator>Assign</operator>
+            <assignToReference>householdMemberAccountIds</assignToReference>
+            <operator>Add</operator>
             <value>
-                <elementReference>GetPrimaryHouseholdMember.Contact.AccountId</elementReference>
+                <elementReference>GetAccount.Id</elementReference>
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Get_Financial_Account_Roles</targetReference>
+            <targetReference>Loop_Through_Household_Members</targetReference>
         </connector>
     </assignments>
     <assignments>
-        <description>Sets PrimaryMemberAccountId to the person contact ID of the Account from GetAccount.</description>
-        <name>SetPrimaryMemberAccountIdPersonAcct</name>
-        <label>Set Primary Member Account ID for Person Account</label>
+        <description>Adds each household member&apos;s person account ID to the householdMemberAccountIds collection and the member&apos;s contact ID to the personContactIds collection.</description>
+        <name>Add_Household_Member_To_Collections</name>
+        <label>Add Household Member To Collections</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>PrimaryMemberAccountId</assignToReference>
-            <operator>Assign</operator>
+            <assignToReference>householdMemberAccountIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Loop_Through_Household_Members.Contact.AccountId</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>personContactIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Loop_Through_Household_Members.ContactId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Through_Household_Members</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the person account&apos;s ID to the householdMemberAccountIds collection and its person contact ID to the personContactIds collection.</description>
+        <name>Add_Person_Account_To_Collections</name>
+        <label>Add Person Account To Collections</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>householdMemberAccountIds</assignToReference>
+            <operator>Add</operator>
             <value>
                 <elementReference>GetAccount.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>personContactIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>GetAccount.PersonContactId</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -600,7 +631,7 @@ Task Details:
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>GetPrimaryHouseholdMember</targetReference>
+            <targetReference>Get_Household_Members</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Household Account</defaultConnectorLabel>
         <rules>
@@ -614,7 +645,7 @@ Task Details:
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>SetPrimaryMemberAccountIdPersonAcct</targetReference>
+                <targetReference>Add_Person_Account_To_Collections</targetReference>
             </connector>
             <label>Person Account</label>
         </rules>
@@ -623,6 +654,21 @@ Task Details:
     <interviewLabel>Meeting Concierge: Prep Brief Summary FSC Package {!$Flow.CurrentDateTime}</interviewLabel>
     <isOverridable>true</isOverridable>
     <label>Meeting Concierge: Prep Brief Summary FSC Package</label>
+    <loops>
+        <description>Iterates over the active account contact relations of the household to collect each member&apos;s person account ID and contact ID.</description>
+        <name>Loop_Through_Household_Members</name>
+        <label>Loop Through Household Members</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Household_Members</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Household_Member_To_Collections</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Financial_Account_Roles</targetReference>
+        </noMoreValuesConnector>
+    </loops>
     <loops>
         <description>Repeats an action for each financial account role record in Financial Account Roles from Get_Financial_Account_Roles.</description>
         <name>Iterate_Over_Financial_Account_Roles</name>
@@ -790,7 +836,7 @@ Task Details:
     </processMetadataValues>
     <processType>PromptFlow</processType>
     <recordLookups>
-        <description>Gets the active financial account role records with an account ID that matches PrimaryMemberAccountId. Stores the results in the Financial Account Roles from Get_Financial_Account_Roles record collection.</description>
+        <description>Gets the active financial account role records with a related account ID in the householdMemberAccountIds collection. Stores the results in the Financial Account Roles from Get_Financial_Account_Roles record collection.</description>
         <name>Get_Financial_Account_Roles</name>
         <label>Get Financial Account Roles</label>
         <locationX>0</locationX>
@@ -812,9 +858,9 @@ Task Details:
         </filters>
         <filters>
             <field>FinServ__RelatedAccount__c</field>
-            <operator>EqualTo</operator>
+            <operator>In</operator>
             <value>
-                <elementReference>PrimaryMemberAccountId</elementReference>
+                <elementReference>householdMemberAccountIds</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
@@ -822,7 +868,7 @@ Task Details:
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets the financial goal records related to the primary owner ID stored in PrimaryMemberAccountId. Stores the results in the Financial Goals from GetFinancialGoals record collection.</description>
+        <description>Gets the financial goal records with a primary owner ID in the householdMemberAccountIds collection. Stores the results in the Financial Goals from GetFinancialGoals record collection.</description>
         <name>Get_Financial_Goals</name>
         <label>Get Financial Goals</label>
         <locationX>0</locationX>
@@ -837,9 +883,9 @@ Task Details:
         <filterLogic>and</filterLogic>
         <filters>
             <field>FinServ__PrimaryOwner__c</field>
-            <operator>EqualTo</operator>
+            <operator>In</operator>
             <value>
-                <elementReference>PrimaryMemberAccountId</elementReference>
+                <elementReference>householdMemberAccountIds</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
@@ -897,7 +943,7 @@ Task Details:
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets the ID, name, type, status, and last modified date for the financial plan records related to the account ID stored in PrimaryMemberAccountId. Stores the results in the Financial Plans from GetFinancialPlans record collection.</description>
+        <description>Gets the ID, name, type, status, and last modified date for the financial plan records with an account ID in the householdMemberAccountIds collection. Stores the results in the Financial Plans from GetFinancialPlans record collection.</description>
         <name>GetFinancialPlans</name>
         <label>Get Financial Plans</label>
         <locationX>0</locationX>
@@ -912,9 +958,9 @@ Task Details:
         <filterLogic>and</filterLogic>
         <filters>
             <field>AccountId</field>
-            <operator>EqualTo</operator>
+            <operator>In</operator>
             <value>
-                <elementReference>PrimaryMemberAccountId</elementReference>
+                <elementReference>householdMemberAccountIds</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
@@ -1067,7 +1113,7 @@ Task Details:
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets the case records with a status that does not equal Closed and an account ID that matches PrimaryMemberAccountId, sorted by created date with the most recent first. Stores the results in the Cases from GetOpenCases record collection.</description>
+        <description>Gets the case records with a status that does not equal Closed and an account ID in the householdMemberAccountIds collection, sorted by created date with the most recent first. Stores the results in the Cases from GetOpenCases record collection.</description>
         <name>GetOpenCases</name>
         <label>Get Open Cases</label>
         <locationX>0</locationX>
@@ -1089,9 +1135,9 @@ Task Details:
         </filters>
         <filters>
             <field>AccountId</field>
-            <operator>EqualTo</operator>
+            <operator>In</operator>
             <value>
-                <elementReference>PrimaryMemberAccountId</elementReference>
+                <elementReference>householdMemberAccountIds</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
@@ -1107,7 +1153,7 @@ Task Details:
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets the person life event records with a Contact ID that matches the contact found by GetPrimaryHouseholdMember, sorted by created date with the most recent first. Stores the results in the Person Life Events from GetPersonLifeEvents record collection.</description>
+        <description>Gets the person life event records with a primary person ID in the personContactIds collection, sorted by created date with the most recent first. Stores the results in the Person Life Events from GetPersonLifeEvents record collection.</description>
         <name>GetPersonLifeEvents</name>
         <label>Get Person Life Events</label>
         <locationX>0</locationX>
@@ -1122,9 +1168,9 @@ Task Details:
         <filterLogic>and</filterLogic>
         <filters>
             <field>PrimaryPersonId</field>
-            <operator>EqualTo</operator>
+            <operator>In</operator>
             <value>
-                <elementReference>GetPrimaryHouseholdMember.ContactId</elementReference>
+                <elementReference>personContactIds</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
@@ -1139,14 +1185,14 @@ Task Details:
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets the active account contact relation record for the account found by GetAccount where the member is marked as the primary member. Stores the result in the Account Contact Relation from GetPrimaryHouseholdMember record variable.</description>
-        <name>GetPrimaryHouseholdMember</name>
-        <label>Get Primary Household Member</label>
+        <description>Gets all active account contact relation records for the household account found by GetAccount. Stores the results in the Account Contact Relations from Get_Household_Members record collection so data can be gathered for every household member, not just the primary member.</description>
+        <name>Get_Household_Members</name>
+        <label>Get Household Members</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>SetPrimaryMemberAccountIdHousehold</targetReference>
+            <targetReference>Add_Household_Account_To_Collection</targetReference>
         </connector>
         <faultConnector>
             <targetReference>SetGetAccountContactRelationErrorMessage</targetReference>
@@ -1166,14 +1212,7 @@ Task Details:
                 <booleanValue>true</booleanValue>
             </value>
         </filters>
-        <filters>
-            <field>FinServ__Primary__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
         <object>AccountContactRelation</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
@@ -1265,10 +1304,18 @@ Task Details:
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <description>Stores the ID of the account for the primary household member or person account.</description>
-        <name>PrimaryMemberAccountId</name>
+        <description>Collection of account IDs (all household members and the household account itself, or the single person account) used as join keys for downstream financial-entity, case, and plan queries.</description>
+        <name>householdMemberAccountIds</name>
         <dataType>String</dataType>
-        <isCollection>false</isCollection>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Collection of person contact IDs for all household members (or the single person account) used for person-based queries such as person life events.</description>
+        <name>personContactIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>

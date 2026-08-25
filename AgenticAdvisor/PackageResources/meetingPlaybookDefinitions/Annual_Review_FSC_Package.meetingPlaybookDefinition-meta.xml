@@ -73,8 +73,8 @@
         <mtgPlbkDefStgCapability>
             <capabilityOrder>3</capabilityOrder>
             <flow>meetingcenter_wealth__PrdCreateTask</flow>
-            <isAllowMultipleUse>false</isAllowMultipleUse>
-            <masterLabel>Create Tasks</masterLabel>
+            <isAllowMultipleUse>true</isAllowMultipleUse>
+            <masterLabel>Create or Update Tasks</masterLabel>
             <description>Creates tasks for each action item identified in the meeting notes</description>
             <promptGeneratedTextType>PostMeetingActionPrompt</promptGeneratedTextType>
         </mtgPlbkDefStgCapability>

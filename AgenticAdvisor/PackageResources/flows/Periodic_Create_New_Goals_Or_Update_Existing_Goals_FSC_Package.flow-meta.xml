@@ -1,47 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
-        <description>Retrieves a specific financial goal suggestion by index from the AI-generated goals JSON.</description>
-        <name>Get_Goal_By_Index</name>
-        <label>Get Goal By Index</label>
+        <description>Invokes the AI prompt that, in a single pass, reviews the post-meeting notes against the existing financial goals related to this record and returns both new goals to create and field-level edits to existing goals. One prompt (rather than separate create and edit prompts) lets the model deduplicate across the two categories: a goal already covered by an existing goal is returned as an edit, never as a duplicate new goal.</description>
+        <name>Call_GoalReviewPrompt</name>
+        <label>Call Goal Review Prompt</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <actionName>meetingcenter_wealth__PeriodicFinancialGoalByIndexPrompt</actionName>
+        <actionName>meetingcenter_wealth__PeriodicGenerateGoalFlowPrompt</actionName>
         <actionType>generatePromptResponse</actionType>
         <connector>
-            <targetReference>Store_Current_Goal_JSON</targetReference>
+            <targetReference>Screen_ReviewGoals</targetReference>
         </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Error_Screen</targetReference>
+        </faultConnector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
-            <name>Input:GoalsJson</name>
+            <name>Input:MeetingPlaybookStage</name>
             <value>
-                <elementReference>varGoalsJson</elementReference>
+                <elementReference>Get_Meeting_PlaybookStage</elementReference>
                 <inputConfiguratorMode>Resource</inputConfiguratorMode>
             </value>
         </inputParameters>
-        <inputParameters>
-            <name>Input:GoalIndex</name>
-            <value>
-                <elementReference>FormulaGoalIndexText</elementReference>
-                <inputConfiguratorMode>Resource</inputConfiguratorMode>
-            </value>
-        </inputParameters>
-        <nameSegment>meetingcenter_wealth__PeriodicFinancialGoalByIndexPrompt</nameSegment>
-        <offset>0</offset>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </actionCalls>
-    <actionCalls>
-        <description>Invokes the AI prompt to extract new financial goal suggestions from the post meeting notes.</description>
-        <name>Get_New_Goals_from_Meeting_Notes</name>
-        <label>Get New Goals from Meeting Notes</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <actionName>meetingcenter_wealth__PeriodicGetNewGoalsPrompt</actionName>
-        <actionType>generatePromptResponse</actionType>
-        <connector>
-            <targetReference>Store_Goals_JSON</targetReference>
-        </connector>
-        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>Input:MeetingNotes</name>
             <value>
@@ -49,32 +30,24 @@
                 <inputConfiguratorMode>Resource</inputConfiguratorMode>
             </value>
         </inputParameters>
-        <nameSegment>meetingcenter_wealth__PeriodicGetNewGoalsPrompt</nameSegment>
+        <inputParameters>
+            <name>Input:ExistingGoalsContext</name>
+            <value>
+                <elementReference>existingGoalsContext</elementReference>
+                <inputConfiguratorMode>Resource</inputConfiguratorMode>
+            </value>
+        </inputParameters>
+        <nameSegment>meetingcenter_wealth__PeriodicGenerateGoalFlowPrompt</nameSegment>
         <offset>0</offset>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <outputParameters>
+            <assignToReference>reviewJson</assignToReference>
+            <name>promptResponse</name>
+        </outputParameters>
     </actionCalls>
     <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
-        <description>Increments the goal index counter to iterate to the next AI-suggested goal.</description>
-        <name>Increment_Goal_Index</name>
-        <label>Increment Goal Index</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>varGoalIndex</assignToReference>
-            <operator>Add</operator>
-            <value>
-                <numberValue>1.0</numberValue>
-            </value>
-        </assignmentItems>
-        <connector>
-            <isGoTo>true</isGoTo>
-            <targetReference>Get_Goal_By_Index</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <description>Sets the primary member account ID to the ID of the person account</description>
+        <description>Sets the primary member account ID to the ID of the person account.</description>
         <name>Set_Primary_Member_Person_Account</name>
         <label>Set Primary Member Account ID for Person Account</label>
         <locationX>0</locationX>
@@ -108,156 +81,82 @@
         </connector>
     </assignments>
     <assignments>
-        <description>Stores the current goal JSON response from the Get Goal By Index prompt into a variable for formula extraction.</description>
-        <name>Store_Current_Goal_JSON</name>
-        <label>Store Current Goal JSON</label>
+        <description>Appends the heading for the existing goals section to the grounding context passed to the review prompt.</description>
+        <name>Add_ExistingGoals_Heading</name>
+        <label>Add Existing Goals Heading</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>varCurrentGoalJson</assignToReference>
-            <operator>Assign</operator>
+            <assignToReference>existingGoalsContext</assignToReference>
+            <operator>Add</operator>
             <value>
-                <elementReference>Get_Goal_By_Index.promptResponse</elementReference>
+                <stringValue>## EXISTING GOALS
+
+</stringValue>
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Is_Goal_Empty</targetReference>
+            <targetReference>Loop_ExistingGoals</targetReference>
         </connector>
     </assignments>
     <assignments>
-        <description>Stores the AI-generated goals JSON response for subsequent indexed goal retrieval.</description>
-        <name>Store_Goals_JSON</name>
-        <label>Store Goals JSON</label>
+        <description>Appends the current existing goal&apos;s details to the grounding context, tagged with its Salesforce Id as [SourceId: &lt;id&gt;] so the prompt can echo it back as recordId on each edit.</description>
+        <name>Add_ExistingGoal_Details</name>
+        <label>Add Existing Goal Details</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>varGoalsJson</assignToReference>
-            <operator>Assign</operator>
+            <assignToReference>existingGoalsContext</assignToReference>
+            <operator>Add</operator>
             <value>
-                <elementReference>Get_New_Goals_from_Meeting_Notes.promptResponse</elementReference>
+                <stringValue>Goal: {!Loop_ExistingGoals.Name} [SourceId: {!Loop_ExistingGoals.Id}]
+- Type: {!Loop_ExistingGoals.FinServ__Type__c}
+- Target Amount: {!Loop_ExistingGoals.FinServ__TargetValue__c}
+- Target Date: {!Loop_ExistingGoals.FinServ__TargetDate__c}
+- Status: {!Loop_ExistingGoals.FinServ__Status__c}
+- Description: {!Loop_ExistingGoals.FinServ__Description__c}
+====
+</stringValue>
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Get_Goal_By_Index</targetReference>
+            <targetReference>Loop_ExistingGoals</targetReference>
         </connector>
     </assignments>
-    <choices>
-        <description>Goal status option representing a completed financial goal.</description>
-        <name>ChoiceCompleted</name>
-        <choiceText>COMPLETED</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>COMPLETED</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <description>Goal type option for education savings goals.</description>
-        <name>ChoiceEducation</name>
-        <choiceText>Education</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>Education</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <description>Goal type option for emergency fund goals.</description>
-        <name>ChoiceEmergency</name>
-        <choiceText>Emergency</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>Emergency</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <description>Goal priority option indicating high priority.</description>
-        <name>ChoiceHigh</name>
-        <choiceText>High</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>High</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <description>Goal status option representing a goal currently in progress.</description>
-        <name>ChoiceInProgress</name>
-        <choiceText>IN_PROGRESS</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>IN_PROGRESS</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <description>Goal priority option indicating low priority.</description>
-        <name>ChoiceLow</name>
-        <choiceText>Low</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>Low</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <description>Goal priority option indicating medium priority.</description>
-        <name>ChoiceMedium</name>
-        <choiceText>Medium</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>Medium</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <description>Goal status option representing a goal that has not yet been started.</description>
-        <name>ChoiceNotStarted</name>
-        <choiceText>NOT_STARTED</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>NOT_STARTED</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <description>Goal type option for miscellaneous goals that do not fit a specific category.</description>
-        <name>ChoiceOther</name>
-        <choiceText>Other</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>Other</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <description>Goal type option for debt repayment goals.</description>
-        <name>ChoicePayOffDebt</name>
-        <choiceText>Pay off Debt</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>Pay off Debt</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <description>Goal type option for retirement savings goals.</description>
-        <name>ChoiceRetirement</name>
-        <choiceText>Retirement</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>Retirement</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <description>Goal type option for vacation savings goals.</description>
-        <name>ChoiceVacation</name>
-        <choiceText>Vacation</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>Vacation</stringValue>
-        </value>
-    </choices>
-    <choices>
-        <description>Goal type option for vehicle purchase savings goals.</description>
-        <name>ChoiceVehicle</name>
-        <choiceText>Vehicle</choiceText>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>Vehicle</stringValue>
-        </value>
-    </choices>
+    <assignments>
+        <description>Sets a non-null placeholder grounding context when no existing goals were found. The generatePromptResponse action rejects a null Input:ExistingGoalsContext, so the flow must pass a non-null string; this also tells the model explicitly that there are no existing goals to edit.</description>
+        <name>Assign_EmptyGoalsContext</name>
+        <label>Assign Empty Goals Context</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>existingGoalsContext</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>No existing financial goals are related to this record.</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Call_GoalReviewPrompt</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Builds the summary message text after creating and updating goals.</description>
+        <name>Assign_SummaryText</name>
+        <label>Assign Summary Text</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>summaryText</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>FormulaSummaryText</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Screen_Summary</targetReference>
+        </connector>
+    </assignments>
     <customProperties>
         <name>ScreenProgressIndicator</name>
         <value>
@@ -265,40 +164,7 @@
         </value>
     </customProperties>
     <decisions>
-        <description>Checks whether the AI-returned goal at the current index is empty to determine if all suggested goals have been processed.</description>
-        <name>Is_Goal_Empty</name>
-        <label>Is Goal Empty</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>Review_New_Goal</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Has Goal</defaultConnectorLabel>
-        <rules>
-            <name>No_More_Goals</name>
-            <conditionLogic>or</conditionLogic>
-            <conditions>
-                <leftValueReference>FormulaGoalName</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>FormulaGoalName</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue></stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Goals_Saved</targetReference>
-            </connector>
-            <label>No More Goals</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <description>Determines whether the account found by Get_Account is a person account.</description>
+        <description>Determines whether the account found by Get_Account is a person account. A person account resolves directly; otherwise the flow treats the account as a household and resolves the primary member.</description>
         <name>Is_Person_Account</name>
         <label>Is Person Account</label>
         <locationX>0</locationX>
@@ -324,11 +190,15 @@
         </rules>
     </decisions>
     <decisions>
+        <description>Determines whether a primary household member was found for the related account. When present, the flow resolves to that person account; otherwise the meeting does not resolve to a person account and no goals can be created or updated.</description>
         <name>Is_Primary_Member_Present</name>
         <label>Is Primary Member Present</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <defaultConnector>
+            <targetReference>Screen_NoPersonAccount</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No Primary Member</defaultConnectorLabel>
         <rules>
             <name>Is_Primary_Member</name>
             <conditionLogic>and</conditionLogic>
@@ -346,158 +216,144 @@
         </rules>
     </decisions>
     <decisions>
-        <description>Checks whether the advisor chose to skip this goal on the review screen.</description>
-        <name>Should_Create_Goal</name>
-        <label>Should Create Goal?</label>
+        <description>Determines whether any existing goal records were retrieved. Only build the grounding context when there is at least one goal; otherwise call the prompt with an empty context.</description>
+        <name>Has_ExistingGoals</name>
+        <label>Has Existing Goals</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Create_New_Goal_Record</targetReference>
+            <targetReference>Assign_EmptyGoalsContext</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Create</defaultConnectorLabel>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
-            <name>Skip_Goal</name>
+            <name>Existing_Goals_Found</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>scr_SkipGoal</leftValueReference>
-                <operator>EqualTo</operator>
+                <leftValueReference>Get_Financial_Goals</leftValueReference>
+                <operator>IsEmpty</operator>
                 <rightValue>
-                    <booleanValue>true</booleanValue>
+                    <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Increment_Goal_Index</targetReference>
+                <targetReference>Add_ExistingGoals_Heading</targetReference>
             </connector>
-            <label>Skip</label>
+            <doesRequireRecordChangedToMeetCriteria>false</doesRequireRecordChangedToMeetCriteria>
+            <isGroupedConditions>false</isGroupedConditions>
+            <label>Existing Goals Found</label>
         </rules>
     </decisions>
+    <decisions>
+        <description>After creating a new goal, only create a completed Task proxy and linking ActionPlanItem when the meeting stage actually has an Action Plan. A financial goal cannot be an ActionPlanItem target, so a completed Task represents the goal on the Meeting Follow-Up Tasks Action Plan. When the stage has no Action Plan, skip this so the flow does not fault on a null master-detail ActionPlanId; the goal is still created and linked to the person account.</description>
+        <name>Has_ActionPlan</name>
+        <label>Has Action Plan</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Loop_CreateNewGoals</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No Action Plan</defaultConnectorLabel>
+        <rules>
+            <name>Action_Plan_Present</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Meeting_PlaybookStage.ActionPlanId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Goal_Task</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>false</doesRequireRecordChangedToMeetCriteria>
+            <isGroupedConditions>false</isGroupedConditions>
+            <label>Action Plan Present</label>
+        </rules>
+    </decisions>
+    <description>Flow creates and updates financial goals from post-meeting notes for periodic client meetings. Advisors can review AI-suggested new goals and edits to existing goals related to the resolved person account before saving. New goals are linked to the person account via FinServ__PrimaryOwner__c; when the stage has an Action Plan, each created goal is also represented by a completed Task added to the plan. The meeting must resolve to a person account (directly or via a household primary member); otherwise no records are created.</description>
     <environments>Default</environments>
     <formulas>
-        <description>Extracts the goalAmount value from the current goal JSON response.</description>
-        <name>FormulaGoalAmount</name>
+        <description>Running user&apos;s display name, built from first + last name. The $User global does not expose a Name/FullName field in Flow formulas, only FirstName/LastName.</description>
+        <name>FormulaCurrentUserName</name>
         <dataType>String</dataType>
-        <expression>IF(CONTAINS({!varCurrentGoalJson},&apos;&quot;goalAmount&quot;:&apos;),
-  TRIM(MID({!varCurrentGoalJson},
-    FIND(&apos;&quot;goalAmount&quot;:&apos;,{!varCurrentGoalJson})+13,
-    FIND(&apos;,&apos;,{!varCurrentGoalJson},
-      FIND(&apos;&quot;goalAmount&quot;:&apos;,{!varCurrentGoalJson})+13)
-    -FIND(&apos;&quot;goalAmount&quot;:&apos;,{!varCurrentGoalJson})-13)),
-&quot;0&quot;)</expression>
+        <expression>TRIM({!$User.FirstName} &amp; &quot; &quot; &amp; {!$User.LastName})</expression>
     </formulas>
     <formulas>
-        <description>Extracts the goalDescription value from the current goal JSON response.</description>
-        <name>FormulaGoalDescription</name>
+        <description>Subject for the completed Task proxy that represents a created goal on the Action Plan.</description>
+        <name>FormulaGoalTaskSubject</name>
         <dataType>String</dataType>
-        <expression>IF(CONTAINS({!varCurrentGoalJson},&apos;&quot;goalDescription&quot;:&quot;&apos;),
-  MID({!varCurrentGoalJson},
-    FIND(&apos;&quot;goalDescription&quot;:&quot;&apos;,{!varCurrentGoalJson})+19,
-    FIND(&apos;&quot;&apos;,{!varCurrentGoalJson},
-      FIND(&apos;&quot;goalDescription&quot;:&quot;&apos;,{!varCurrentGoalJson})+19)
-    -FIND(&apos;&quot;goalDescription&quot;:&quot;&apos;,{!varCurrentGoalJson})-19),
-&quot;&quot;)</expression>
+        <expression>&quot;Goal created: &quot; &amp; {!Loop_CreateNewGoals.Name}</expression>
     </formulas>
     <formulas>
-        <description>Converts the numeric goal index counter to a text value for use as the AI prompt input parameter.</description>
-        <name>FormulaGoalIndexText</name>
+        <description>Remaps the raw prompt JSON (reviewJson) into the exact key and value forms the industries_common:recordsReviewTable component expects for the FSC FinancialGoal object. The component looks up each cell as record[toEditKey(fieldApiName)], where toEditKey lowercases only the first character of the field API name; so the prompt&apos;s camelCase keys (type, targetAmount, ...) are rewritten to finServ__Type__c, finServ__TargetValue__c, etc. (name already matches). Status picklist values are normalized from the prompt&apos;s screaming-snake enum to the FinServ__Status__c API values (Not Started / In Progress / Completed). Type values are mapped from the base prompt&apos;s fixed 8-value vocabulary (Education, Emergency, Home, Pay off Debt, Retirement, Vacation, Vehicle, Other) to FSC FinServ__Type__c values: Education/Retirement/Other match verbatim; Home becomes Home Purchase; and Emergency, Pay off Debt, Vacation and Vehicle have no FSC equivalent so they fall back to Other. All tokens are matched with their surrounding double quotes so only JSON keys/values are affected, never prose inside a description; the global SUBSTITUTE also covers keys and values inside recordEdits.</description>
+        <name>FormulaReviewJsonRemapped</name>
         <dataType>String</dataType>
-        <expression>TEXT({!varGoalIndex})</expression>
+        <expression>SUBSTITUTE(
+ SUBSTITUTE(
+  SUBSTITUTE(
+   SUBSTITUTE(
+    SUBSTITUTE(
+     SUBSTITUTE(
+      SUBSTITUTE(
+       SUBSTITUTE(
+        SUBSTITUTE(
+         SUBSTITUTE(
+          SUBSTITUTE(
+           SUBSTITUTE(
+            SUBSTITUTE(
+             {!reviewJson},
+             &quot;\&quot;type\&quot;&quot;,         &quot;\&quot;finServ__Type__c\&quot;&quot;),
+            &quot;\&quot;targetAmount\&quot;&quot;,  &quot;\&quot;finServ__TargetValue__c\&quot;&quot;),
+           &quot;\&quot;targetDate\&quot;&quot;,     &quot;\&quot;finServ__TargetDate__c\&quot;&quot;),
+          &quot;\&quot;status\&quot;&quot;,          &quot;\&quot;finServ__Status__c\&quot;&quot;),
+         &quot;\&quot;description\&quot;&quot;,      &quot;\&quot;finServ__Description__c\&quot;&quot;),
+        &quot;\&quot;NOT_STARTED\&quot;&quot;,       &quot;\&quot;Not Started\&quot;&quot;),
+       &quot;\&quot;IN_PROGRESS\&quot;&quot;,        &quot;\&quot;In Progress\&quot;&quot;),
+      &quot;\&quot;COMPLETED\&quot;&quot;,           &quot;\&quot;Completed\&quot;&quot;),
+     &quot;\&quot;Home\&quot;&quot;,               &quot;\&quot;Home Purchase\&quot;&quot;),
+    &quot;\&quot;Emergency\&quot;&quot;,          &quot;\&quot;Other\&quot;&quot;),
+   &quot;\&quot;Pay off Debt\&quot;&quot;,       &quot;\&quot;Other\&quot;&quot;),
+  &quot;\&quot;Vacation\&quot;&quot;,           &quot;\&quot;Other\&quot;&quot;),
+ &quot;\&quot;Vehicle\&quot;&quot;,            &quot;\&quot;Other\&quot;&quot;)</expression>
     </formulas>
     <formulas>
-        <description>Extracts the goalName value from the current goal JSON response.</description>
-        <name>FormulaGoalName</name>
+        <description>Builds the summary message combining the count of new goals created and existing goals updated.</description>
+        <name>FormulaSummaryText</name>
         <dataType>String</dataType>
-        <expression>IF(CONTAINS({!varCurrentGoalJson},&apos;&quot;goalName&quot;:&quot;&apos;),
-  MID({!varCurrentGoalJson},
-    FIND(&apos;&quot;goalName&quot;:&quot;&apos;,{!varCurrentGoalJson})+12,
-    FIND(&apos;&quot;&apos;,{!varCurrentGoalJson},
-      FIND(&apos;&quot;goalName&quot;:&quot;&apos;,{!varCurrentGoalJson})+12)
-    -FIND(&apos;&quot;goalName&quot;:&quot;&apos;,{!varCurrentGoalJson})-12),
-&quot;&quot;)</expression>
-    </formulas>
-    <formulas>
-        <description>Returns the primary member account ID if available, otherwise falls back to the meeting playbook related record ID.</description>
-        <name>FormulaGoalPartyAccountId</name>
-        <dataType>String</dataType>
-        <expression>IF(ISBLANK({!primaryMemberAccountId}),
-  {!Get_MeetingPlayBook.RelatedRecordId},
-  {!primaryMemberAccountId})</expression>
-    </formulas>
-    <formulas>
-        <description>Extracts the goalPriority value from the current goal JSON response.</description>
-        <name>FormulaGoalPriority</name>
-        <dataType>String</dataType>
-        <expression>IF(CONTAINS({!varCurrentGoalJson},&apos;&quot;goalPriority&quot;:&quot;&apos;),
-  MID({!varCurrentGoalJson},
-    FIND(&apos;&quot;goalPriority&quot;:&quot;&apos;,{!varCurrentGoalJson})+16,
-    FIND(&apos;&quot;&apos;,{!varCurrentGoalJson},
-      FIND(&apos;&quot;goalPriority&quot;:&quot;&apos;,{!varCurrentGoalJson})+16)
-    -FIND(&apos;&quot;goalPriority&quot;:&quot;&apos;,{!varCurrentGoalJson})-16),
-&quot;&quot;)</expression>
-    </formulas>
-    <formulas>
-        <description>Extracts the goalStartDate value from the current goal JSON response.</description>
-        <name>FormulaGoalStartDate</name>
-        <dataType>String</dataType>
-        <expression>IF(CONTAINS({!varCurrentGoalJson},&apos;&quot;goalStartDate&quot;:&quot;&apos;),
-  MID({!varCurrentGoalJson},
-    FIND(&apos;&quot;goalStartDate&quot;:&quot;&apos;,{!varCurrentGoalJson})+17,
-    FIND(&apos;&quot;&apos;,{!varCurrentGoalJson},
-      FIND(&apos;&quot;goalStartDate&quot;:&quot;&apos;,{!varCurrentGoalJson})+17)
-    -FIND(&apos;&quot;goalStartDate&quot;:&quot;&apos;,{!varCurrentGoalJson})-17),
-&quot;&quot;)</expression>
-    </formulas>
-    <formulas>
-        <description>Extracts the goalStatus value from the current goal JSON response.</description>
-        <name>FormulaGoalStatus</name>
-        <dataType>String</dataType>
-        <expression>IF(CONTAINS({!varCurrentGoalJson},&apos;&quot;goalStatus&quot;:&quot;&apos;),
-  MID({!varCurrentGoalJson},
-    FIND(&apos;&quot;goalStatus&quot;:&quot;&apos;,{!varCurrentGoalJson})+14,
-    FIND(&apos;&quot;&apos;,{!varCurrentGoalJson},
-      FIND(&apos;&quot;goalStatus&quot;:&quot;&apos;,{!varCurrentGoalJson})+14)
-    -FIND(&apos;&quot;goalStatus&quot;:&quot;&apos;,{!varCurrentGoalJson})-14),
-&quot;&quot;)</expression>
-    </formulas>
-    <formulas>
-        <description>Extracts the goalTargetDate value from the current goal JSON response.</description>
-        <name>FormulaGoalTargetDate</name>
-        <dataType>String</dataType>
-        <expression>IF(CONTAINS({!varCurrentGoalJson},&apos;&quot;goalTargetDate&quot;:&quot;&apos;),
-  MID({!varCurrentGoalJson},
-    FIND(&apos;&quot;goalTargetDate&quot;:&quot;&apos;,{!varCurrentGoalJson})+18,
-    FIND(&apos;&quot;&apos;,{!varCurrentGoalJson},
-      FIND(&apos;&quot;goalTargetDate&quot;:&quot;&apos;,{!varCurrentGoalJson})+18)
-    -FIND(&apos;&quot;goalTargetDate&quot;:&quot;&apos;,{!varCurrentGoalJson})-18),
-&quot;&quot;)</expression>
-    </formulas>
-    <formulas>
-        <description>Extracts the goalType value from the current goal JSON response.</description>
-        <name>FormulaGoalType</name>
-        <dataType>String</dataType>
-        <expression>IF(CONTAINS({!varCurrentGoalJson},&apos;&quot;goalType&quot;:&quot;&apos;),
-  MID({!varCurrentGoalJson},
-    FIND(&apos;&quot;goalType&quot;:&quot;&apos;,{!varCurrentGoalJson})+12,
-    FIND(&apos;&quot;&apos;,{!varCurrentGoalJson},
-      FIND(&apos;&quot;goalType&quot;:&quot;&apos;,{!varCurrentGoalJson})+12)
-    -FIND(&apos;&quot;goalType&quot;:&quot;&apos;,{!varCurrentGoalJson})-12),
-&quot;&quot;)</expression>
+        <expression>TEXT({!newCount}) &amp; &quot; goal(s) added, &quot; &amp; TEXT({!updatedCount}) &amp; &quot; goal(s) updated&quot;</expression>
     </formulas>
     <interviewLabel>Meeting Concierge: Periodic Create New Goals Or Update Existing Goals FSC Package {!$Flow.CurrentDateTime}</interviewLabel>
     <isOverridable>true</isOverridable>
     <label>Meeting Concierge: Periodic Create New Goals Or Update Existing Goals FSC Package</label>
     <loops>
-        <description>Iterates through each financial goal to retrieve and format goal details.</description>
-        <name>Loop_Through_Financial_Goals</name>
-        <label>Loop Through Financial Goals</label>
+        <description>Iterates over the existing goal records and appends each goal&apos;s details to the grounding context supplied to the review prompt.</description>
+        <name>Loop_ExistingGoals</name>
+        <label>Loop Existing Goals</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <collectionReference>Get_Financial_Goals</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
-            <targetReference>Review_Existing_Goal</targetReference>
+            <targetReference>Add_ExistingGoal_Details</targetReference>
         </nextValueConnector>
         <noMoreValuesConnector>
-            <targetReference>DisplayMessage</targetReference>
+            <targetReference>Call_GoalReviewPrompt</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Iterates over each selected new goal returned by the review screen to create the financial goal record and, when the stage has an Action Plan, a completed Task proxy on the plan.</description>
+        <name>Loop_CreateNewGoals</name>
+        <label>Loop Create New Goals</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>selectedNewRecords</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Create_New_Goal_Record</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Update_ExistingGoals</targetReference>
         </noMoreValuesConnector>
     </loops>
     <processMetadataValues>
@@ -520,13 +376,13 @@
     </processMetadataValues>
     <processType>Flow</processType>
     <recordCreates>
-        <description>Creates a new financial goal record with the details confirmed by the advisor, or skips if a matching goal already exists.</description>
+        <description>Creates a new financial goal record for the current loop iteration with the advisor-confirmed field values from the review screen, linked to the resolved person account.</description>
         <name>Create_New_Goal_Record</name>
         <label>Create New Goal Record</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Increment_Goal_Index</targetReference>
+            <targetReference>Has_ActionPlan</targetReference>
         </connector>
         <faultConnector>
             <isGoTo>true</isGoTo>
@@ -535,7 +391,7 @@
         <inputAssignments>
             <field>FinServ__Description__c</field>
             <value>
-                <elementReference>scr_GoalDescription</elementReference>
+                <elementReference>Loop_CreateNewGoals.FinServ__Description__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -547,38 +403,118 @@
         <inputAssignments>
             <field>FinServ__Status__c</field>
             <value>
-                <elementReference>scr_GoalStatus</elementReference>
+                <elementReference>Loop_CreateNewGoals.FinServ__Status__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
             <field>FinServ__TargetDate__c</field>
             <value>
-                <elementReference>scr_GoalTargetDate</elementReference>
+                <elementReference>Loop_CreateNewGoals.FinServ__TargetDate__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
             <field>FinServ__TargetValue__c</field>
             <value>
-                <elementReference>scr_GoalAmount</elementReference>
+                <elementReference>Loop_CreateNewGoals.FinServ__TargetValue__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
             <field>FinServ__Type__c</field>
             <value>
-                <elementReference>scr_GoalType</elementReference>
+                <elementReference>Loop_CreateNewGoals.FinServ__Type__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
             <field>Name</field>
             <value>
-                <elementReference>scr_GoalName</elementReference>
+                <elementReference>Loop_CreateNewGoals.Name</elementReference>
             </value>
         </inputAssignments>
         <object>FinServ__FinancialGoal__c</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
+    <recordCreates>
+        <description>Creates a completed Task that represents the newly created goal on the Meeting Follow-Up Tasks Action Plan. A financial goal cannot be an ActionPlanItem target directly, so this Task is the plan-visible proxy for the goal.</description>
+        <name>Create_Goal_Task</name>
+        <label>Create Goal Task</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Create_APItem_Record</targetReference>
+        </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Error_Screen</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>$User.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Completed</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <elementReference>FormulaGoalTaskSubject</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhatId</field>
+            <value>
+                <elementReference>primaryMemberAccountId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Task</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <description>Creates an ActionPlanItem linking the completed goal-proxy Task to the meeting stage Action Plan so the created goal appears (as a completed task) in the Meeting Follow-Up Tasks component.</description>
+        <name>Create_APItem_Record</name>
+        <label>Create APItem Record</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Loop_CreateNewGoals</targetReference>
+        </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Error_Screen</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>ActionPlanId</field>
+            <value>
+                <elementReference>Get_Meeting_PlaybookStage.ActionPlanId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ItemId</field>
+            <value>
+                <elementReference>Create_Goal_Task</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ItemState</field>
+            <value>
+                <stringValue>Completed</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Name</field>
+            <value>
+                <stringValue>Goal</stringValue>
+            </value>
+        </inputAssignments>
+        <object>ActionPlanItem</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
     <recordLookups>
-        <description>Retrieves the related account from the meeting playbook.</description>
+        <description>Retrieves the related account from the meeting playbook (the household or, for a person-account meeting, the person account itself), used to look up the household primary member.</description>
         <name>Get_Account</name>
         <label>Get Account</label>
         <locationX>0</locationX>
@@ -604,14 +540,14 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Retrieves all financial goals linked to the household&apos;s primary member account to iterate over existing goals.</description>
+        <description>Retrieves all financial goals linked to the resolved person account to supply to the review screen and to build the grounding context for AI-suggested edits.</description>
         <name>Get_Financial_Goals</name>
         <label>Get Financial Goals</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Loop_Through_Financial_Goals</targetReference>
+            <targetReference>Has_ExistingGoals</targetReference>
         </connector>
         <faultConnector>
             <isGoTo>true</isGoTo>
@@ -627,10 +563,12 @@
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
         <object>FinServ__FinancialGoal__c</object>
+        <sortField>LastModifiedDate</sortField>
+        <sortOrder>Desc</sortOrder>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Retrieves the meeting playbook stage record to provide meeting context for AI goal generation.</description>
+        <description>Retrieves the meeting playbook stage record to provide meeting context, including the ActionPlanId used to add created goals to the Action Plan.</description>
         <name>Get_Meeting_PlaybookStage</name>
         <label>Get Meeting PlaybookStage</label>
         <locationX>0</locationX>
@@ -640,6 +578,7 @@
             <targetReference>Get_MeetingFollowupText</targetReference>
         </connector>
         <faultConnector>
+            <isGoTo>true</isGoTo>
             <targetReference>Error_Screen</targetReference>
         </faultConnector>
         <filterLogic>and</filterLogic>
@@ -719,10 +658,14 @@
         <label>Get Primary Household Member</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Is_Primary_Member_Present</targetReference>
         </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Error_Screen</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>AccountId</field>
@@ -750,87 +693,20 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordUpdates>
-        <description>Updates an existing financial goal with the field values confirmed by the advisor on the review screen.</description>
-        <name>Update_Goal</name>
-        <label>Update Goal</label>
+        <description>Updates the selected existing financial goal records with the field values chosen by the advisor in the review table.</description>
+        <name>Update_ExistingGoals</name>
+        <label>Update Existing Goals</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Loop_Through_Financial_Goals</targetReference>
+            <targetReference>Assign_SummaryText</targetReference>
         </connector>
         <faultConnector>
             <isGoTo>true</isGoTo>
             <targetReference>Error_Screen</targetReference>
         </faultConnector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>Loop_Through_Financial_Goals.Id</elementReference>
-            </value>
-        </filters>
-        <inputAssignments>
-            <field>FinServ__Description__c</field>
-            <value>
-                <elementReference>Description</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>FinServ__Status__c</field>
-            <value>
-                <elementReference>Status</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>FinServ__TargetDate__c</field>
-            <value>
-                <elementReference>Target_Date</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>FinServ__TargetValue__c</field>
-            <value>
-                <elementReference>Target_Amount</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Name</field>
-            <value>
-                <elementReference>Goal_Name</elementReference>
-            </value>
-        </inputAssignments>
-        <object>FinServ__FinancialGoal__c</object>
+        <inputReference>selectedExistingRecords</inputReference>
     </recordUpdates>
-    <screens>
-        <description>Confirms existing goals have been updated and prompts the advisor to analyze meeting notes for new goal suggestions.</description>
-        <name>DisplayMessage</name>
-        <label>DisplayMessage</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <connector>
-            <targetReference>Get_New_Goals_from_Meeting_Notes</targetReference>
-        </connector>
-        <fields>
-            <name>UpdatedExistingGoals</name>
-            <fieldText>&lt;p&gt;✅ Existing Goals Updated Successfully!&lt;/p&gt;&lt;p&gt;Your changes have been saved. &lt;/p&gt;&lt;p&gt;Next, we&apos;ll analyze your meeting notes suggest new financial goals.&lt;/p&gt;&lt;p&gt;Click &quot;Analyze Meeting Notes&quot; to continue — this may take up to 30 seconds.&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <nextOrFinishButtonLabel>Analyze Meeting Notes</nextOrFinishButtonLabel>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
     <screens>
         <description>Error Screen Message</description>
         <name>Error_Screen</name>
@@ -858,8 +734,129 @@
         <showHeader>true</showHeader>
     </screens>
     <screens>
-        <description>Confirms all goals have been reviewed and saved successfully.</description>
-        <name>Goals_Saved</name>
+        <description>Shown when the meeting does not resolve to a person account. Financial goals can only be associated with a person account, so no goals are created or updated.</description>
+        <name>Screen_NoPersonAccount</name>
+        <label>No Person Account</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>NoPersonAccountMessage</name>
+            <fieldText>&lt;p&gt;This meeting isn&apos;t associated with a person account, so financial goals can&apos;t be created or updated here.&lt;/p&gt;&lt;p&gt;Financial goals can only be linked to a person account (an individual client), not a business account.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <nextOrFinishButtonLabel>Close</nextOrFinishButtonLabel>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <description>Allows the advisor to review AI-suggested new goals and edits to existing goals before saving. The custom LWC presents both tables with inline edit and selection.</description>
+        <name>Screen_ReviewGoals</name>
+        <label>Review Goals</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Loop_CreateNewGoals</targetReference>
+        </connector>
+        <fields>
+            <name>ReviewTable</name>
+            <dataTypeMappings>
+                <typeName>T</typeName>
+                <typeValue>FinServ__FinancialGoal__c</typeValue>
+            </dataTypeMappings>
+            <extensionName>industries_common:recordsReviewTable</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>reviewJson</name>
+                <value>
+                    <elementReference>FormulaReviewJsonRemapped</elementReference>
+                    <inputConfiguratorMode>Resource</inputConfiguratorMode>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>existingRecords</name>
+                <value>
+                    <elementReference>Get_Financial_Goals</elementReference>
+                    <inputConfiguratorMode>Resource</inputConfiguratorMode>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>objectApiName</name>
+                <value>
+                    <stringValue>FinServ__FinancialGoal__c</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>currentUserId</name>
+                <value>
+                    <elementReference>$User.Id</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>currentUserName</name>
+                <value>
+                    <elementReference>FormulaCurrentUserName</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>newColumnsJson</name>
+                <value>
+                    <stringValue>[{"fieldApiName":"Name","label":"Name","editable":true,"rendering":"text"},{"fieldApiName":"FinServ__Type__c","label":"Type","editable":true,"rendering":"picklist","required":true},{"fieldApiName":"FinServ__TargetValue__c","label":"Target Amount","editable":true,"rendering":"currency"},{"fieldApiName":"FinServ__TargetDate__c","label":"Target Date","editable":true,"rendering":"date"},{"fieldApiName":"FinServ__Status__c","label":"Status","editable":true,"rendering":"badge","required":true},{"fieldApiName":"FinServ__Description__c","label":"Description","editable":true,"rendering":"text"}]</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>existingColumnsJson</name>
+                <value>
+                    <stringValue>[{"fieldApiName":"Name","label":"Name","editable":true,"rendering":"text"},{"fieldApiName":"FinServ__Type__c","label":"Type","editable":true,"rendering":"picklist","required":true},{"fieldApiName":"FinServ__TargetValue__c","label":"Target Amount","editable":true,"rendering":"currency"},{"fieldApiName":"FinServ__TargetDate__c","label":"Target Date","editable":true,"rendering":"date"},{"fieldApiName":"FinServ__Status__c","label":"Status","editable":true,"rendering":"badge"},{"fieldApiName":"FinServ__Description__c","label":"Description","editable":true,"rendering":"text"}]</stringValue>
+                </value>
+            </inputParameters>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+            <outputParameters>
+                <assignToReference>selectedNewRecords</assignToReference>
+                <name>selectedNewRecords</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>selectedExistingRecords</assignToReference>
+                <name>selectedExistingRecords</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>newCount</assignToReference>
+                <name>newCount</name>
+            </outputParameters>
+            <outputParameters>
+                <assignToReference>updatedCount</assignToReference>
+                <name>updatedCount</name>
+            </outputParameters>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <nextOrFinishButtonLabel>Save Selected</nextOrFinishButtonLabel>
+        <showFooter>false</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <description>Displays a summary of the goals created and updated after the advisor saves their selections.</description>
+        <name>Screen_Summary</name>
         <label>Goals Saved</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
@@ -867,8 +864,8 @@
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <fields>
-            <name>SavedGoalScreen</name>
-            <fieldText>&lt;p&gt;All goals have been reviewed and saved successfully.&lt;/p&gt;</fieldText>
+            <name>SummaryMessage</name>
+            <fieldText>&lt;p&gt;{!summaryText}&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -879,284 +876,7 @@
                 </width>
             </styleProperties>
         </fields>
-        <nextOrFinishButtonLabel>Done</nextOrFinishButtonLabel>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
-        <description>Displays an existing financial goal for the advisor to review and update before saving.</description>
-        <name>Review_Existing_Goal</name>
-        <label>Review Existing Goal</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <allowBack>true</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <connector>
-            <targetReference>Update_Goal</targetReference>
-        </connector>
-        <fields>
-            <name>GoalDetails</name>
-            <fieldText>&lt;h5&gt;Update Existing Goal&lt;/h5&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>Goal_Name</name>
-            <dataType>String</dataType>
-            <defaultValue>
-                <elementReference>Loop_Through_Financial_Goals.Name</elementReference>
-            </defaultValue>
-            <fieldText>Goal Name</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>Target_Amount</name>
-            <dataType>Currency</dataType>
-            <defaultValue>
-                <elementReference>Loop_Through_Financial_Goals.FinServ__TargetValue__c</elementReference>
-            </defaultValue>
-            <fieldText>Target Amount</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
-            <scale>0</scale>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>Target_Date</name>
-            <dataType>DateTime</dataType>
-            <defaultValue>
-                <elementReference>Loop_Through_Financial_Goals.FinServ__TargetDate__c</elementReference>
-            </defaultValue>
-            <fieldText>Target Date</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>Status</name>
-            <dataType>String</dataType>
-            <defaultValue>
-                <elementReference>Loop_Through_Financial_Goals.FinServ__Status__c</elementReference>
-            </defaultValue>
-            <fieldText>Status</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>Description</name>
-            <dataType>String</dataType>
-            <defaultValue>
-                <elementReference>Loop_Through_Financial_Goals.FinServ__Description__c</elementReference>
-            </defaultValue>
-            <fieldText>Description</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <nextOrFinishButtonLabel>Save &amp; Next</nextOrFinishButtonLabel>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
-        <description>Displays a new AI-suggested financial goal for the advisor to review and confirm before creating.</description>
-        <name>Review_New_Goal</name>
-        <label>Review New Goal</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <connector>
-            <targetReference>Should_Create_Goal</targetReference>
-        </connector>
-        <fields>
-            <name>CreatingNewGoal</name>
-            <fieldText>&lt;h5&gt;New Goal Suggested&lt;/h5&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>scr_GoalName</name>
-            <dataType>String</dataType>
-            <defaultValue>
-                <elementReference>FormulaGoalName</elementReference>
-            </defaultValue>
-            <fieldText>Goal Name</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>scr_GoalType</name>
-            <choiceReferences>ChoiceEducation</choiceReferences>
-            <choiceReferences>ChoiceEmergency</choiceReferences>
-            <choiceReferences>ChoiceOther</choiceReferences>
-            <choiceReferences>ChoicePayOffDebt</choiceReferences>
-            <choiceReferences>ChoiceRetirement</choiceReferences>
-            <choiceReferences>ChoiceVacation</choiceReferences>
-            <choiceReferences>ChoiceVehicle</choiceReferences>
-            <dataType>String</dataType>
-            <defaultValue>
-                <elementReference>FormulaGoalType</elementReference>
-            </defaultValue>
-            <fieldText>Goal Type</fieldText>
-            <fieldType>DropdownBox</fieldType>
-            <isRequired>false</isRequired>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>scr_GoalStatus</name>
-            <choiceReferences>ChoiceInProgress</choiceReferences>
-            <choiceReferences>ChoiceNotStarted</choiceReferences>
-            <choiceReferences>ChoiceCompleted</choiceReferences>
-            <dataType>String</dataType>
-            <defaultValue>
-                <elementReference>FormulaGoalStatus</elementReference>
-            </defaultValue>
-            <fieldText>Goal Status</fieldText>
-            <fieldType>DropdownBox</fieldType>
-            <isRequired>false</isRequired>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>scr_GoalAmount</name>
-            <dataType>Currency</dataType>
-            <fieldText>Target Amount</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
-            <scale>0</scale>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>scr_GoalTargetDate</name>
-            <dataType>Date</dataType>
-            <fieldText>Target Date</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>scr_GoalDescription</name>
-            <dataType>String</dataType>
-            <defaultValue>
-                <elementReference>FormulaGoalDescription</elementReference>
-            </defaultValue>
-            <fieldText>Description</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>scr_SkipGoal</name>
-            <dataType>Boolean</dataType>
-            <fieldText>Skip this goal</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <nextOrFinishButtonLabel>Save &amp; Next</nextOrFinishButtonLabel>
+        <nextOrFinishButtonLabel>Close</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
@@ -1177,7 +897,27 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <description>Stores the Salesforce Account ID of the primary household member, used to query existing financial goals and create new goal party records.</description>
+        <description>Grounding context string built from the existing goals (each tagged [SourceId: &lt;id&gt;]) and passed to the review prompt as Input:ExistingGoalsContext.</description>
+        <name>existingGoalsContext</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores the count of new goals selected by the advisor for creation, emitted by the review screen.</description>
+        <name>newCount</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <scale>0</scale>
+        <value>
+            <numberValue>0.0</numberValue>
+        </value>
+    </variables>
+    <variables>
+        <description>Stores the Salesforce Account ID of the resolved person account (the meeting&apos;s person account, or the household&apos;s primary member account), used to query existing goals and link new goals.</description>
         <name>primaryMemberAccountId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
@@ -1185,39 +925,60 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <description>Stores the raw JSON text of the current goal returned by Get Goal By Index prompt, used by MID/FIND formulas to extract individual field values.</description>
-        <name>varCurrentGoalJson</name>
+        <description>Output variable signaling that this flow created or updated goals, so the launching component can refresh its list.</description>
+        <name>refreshGoals</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <value>
+            <booleanValue>true</booleanValue>
+        </value>
+    </variables>
+    <variables>
+        <description>Stores the raw JSON string returned by PeriodicGenerateGoalFlowPrompt. Single consolidated payload of shape {newRecords:[...], recordEdits:[...]} feeding both tables of the review screen; the one prompt deduplicates across the two arrays.</description>
+        <name>reviewJson</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <description>Counter tracking the current position in the AI-suggested goals list, incremented after each goal is reviewed to iterate through all suggestions.</description>
-        <name>varGoalIndex</name>
+        <description>Collection of financial goal records with edited field values (with Id) returned by the review screen for the advisor-selected rows in the existing goals table.</description>
+        <name>selectedExistingRecords</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>FinServ__FinancialGoal__c</objectType>
+    </variables>
+    <variables>
+        <description>Collection of new financial goal records (without Id) returned by the review screen for the advisor-selected rows in the new goals table.</description>
+        <name>selectedNewRecords</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>FinServ__FinancialGoal__c</objectType>
+    </variables>
+    <variables>
+        <description>Stores the summary text displayed on the finish screen, combining counts of goals created and updated.</description>
+        <name>summaryText</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores the count of existing goals selected by the advisor for update, emitted by the review screen.</description>
+        <name>updatedCount</name>
         <dataType>Number</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
-        <scale>2</scale>
+        <scale>0</scale>
         <value>
-            <numberValue>1.0</numberValue>
+            <numberValue>0.0</numberValue>
         </value>
-    </variables>
-    <variables>
-        <description>Stores the raw JSON string of AI-suggested financial goals returned from the meeting notes prompt, used as input for indexed goal retrieval.</description>
-        <name>varGoalsJson</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <description>Stores the Salesforce record ID of a newly created financial goal, used to associate it with a FinancialGoalParty record.</description>
-        <name>varNewGoalId</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
     </variables>
 </Flow>
