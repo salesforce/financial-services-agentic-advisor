@@ -230,7 +230,7 @@
             <componentInstance>
                 <componentInstanceProperties>
                     <name>graphName</name>
-                    <value>Household_Graph_for_Managed_Package</value>
+                    <value>Household_Management_Graph_for_Managed_Package</value>
                 </componentInstanceProperties>
                 <componentName>runtime_industries_arcgraph:arcGraph</componentName>
                 <identifier>arcGraph_relationships</identifier>
