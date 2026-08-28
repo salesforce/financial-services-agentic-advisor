@@ -42,7 +42,7 @@
         <offset>0</offset>
     </actionCalls>
     <actionCalls>
-        <description>Shows a success toast message to convey that the specified account contact relationship record was created.</description>
+        <description>Shows a success toast message to convey that the specified account was added and the corresponding relationship record was created.</description>
         <name>ShowAddRelatedAccountSuccessMessage</name>
         <label>Show Add Related Account Success Message</label>
         <locationX>0</locationX>
@@ -62,7 +62,7 @@
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>Account {!NameText} was added to the household, and the corresponding account account relationship record was created.</stringValue>
+                <stringValue>An account was added to the household, and the corresponding relationship record was created.</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -164,8 +164,8 @@
     <apiVersion>68.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
-        <description>Set the selected account details from the account lookup</description>
-        <name>Set_Selected_Account_Details</name>
+        <description>Sets the SelectedAccountId to AccountId, and SelectedAccountName to Account Name that the flow user selected on the ScreenCollectRelatedAccountType screen.</description>
+        <name>SetSelectedAccountDetails</name>
         <label>Set Selected Account Details</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
@@ -188,9 +188,9 @@
         </connector>
     </assignments>
     <assignments>
-        <description>Set the selected account details from the recent items data table</description>
-        <name>Set_Selected_Recent_Account_Details</name>
-        <label>Set Selected Recent Account Details</label>
+        <description>Sets the SelectedAccountId to AccountId, and SelectedAccountName to Account Name that the flow user selected on the ScreenCollectRelatedAccountType screen.</description>
+        <name>SetSelectedAccountDetailsForRecentItemSelection</name>
+        <label>Set Selected Account Details</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
@@ -303,8 +303,8 @@
     </customProperties>
     <decisions>
         <description>Determines whether the ContactId in Contact from GetContact record variable exists.</description>
-        <name>HaveContactId</name>
-        <label>Have Contact ID?</label>
+        <name>HaveMemberContactId</name>
+        <label>Have Member Contact ID?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
@@ -312,7 +312,7 @@
         </defaultConnector>
         <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
         <rules>
-            <name>HasContactId</name>
+            <name>HasMemberContactId</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>GetContact.Id</leftValueReference>
@@ -328,17 +328,17 @@
         </rules>
     </decisions>
     <decisions>
-        <description>Check whether the account chosen via lookup is already actively related to the member</description>
-        <name>Is_Account_Already_Related</name>
-        <label>Is Account Already Related</label>
+        <description>Determines if the account associated with the record selected on the ScreenCollectRelatedAccountType screen is already a member of the household.</description>
+        <name>IsAccountMemberOfHousehold</name>
+        <label>Is Account a Member of the Household?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Set_Selected_Account_Details</targetReference>
+            <targetReference>SetSelectedAccountDetails</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Not Related</defaultConnectorLabel>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
         <rules>
-            <name>Account_Already_Related</name>
+            <name>ExistingRelatedAccount</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>TransformActiveMemberAccountIds</leftValueReference>
@@ -348,90 +348,9 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>AccountAlreadyRelatedError</targetReference>
+                <targetReference>ScreenShowRelatedAccountAlreadyAddedToHouseholdError</targetReference>
             </connector>
-            <label>Account Already Related</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <description>Check that exactly one of the account lookup or recent items data table is selected</description>
-        <name>Is_Single_Account_Selected</name>
-        <label>Is Single Account Selected</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>ScreenInvalidSelectionError</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Invalid Selection</defaultConnectorLabel>
-        <rules>
-            <name>Recent_Account_Selected</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>ExistingTable.firstSelectedRow.Id</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>AccountLookup.recordId</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Set_Selected_Recent_Account_Details</targetReference>
-            </connector>
-            <label>Recent Account Selected</label>
-        </rules>
-        <rules>
-            <name>Account_Lookup_Selected</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>AccountLookup.recordId</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>ExistingTable.firstSelectedRow.Id</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Get_Selected_Account_Record</targetReference>
-            </connector>
-            <label>Account Lookup Selected</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <description>Validate the account chosen via lookup is not a person account</description>
-        <name>Is_Valid_Account_Selected</name>
-        <label>Is Valid Account Selected</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>Is_Account_Already_Related</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Valid Account</defaultConnectorLabel>
-        <rules>
-            <name>Person_Account_Selected</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Get_Selected_Account_Record.IsPersonAccount</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>ScreenInvalidAccountError</targetReference>
-            </connector>
-            <label>Person Account Selected</label>
+            <label>Yes</label>
         </rules>
     </decisions>
     <decisions>
@@ -461,13 +380,94 @@
         </rules>
     </decisions>
     <decisions>
+        <description>Determines if the account associated with the selected record is of type Person Account.</description>
+        <name>IsPersonAccountSelected</name>
+        <label>Is Person Account Selected?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>IsAccountMemberOfHousehold</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>PersonAccountSelected</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetAccountForSelectedRecord.IsPersonAccount</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>ScreenShowPersonAccountError</targetReference>
+            </connector>
+            <label>Yes (Default)</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether exactly one account was selected from either Recent Items or Member Lookup.</description>
+        <name>IsSingleAccountSelectedFromRecentItemsOrLookup</name>
+        <label>Is a Single Account Selected from Recent Items or Lookup?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>ScreenShowRecordSelectionError</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Other (Default)</defaultConnectorLabel>
+        <rules>
+            <name>AccountSelectedFromRecentItems</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>ExistingTable.firstSelectedRow.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>AccountLookup.recordId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SetSelectedAccountDetailsForRecentItemSelection</targetReference>
+            </connector>
+            <label>Is Selected from Recent Items</label>
+        </rules>
+        <rules>
+            <name>AccountSelectedFromLookup</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>AccountLookup.recordId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>ExistingTable.firstSelectedRow.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>GetAccountForSelectedRecord</targetReference>
+            </connector>
+            <label>Is Selected from Account Lookup</label>
+        </rules>
+    </decisions>
+    <decisions>
         <description>Determines which attribute is stored in the ChoiceExistingAccounts and ChoiceNewAccount variables.</description>
         <name>SetWhichAttribute</name>
         <label>Set Which Attribute?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Is_Single_Account_Selected</targetReference>
+            <targetReference>IsSingleAccountSelectedFromRecentItemsOrLookup</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Existing Account (Default)</defaultConnectorLabel>
         <rules>
@@ -729,14 +729,14 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
     <recordLookups>
-        <description>Fetch the account chosen via the lookup to validate its type before creating the relationship</description>
-        <name>Get_Selected_Account_Record</name>
-        <label>Get Selected Account Record</label>
+        <description>Gets the account record with an ID that matches the account ID of the record that the flow user selected on the ScreenCollectRelatedAccountType screen.</description>
+        <name>GetAccountForSelectedRecord</name>
+        <label>Get Account</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Is_Valid_Account_Selected</targetReference>
+            <targetReference>IsPersonAccountSelected</targetReference>
         </connector>
         <faultConnector>
             <isGoTo>true</isGoTo>
@@ -812,7 +812,7 @@
     <recordLookups>
         <description>Gets the account contact relationship records with an contact ID that matches the memberId passed into the flow, and Active set to True. Stores the result in the Account Contact Relationships from GetActiveAccountContactRelationships record collection.</description>
         <name>GetActiveAccountContactRelationships</name>
-        <label>Get Active Member Accounts of Household</label>
+        <label>Get Account Contact Relationships</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
@@ -852,7 +852,7 @@
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>HaveContactId</targetReference>
+            <targetReference>HaveMemberContactId</targetReference>
         </connector>
         <faultConnector>
             <targetReference>ShowMemberContactRecordRetrievalError</targetReference>
@@ -873,7 +873,7 @@
     <recordLookups>
         <description>Gets the account contact relationship records with an contact ID that matches the memberId passed into the flow, and Active set to False. Stores the result in the Account Contact Relationships from GetInactiveAccountContactRelationships record collection.</description>
         <name>GetInactiveAccountContactRelationships</name>
-        <label>Get Inactive Member Accounts of Household</label>
+        <label>Get Account Contact Relationships</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
@@ -1003,36 +1003,6 @@
     </recordUpdates>
     <runInMode>DefaultMode</runInMode>
     <screens>
-        <description>Error shown when the account selected via lookup is already actively related to the member</description>
-        <name>AccountAlreadyRelatedError</name>
-        <label>AccountAlreadyRelatedError</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <allowBack>true</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <backButtonLabel>Back</backButtonLabel>
-        <connector>
-            <targetReference>END_ELEMENT_11</targetReference>
-        </connector>
-        <fields>
-            <name>AccountAlreadyRelatedText</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;This record is already a related account of the member. Select a different account and try again.&lt;/span&gt;&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <nextOrFinishButtonLabel>Cancel</nextOrFinishButtonLabel>
-        <showFooter>true</showFooter>
-        <showHeader>false</showHeader>
-    </screens>
-    <screens>
         <description>Allows the flow user to enter the role for the existing account being added to the household.</description>
         <name>ScreenCollectExistingAccountDetails</name>
         <label>Collect Existing Account Details</label>
@@ -1122,7 +1092,7 @@
             <choiceReferences>ChoiceNewAccount</choiceReferences>
             <dataType>String</dataType>
             <defaultSelectedChoiceReference>ChoiceExistingAccounts</defaultSelectedChoiceReference>
-            <fieldText>Add Account</fieldText>
+            <fieldText>Add Member Account</fieldText>
             <fieldType>RadioButtons</fieldType>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
@@ -1341,7 +1311,7 @@
                 <fields>
                     <name>NameText</name>
                     <dataType>String</dataType>
-                    <fieldText>Account Name</fieldText>
+                    <fieldText>Name</fieldText>
                     <fieldType>InputField</fieldType>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
@@ -1536,21 +1506,20 @@
         </stageReference>
     </screens>
     <screens>
-        <description>Error shown when the account selected via lookup is a person account</description>
-        <name>ScreenInvalidAccountError</name>
-        <label>ScreenInvalidAccountError</label>
+        <description>Shows an error message if the selected account is of the person account record type.</description>
+        <name>ScreenShowPersonAccountError</name>
+        <label>Show Person Account Error</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
-        <backButtonLabel>Back</backButtonLabel>
         <connector>
             <targetReference>END_ELEMENT_10</targetReference>
         </connector>
         <fields>
-            <name>InvalidAccountType</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;Choose a Business Account to proceed.&lt;/p&gt;</fieldText>
+            <name>PersonAccountErrorDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(0, 0, 0); font-size: 13px;&quot;&gt;We can’t add this record because it is&amp;nbsp; a Person Account. Click Back, select a different account and try again.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -1566,21 +1535,20 @@
         <showHeader>false</showHeader>
     </screens>
     <screens>
-        <description>Error shown when neither or both of the account lookup and recent items are selected</description>
-        <name>ScreenInvalidSelectionError</name>
-        <label>ScreenInvalidSelectionError</label>
+        <description>Displays an error message if no account records are selected. Exactly one account record is required to add as a related account to the household.</description>
+        <name>ScreenShowRecordSelectionError</name>
+        <label>ShowRecordSelectionError</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
-        <backButtonLabel>Back</backButtonLabel>
         <connector>
             <targetReference>END_ELEMENT_9</targetReference>
         </connector>
         <fields>
-            <name>NoAccountSelectedError</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;Select at least one account to add to the household. Click Back, select an account, and continue.&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <name>NoAccountSelectedDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(0, 0, 0); font-size: 13px;&quot;&gt;Select at least one account to add to the household. Click Previous, select an account, and continue.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -1609,8 +1577,8 @@
             </visibilityRule>
         </fields>
         <fields>
-            <name>MultipleAccountSelectedError</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;Select exactly one account to add to the household. Click Back, select only one account, and continue.&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <name>MultipleRecordSelectionDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(0, 0, 0); font-size: 13px;&quot;&gt;Select exactly one account to add to the household. Click Previous, select only one account, and continue.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -1637,6 +1605,35 @@
                     </rightValue>
                 </conditions>
             </visibilityRule>
+        </fields>
+        <nextOrFinishButtonLabel>Cancel</nextOrFinishButtonLabel>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <description>Shows an error message indicating that the record the flow user selected to add to the household is already associated with the household.</description>
+        <name>ScreenShowRelatedAccountAlreadyAddedToHouseholdError</name>
+        <label>Show Related Account Already Added to Household Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>END_ELEMENT_11</targetReference>
+        </connector>
+        <fields>
+            <name>RelatedAccountAlreadyAddedToHouseholdErrorDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(48, 48, 48); font-size: 13px;&quot;&gt;This account is already associated with the household. Select a different account and try again.&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <nextOrFinishButtonLabel>Cancel</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
@@ -1733,7 +1730,7 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <description>Stores the Id of the account selected via the lookup or recent items data table</description>
+        <description>Stores the ID of the selected account to add to the household.</description>
         <name>SelectedAccountId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
@@ -1741,7 +1738,7 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <description>Stores the name of the account selected via the lookup or recent items data table</description>
+        <description>Stores the name of the selected account to add to the household.</description>
         <name>SelectedAccountName</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>

@@ -2,7 +2,7 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <accessType>NamespaceRestricted</accessType>
     <actionCalls>
-        <description>Shows a success toast message to convey that the specified account account relationship record was created.</description>
+        <description>Shows a success toast message to convey that the specified account was added and the corresponding relationship record was created.</description>
         <name>ShowAddRelatedGroupSuccessMessage</name>
         <label>Show Add Related Group Success Message</label>
         <locationX>0</locationX>
@@ -16,13 +16,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Account was added to the household</stringValue>
+                <stringValue>Related group was added to the household</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>Account {!NameText} was added to the household, and the corresponding account account relationship record was created.</stringValue>
+                <stringValue>An account was added to the household, and the corresponding relationship record was created.</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -164,20 +164,20 @@
     <apiVersion>68.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
-        <description>Set the selected group details from the account lookup</description>
-        <name>Set_Selected_Group_Details</name>
-        <label>Set Selected Group Details</label>
+        <description>Sets the SelectedAccountId to AccountId, and SelectedAccountName to Account Name that the flow user selected on the ScreenCollectRelatedGroupAccountType screen.</description>
+        <name>SetSelectedAccountDetails</name>
+        <label>Set Selected Account Details</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>SelectedGroupId</assignToReference>
+            <assignToReference>SelectedAccountId</assignToReference>
             <operator>Assign</operator>
             <value>
                 <elementReference>AccountLookup.recordId</elementReference>
             </value>
         </assignmentItems>
         <assignmentItems>
-            <assignToReference>SelectedGroupName</assignToReference>
+            <assignToReference>SelectedAccountName</assignToReference>
             <operator>Assign</operator>
             <value>
                 <elementReference>AccountLookup.recordName</elementReference>
@@ -189,20 +189,20 @@
         </connector>
     </assignments>
     <assignments>
-        <description>Set the selected group details from the recent items data table</description>
-        <name>Set_Selected_Recent_Group_Details</name>
-        <label>Set Selected Recent Group Details</label>
+        <description>Sets the SelectedAccountId to AccountId, and SelectedAccountName to Account Name that the flow user selected on the ScreenCollectRelatedAccountType screen.</description>
+        <name>SetSelectedAccountDetailsForRecentItemSelection</name>
+        <label>Set Selected Account Details</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>SelectedGroupId</assignToReference>
+            <assignToReference>SelectedAccountId</assignToReference>
             <operator>Assign</operator>
             <value>
                 <elementReference>SelectAccountsDataTable.firstSelectedRow.Id</elementReference>
             </value>
         </assignmentItems>
         <assignmentItems>
-            <assignToReference>SelectedGroupName</assignToReference>
+            <assignToReference>SelectedAccountName</assignToReference>
             <operator>Assign</operator>
             <value>
                 <elementReference>SelectAccountsDataTable.firstSelectedRow.Name</elementReference>
@@ -307,17 +307,43 @@
         </rules>
     </decisions>
     <decisions>
-        <description>If the account chosen from the lookup is already related to the household, show an error instead of creating a duplicate relationship</description>
-        <name>Is_Group_Already_Related</name>
-        <label>Is Group Already Related</label>
+        <description>Determines if the account associated with the selected record is of type IndustriesHousehold or is the same as the household account ID.</description>
+        <name>IsGroupAccountTypeInvalid</name>
+        <label>Is Group Account Type Invalid?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Set_Selected_Group_Details</targetReference>
+            <targetReference>ScreenHouseholdAccountError</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Not Already Related</defaultConnectorLabel>
+        <defaultConnectorLabel>Invalid (Default)</defaultConnectorLabel>
         <rules>
-            <name>Group_Related_Or_Same_As_Household</name>
+            <name>ValidType</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetAccountForSelectedRecord.RecordType.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>IndustriesHouseholdRecordType</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>IsGroupRelatedToHousehold</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether the selected record is already associated with the household or is the household account.</description>
+        <name>IsGroupRelatedToHousehold</name>
+        <label>Is Group Related to Household?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>SetSelectedAccountDetails</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>ExistingAccount</name>
             <conditionLogic>or</conditionLogic>
             <conditions>
                 <leftValueReference>TransformRelatedGroupAccountIds</leftValueReference>
@@ -334,23 +360,23 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>GroupAlreadyRelatedError</targetReference>
+                <targetReference>ScreenShowAccountAlreadyAddedToHouseholdError</targetReference>
             </connector>
-            <label>Group Related Or Same As Household</label>
+            <label>Yes</label>
         </rules>
     </decisions>
     <decisions>
-        <description>Check that exactly one of the group lookup or recent items data table is selected</description>
-        <name>Is_Single_Group_Selected</name>
-        <label>Is Single Group Selected</label>
+        <description>Determines whether exactly one account was selected from either Recent Items or Member Lookup.</description>
+        <name>IsSingleAccountSelectedFromRecentItemsOrLookup</name>
+        <label>Is a Single Account Selected from Recent Items or Lookup?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>ScreenInvalidSelectionError</targetReference>
+            <targetReference>ScreenShowMultipleRecordSelectionError</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Invalid Selection</defaultConnectorLabel>
+        <defaultConnectorLabel>Other (Default)</defaultConnectorLabel>
         <rules>
-            <name>Recent_Group_Selected</name>
+            <name>AccountSelectedFromRecentItems</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>SelectAccountsDataTable.firstSelectedRow.Id</leftValueReference>
@@ -367,12 +393,12 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Set_Selected_Recent_Group_Details</targetReference>
+                <targetReference>SetSelectedAccountDetailsForRecentItemSelection</targetReference>
             </connector>
-            <label>Recent Group Selected</label>
+            <label>Is Selected from Recent Items</label>
         </rules>
         <rules>
-            <name>Group_Lookup_Selected</name>
+            <name>AccountSelectedFromLookup</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>AccountLookup.recordId</leftValueReference>
@@ -389,35 +415,9 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Get_Selected_Account_Record</targetReference>
+                <targetReference>GetAccountForSelectedRecord</targetReference>
             </connector>
-            <label>Group Lookup Selected</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <description>Validate the account chosen via lookup is an IndustriesHousehold record type</description>
-        <name>Is_Valid_Group_Selected</name>
-        <label>Is Valid Group Selected</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>ScreenInvalidGroupError</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Not a Household</defaultConnectorLabel>
-        <rules>
-            <name>Household_Group_Selected</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Get_Selected_Account_Record.RecordType.DeveloperName</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <elementReference>IndustriesHouseholdRecordType</elementReference>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Is_Group_Already_Related</targetReference>
-            </connector>
-            <label>Household Group Selected</label>
+            <label>Is Selected from Account Lookup</label>
         </rules>
     </decisions>
     <decisions>
@@ -457,7 +457,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Is_Single_Group_Selected</targetReference>
+                <targetReference>IsSingleAccountSelectedFromRecentItemsOrLookup</targetReference>
             </connector>
             <label>Existing Accounts</label>
         </rules>
@@ -588,7 +588,7 @@
         <inputAssignments>
             <field>FinServ__RelatedAccount__c</field>
             <value>
-                <elementReference>SelectedGroupId</elementReference>
+                <elementReference>SelectedAccountId</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -686,36 +686,6 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
     <recordLookups>
-        <description>Fetch the account chosen via the lookup to validate its record type before creating the relationship</description>
-        <name>Get_Selected_Account_Record</name>
-        <label>Get Selected Account Record</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Is_Valid_Group_Selected</targetReference>
-        </connector>
-        <faultConnector>
-            <isGoTo>true</isGoTo>
-            <targetReference>ShowInvalidAccountTypeChoiceError</targetReference>
-        </faultConnector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>AccountLookup.recordId</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>Account</object>
-        <queriedFields>Id</queriedFields>
-        <queriedFields>Name</queriedFields>
-        <queriedFields>IsPersonAccount</queriedFields>
-        <queriedFields>RecordTypeId</queriedFields>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
         <description>Gets the account record with an account ID that matches the householdId passed into the flow. Stores the result in the Account from GetAccount record variable.</description>
         <name>GetAccount</name>
         <label>Get Account</label>
@@ -770,6 +740,34 @@
         <object>FinServ__AccountAccountRelation__c</object>
         <queriedFields>Id</queriedFields>
         <queriedFields>FinServ__RelatedAccount__c</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Gets the account record with an ID that matches the account ID of the record that the flow user selected on the ScreenCollectRelatedGroupAccountType screen.</description>
+        <name>GetAccountForSelectedRecord</name>
+        <label>Get Account</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IsGroupAccountTypeInvalid</targetReference>
+        </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>ShowInvalidAccountTypeChoiceError</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>AccountLookup.recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>RecordTypeId</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
@@ -885,69 +883,6 @@
     </recordRollbacks>
     <runInMode>DefaultMode</runInMode>
     <screens>
-        <description>Shown when the account selected from the lookup is already related to the household</description>
-        <name>GroupAlreadyRelatedError</name>
-        <label>GroupAlreadyRelatedError</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <allowBack>true</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <backButtonLabel>Back</backButtonLabel>
-        <connector>
-            <targetReference>END_ELEMENT_7</targetReference>
-        </connector>
-        <fields>
-            <name>GroupAlreadyRelatedErrorText</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;This record is already a related account of the household. Select a different account and try again.&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-            <visibilityRule>
-                <conditionLogic>and</conditionLogic>
-                <conditions>
-                    <leftValueReference>AccountLookup.recordId</leftValueReference>
-                    <operator>NotEqualTo</operator>
-                    <rightValue>
-                        <elementReference>householdId</elementReference>
-                    </rightValue>
-                </conditions>
-            </visibilityRule>
-        </fields>
-        <fields>
-            <name>GroupSameAsHouseholdErrorText</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;This record is same as the household you&apos;re adding to. Select a different account and try again.&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-            <visibilityRule>
-                <conditionLogic>and</conditionLogic>
-                <conditions>
-                    <leftValueReference>AccountLookup.recordId</leftValueReference>
-                    <operator>EqualTo</operator>
-                    <rightValue>
-                        <elementReference>householdId</elementReference>
-                    </rightValue>
-                </conditions>
-            </visibilityRule>
-        </fields>
-        <nextOrFinishButtonLabel>Cancel</nextOrFinishButtonLabel>
-        <showFooter>true</showFooter>
-        <showHeader>false</showHeader>
-    </screens>
-    <screens>
         <description>Allows the flow user to provide the existing account details to add to the household.</description>
         <name>ScreenCollectExistingGroupAccountDetails</name>
         <label>Collect Existing Group Account Details</label>
@@ -976,7 +911,7 @@
             <name>ExistingAccountNameText</name>
             <dataType>String</dataType>
             <defaultValue>
-                <elementReference>SelectedGroupName</elementReference>
+                <elementReference>SelectedAccountName</elementReference>
             </defaultValue>
             <fieldText>Name</fieldText>
             <fieldType>InputField</fieldType>
@@ -1507,21 +1442,20 @@
         </stageReference>
     </screens>
     <screens>
-        <description>Error shown when the account selected via lookup is not an IndustriesHousehold record type</description>
-        <name>ScreenInvalidGroupError</name>
-        <label>ScreenInvalidGroupError</label>
+        <description>Shows an error message if the selected record is not of the IndustriesHousehold record type.</description>
+        <name>ScreenHouseholdAccountError</name>
+        <label>Show Household Account Error</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
-        <backButtonLabel>Back</backButtonLabel>
         <connector>
             <targetReference>END_ELEMENT_6</targetReference>
         </connector>
         <fields>
-            <name>InvalidGroupType</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;Choose a Household account to proceed.&lt;/p&gt;</fieldText>
+            <name>HouseholdAccountErrorDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(0, 0, 0); font-size: 13px;&quot;&gt;You can’t add this account because it isn’t of the type IndustriesHousehold. To continue, click Previous, select an account of type IndustriesHousehold, and continue.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -1537,21 +1471,82 @@
         <showHeader>false</showHeader>
     </screens>
     <screens>
-        <description>Error shown when neither or both of the group lookup and recent items are selected</description>
-        <name>ScreenInvalidSelectionError</name>
-        <label>ScreenInvalidSelectionError</label>
+        <description>Shows an error message indicating that the record the flow user selected to add to the household is already a related group of the household.</description>
+        <name>ScreenShowAccountAlreadyAddedToHouseholdError</name>
+        <label>Show Account Already Added to Household Error</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
-        <backButtonLabel>Back</backButtonLabel>
+        <connector>
+            <targetReference>END_ELEMENT_7</targetReference>
+        </connector>
+        <fields>
+            <name>RelatedGroupAlreadyAddedToHouseholdErrorDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(48, 48, 48); font-size: 13px;&quot;&gt;This record is already a related group of the household. Select a different account and try again.&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>AccountLookup.recordId</leftValueReference>
+                    <operator>NotEqualTo</operator>
+                    <rightValue>
+                        <elementReference>householdId</elementReference>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <fields>
+            <name>RelatedGroupSameAsHouseholdErrorDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(0, 0, 0); font-size: 13px;&quot;&gt;We can’t add a household account to the same household. To continue, click Previous, select a different account.&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>AccountLookup.recordId</leftValueReference>
+                    <operator>EqualTo</operator>
+                    <rightValue>
+                        <elementReference>householdId</elementReference>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <nextOrFinishButtonLabel>Cancel</nextOrFinishButtonLabel>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <description>Displays an error message if no records or multiple records are selected. Exactly one record is required to add as a related group to the household.</description>
+        <name>ScreenShowMultipleRecordSelectionError</name>
+        <label>Show Multiple Record Selection Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
         <connector>
             <targetReference>END_ELEMENT_5</targetReference>
         </connector>
         <fields>
-            <name>NoGroupSelectedError</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;Select at least one account to add to the household. Click Back, select an account, and continue.&lt;/p&gt;</fieldText>
+            <name>NoAccountSelectedDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(0, 0, 0); font-size: 13px;&quot;&gt;Select at least one account to add to the household. Click Previous, select an account, and continue.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -1580,8 +1575,8 @@
             </visibilityRule>
         </fields>
         <fields>
-            <name>MultipleGroupSelectedError</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;Select exactly one account to add to the household. Click Back, select only one account, and continue.&lt;/p&gt;</fieldText>
+            <name>MultipleRecordSelectionDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(0, 0, 0); font-size: 13px;&quot;&gt;Select exactly one account to add to the household. Click Previous, select an account, and continue.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -1681,24 +1676,24 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
+        <description>Stores the ID of the selected account to add to the household.</description>
+        <name>SelectedAccountId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores the name of the selected account to add to the household.</description>
+        <name>SelectedAccountName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
         <description>Variable to store reciprocal role selected for related account</description>
         <name>selectedExistingAccountReciprocalRoleId</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <description>Stores the Id of the group selected via the lookup or recent items data table</description>
-        <name>SelectedGroupId</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <description>Stores the name of the group selected via the lookup or recent items data table</description>
-        <name>SelectedGroupName</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>

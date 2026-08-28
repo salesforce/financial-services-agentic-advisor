@@ -2,7 +2,7 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <accessType>NamespaceRestricted</accessType>
     <actionCalls>
-        <description>Shows a success toast message to convey that the specified contact was added and the corresponding account contact relationship record was created.</description>
+        <description>Shows a success toast message to convey that the specified contact was added to the household, and the corresponding relationship record was created.</description>
         <name>ShowAddRelatedContactSuccessMessage</name>
         <label>Show Add Related Contact Success Message</label>
         <locationX>0</locationX>
@@ -16,13 +16,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Contact was added to the household</stringValue>
+                <stringValue>Related contact was added to the household</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>Contact {!PersonAccountName} was added to the household, and the corresponding relationship record was created.</stringValue>
+                <stringValue>Contact was added to the household, and the corresponding relationship record was created.</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -164,31 +164,25 @@
     <apiVersion>68.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
-        <name>Set_Recent_Contact_Details</name>
-        <label>Set Recent Contact Details</label>
+        <description>Sets PersonAccountName to the value returned by FullNameFormula.</description>
+        <name>SetContactName</name>
+        <label>Set Contact Name</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>SelectedContactId</assignToReference>
+            <assignToReference>PersonAccountName</assignToReference>
             <operator>Assign</operator>
             <value>
-                <elementReference>SelectContactsDataTable.firstSelectedRow.Id</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>SelectedContactName</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>SelectContactsDataTable.firstSelectedRow.Name</elementReference>
+                <elementReference>FullNameFormula</elementReference>
             </value>
         </assignmentItems>
         <connector>
-            <isGoTo>true</isGoTo>
-            <targetReference>ScreenCollectExistingContactDetails</targetReference>
+            <targetReference>ScreenCollectNewContactDetails</targetReference>
         </connector>
     </assignments>
     <assignments>
-        <name>Set_Selected_Contact_Details</name>
+        <description>Sets the SelectedContactId to ContactId, and SelectedContactName to Contact Name that the flow user selected on the ScreenCollectRelatedContactType screen.</description>
+        <name>SetSelectedContactDetails</name>
         <label>Set Selected Contact Details</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
@@ -211,20 +205,28 @@
         </connector>
     </assignments>
     <assignments>
-        <description>Sets PersonAccountName to the value returned by FullNameFormula.</description>
-        <name>SetContactName</name>
-        <label>Set Contact Name</label>
+        <description>Sets the SelectedContactId to ContactId, and SelectedContactName to Contact Name that the flow user selected on the ScreenCollectRelatedContactType screen.</description>
+        <name>SetSelectedContactDetailsForRecentItemSelection</name>
+        <label>Set Selected Contact Details</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>PersonAccountName</assignToReference>
+            <assignToReference>SelectedContactId</assignToReference>
             <operator>Assign</operator>
             <value>
-                <elementReference>FullNameFormula</elementReference>
+                <elementReference>SelectContactsDataTable.firstSelectedRow.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>SelectedContactName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>SelectContactsDataTable.firstSelectedRow.Name</elementReference>
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>ScreenCollectNewContactDetails</targetReference>
+            <isGoTo>true</isGoTo>
+            <targetReference>ScreenCollectExistingContactDetails</targetReference>
         </connector>
     </assignments>
     <choices>
@@ -278,17 +280,17 @@
         </rules>
     </decisions>
     <decisions>
-        <description>If the contact chosen from the lookup is already related to the member, show an error instead of creating a duplicate relationship</description>
-        <name>Is_Contact_Already_Related</name>
-        <label>Is Contact Already Related</label>
+        <description>Determines if the contact associated with the record selected on the ScreenCollectRelatedAccountType screen is already associated with the household.</description>
+        <name>IsContactRelatedToHousehold</name>
+        <label>Is Contact Related to the Household?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Set_Selected_Contact_Details</targetReference>
+            <targetReference>SetSelectedContactDetails</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Not Already Related</defaultConnectorLabel>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
         <rules>
-            <name>Contact_Related_or_Same_As_Member</name>
+            <name>ExistingContact</name>
             <conditionLogic>or</conditionLogic>
             <conditions>
                 <leftValueReference>TransformRelatedContactIds</leftValueReference>
@@ -305,23 +307,23 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>ContactAlreadyRelatedError</targetReference>
+                <targetReference>ScreenShowContactAlreadyAddedToHouseholdError</targetReference>
             </connector>
-            <label>Contact Related or Same As Member</label>
+            <label>Yes</label>
         </rules>
     </decisions>
     <decisions>
-        <description>Check if contact selection is valid</description>
-        <name>Is_Single_Contact_Selected</name>
-        <label>Is Single Contact Selected</label>
+        <description>Determines whether exactly one contact was selected from either Recent Items or Member Lookup.</description>
+        <name>IsSingleContactSelectedFromRecentItemsOrLookup</name>
+        <label>Is a Single Contact Selected from Recent Items or Lookup?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>ScreenInvalidSelectionError</targetReference>
+            <targetReference>ScreenShowMultipleRecordSelectionError</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Invalid Selection</defaultConnectorLabel>
+        <defaultConnectorLabel>Other (Default)</defaultConnectorLabel>
         <rules>
-            <name>Recent_Contact_Selected</name>
+            <name>ContactSelectedFromRecentItems</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>SelectContactsDataTable.firstSelectedRow.Id</leftValueReference>
@@ -338,12 +340,12 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Set_Recent_Contact_Details</targetReference>
+                <targetReference>SetSelectedContactDetailsForRecentItemSelection</targetReference>
             </connector>
-            <label>Recent Contact Selected</label>
+            <label>Is Selected from Recent Items</label>
         </rules>
         <rules>
-            <name>Contact_Lookup_Selected</name>
+            <name>ContactSelectedFromLookup</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>ContactLookup.recordId</leftValueReference>
@@ -360,9 +362,9 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Is_Contact_Already_Related</targetReference>
+                <targetReference>IsContactRelatedToHousehold</targetReference>
             </connector>
-            <label>Contact Lookup Selected</label>
+            <label>Is Selected from Contact Lookup</label>
         </rules>
     </decisions>
     <decisions>
@@ -402,7 +404,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Is_Single_Contact_Selected</targetReference>
+                <targetReference>IsSingleContactSelectedFromRecentItemsOrLookup</targetReference>
             </connector>
             <label>Existing Contacts</label>
         </rules>
@@ -775,69 +777,6 @@
         </connector>
     </recordRollbacks>
     <runInMode>DefaultMode</runInMode>
-    <screens>
-        <description>Shown when the contact selected from the lookup is already related to the member</description>
-        <name>ContactAlreadyRelatedError</name>
-        <label>ContactAlreadyRelatedError</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <allowBack>true</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <backButtonLabel>Back</backButtonLabel>
-        <connector>
-            <targetReference>END_ELEMENT_7</targetReference>
-        </connector>
-        <fields>
-            <name>ContactAlreadyRelatedErrorText</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;This contact is already related to the member. Choose a different contact to proceed.&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-            <visibilityRule>
-                <conditionLogic>and</conditionLogic>
-                <conditions>
-                    <leftValueReference>ContactLookup.recordId</leftValueReference>
-                    <operator>NotEqualTo</operator>
-                    <rightValue>
-                        <elementReference>memberId</elementReference>
-                    </rightValue>
-                </conditions>
-            </visibilityRule>
-        </fields>
-        <fields>
-            <name>ContactSameAsMemberErrorText</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;You can&apos;t relate the member to themselves. Choose a different contact to proceed.&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>12</stringValue>
-                </width>
-            </styleProperties>
-            <visibilityRule>
-                <conditionLogic>and</conditionLogic>
-                <conditions>
-                    <leftValueReference>ContactLookup.recordId</leftValueReference>
-                    <operator>EqualTo</operator>
-                    <rightValue>
-                        <elementReference>memberId</elementReference>
-                    </rightValue>
-                </conditions>
-            </visibilityRule>
-        </fields>
-        <nextOrFinishButtonLabel>Cancel</nextOrFinishButtonLabel>
-        <showFooter>true</showFooter>
-        <showHeader>false</showHeader>
-    </screens>
     <screens>
         <description>Allows the flow user to provide the existing contact details to add to the household.</description>
         <name>ScreenCollectExistingContactDetails</name>
@@ -1396,20 +1335,82 @@
         </stageReference>
     </screens>
     <screens>
-        <name>ScreenInvalidSelectionError</name>
-        <label>ScreenInvalidSelectionError</label>
+        <description>Shows an error message indicating that the record the flow user selected to add to the household is already a contact of the household.</description>
+        <name>ScreenShowContactAlreadyAddedToHouseholdError</name>
+        <label>Show Contact Already Added to Household Error</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
-        <backButtonLabel>Back</backButtonLabel>
+        <connector>
+            <targetReference>END_ELEMENT_7</targetReference>
+        </connector>
+        <fields>
+            <name>ContactAlreadyAddedToHouseholdErrorDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(48, 48, 48); font-size: 13px;&quot;&gt;The selected contact is already associated with the household. Select a different contact and try again.&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>ContactLookup.recordId</leftValueReference>
+                    <operator>NotEqualTo</operator>
+                    <rightValue>
+                        <elementReference>memberId</elementReference>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <fields>
+            <name>ContactSameAsMemberErrorDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(48, 48, 48); font-size: 13px;&quot;&gt;This contact is already a household member. Select a different contact and try again.&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>ContactLookup.recordId</leftValueReference>
+                    <operator>EqualTo</operator>
+                    <rightValue>
+                        <elementReference>memberId</elementReference>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <nextOrFinishButtonLabel>Cancel</nextOrFinishButtonLabel>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <description>Displays an error message if no records or multiple records are selected. Exactly one record is required to add as a related contact to the household.</description>
+        <name>ScreenShowMultipleRecordSelectionError</name>
+        <label>Show Multiple Record Selection Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
         <connector>
             <targetReference>END_ELEMENT_6</targetReference>
         </connector>
         <fields>
-            <name>NoContactSelectedError</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;Select at least one contact to add to the household. Click Back, select a contact, and continue.&lt;/p&gt;</fieldText>
+            <name>NoContactSelectedDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(0, 0, 0); font-size: 13px;&quot;&gt;Select at least one contact to add to the household. Click Previous, select a contact, and continue.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -1438,8 +1439,8 @@
             </visibilityRule>
         </fields>
         <fields>
-            <name>MultipleContactSelectedError</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;Select exactly one contact to add to the household. Click Back, select only one contact, and continue.&lt;/p&gt;</fieldText>
+            <name>MultipleRecordSelectionDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(0, 0, 0); font-size: 13px;&quot;&gt;Select exactly one contact to add to the household. Click Previous, select only one contact, and continue.&lt;/span&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -1532,6 +1533,7 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
+        <description>Stores the ID of the selected contact to add to the household.</description>
         <name>SelectedContactId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
@@ -1539,6 +1541,7 @@
         <isOutput>false</isOutput>
     </variables>
     <variables>
+        <description>Stores the name of the selected contact to add to the household.</description>
         <name>SelectedContactName</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>

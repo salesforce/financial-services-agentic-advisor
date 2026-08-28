@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
-        <description>Displays an error toast when retrieving the related contact relationship fails.</description>
-        <name>Get_Related_Contact_Relationship_Error</name>
-        <label>Get Related Contact Relationship Error</label>
+        <description>Shows an error toast when the specified contact contact relationship record couldn’t be retrieved.</description>
+        <name>ShowRecordRetrievalError</name>
+        <label>Show Record Retrieval Error</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>flowruntime:showToastMessage</actionName>
@@ -15,13 +15,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Get Related Contact Relationship Error</stringValue>
+                <stringValue>Can’t retrieve contact contact relationship record</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>{!Clean_Error_Message}</stringValue>
+                <stringValue>{!ExtractErrorMessageFormula}</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -41,9 +41,9 @@
         <offset>0</offset>
     </actionCalls>
     <actionCalls>
-        <description>Displays an error toast when the provided related contact relationship ID is invalid.</description>
-        <name>Invalid_Related_Contact_Relationship_Error</name>
-        <label>Invalid Related Contact Relationship Error</label>
+        <description>Shows an error toast when the specified Contact Contact Relationship ID doesn't exist.</description>
+        <name>ShowRelatedContactRelationshipRecordInvalidError</name>
+        <label>Show Related Contact Relationship Record Invalid Error</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>flowruntime:showToastMessage</actionName>
@@ -55,13 +55,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Invalid Related Contact Relationship Error</stringValue>
+                <stringValue>Contact contact relationship record not found</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>The provided related contact relationship ID is invalid. Enter a valid related contact relationship ID and try again.</stringValue>
+                <stringValue>The specified contact contact relationship record doesn’t exist. Specify a valid ID and try again.</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -81,9 +81,9 @@
         <offset>0</offset>
     </actionCalls>
     <actionCalls>
-        <description>Displays an error toast when deleting the related contact relationship fails.</description>
-        <name>Delete_Related_Contact_Relationship_Error</name>
-        <label>Delete Related Contact Relationship Error</label>
+        <description>Shows an error toast when the specified contact contact relationship record couldn’t be deleted.</description>
+        <name>ShowDeleteRecordError</name>
+        <label>Show Delete Record Error</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>flowruntime:showToastMessage</actionName>
@@ -95,13 +95,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Delete Related Contact Relationship Error</stringValue>
+                <stringValue>Can’t delete contact contact relationship record</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>{!Clean_Error_Message}</stringValue>
+                <stringValue>{!ExtractErrorMessageFormula}</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -121,9 +121,9 @@
         <offset>0</offset>
     </actionCalls>
     <actionCalls>
-        <description>Displays an success toast when deleting the related contact relationship is done.</description>
-        <name>Delete_Related_Contact_Relationship_Successful</name>
-        <label>Delete Related Contact Relationship Successful</label>
+        <description>Shows a success toast message to convey that the relationship record associated with the related contact was deleted.</description>
+        <name>ShowDeleteRelatedContactRelationshipSuccessMessage</name>
+        <label>Show Delete Related Contact Relationship Success Message</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>flowruntime:showToastMessage</actionName>
@@ -135,13 +135,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Success</stringValue>
+                <stringValue>Related contact relationship was deleted</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>Related contact is deleted successfully</stringValue>
+                <stringValue>The relationship record associated with the related contact was deleted.</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -169,32 +169,32 @@
         </value>
     </customProperties>
     <decisions>
-        <description>Checks whether the provided ID identifies a related contact relationship.</description>
-        <name>Is_Valid_Related_Contact_Relationship</name>
-        <label>Is Valid Related Contact Relationship</label>
+        <description>Determines whether the ContactContactRelationshipId exists.</description>
+        <name>HaveContactContactRelationshipId</name>
+        <label>Have Contact Contact Relationship ID?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Invalid_Related_Contact_Relationship_Error</targetReference>
+            <targetReference>ShowRelatedContactRelationshipRecordInvalidError</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Invalid Related Contact Relationship</defaultConnectorLabel>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
         <rules>
-            <name>Valid_Related_Contact_Relationship</name>
+            <name>HasContactContactRelationshipId</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_Related_Contact_Relationship</leftValueReference>
+                <leftValueReference>GetContactContactRelationship</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Screen_Delete_Related_Contact_Relationship</targetReference>
+                <targetReference>ScreenDisplayDeleteContactContactRelationshipConfirmationMessage</targetReference>
             </connector>
-            <label>Valid Related Contact Relationship</label>
+            <label>Yes</label>
         </rules>
     </decisions>
-    <description>Deletes a related contact relationship in the managed package.</description>
+    <description>Deletes the contact contact relationship record associated with a related contact of a household in an org with managed package.</description>
     <ends>
         <name>END_ELEMENT_1</name>
         <locationX>0</locationX>
@@ -217,14 +217,8 @@
     </ends>
     <environments>Default</environments>
     <formulas>
-        <description>Generates the full name of the Contact in the related contact relationship.</description>
-        <name>Formula_ContactFullName</name>
-        <dataType>String</dataType>
-        <expression>TRIM(IF(ISBLANK({!Get_Related_Contact_Relationship.FinServ__Contact__r.FirstName}), &quot;&quot;, {!Get_Related_Contact_Relationship.FinServ__Contact__r.FirstName} &amp; &quot; &quot;) &amp; IF(ISBLANK({!Get_Related_Contact_Relationship.FinServ__Contact__r.LastName}), &quot;&quot;, {!Get_Related_Contact_Relationship.FinServ__Contact__r.LastName}))</expression>
-    </formulas>
-    <formulas>
-        <description>Extracts the user-facing portion of a flow error message.</description>
-        <name>Clean_Error_Message</name>
+        <description>Returns the extracted part of a flow error message that is shown to the user.</description>
+        <name>ExtractErrorMessageFormula</name>
         <dataType>String</dataType>
         <expression>IF(
   AND(
@@ -244,15 +238,15 @@
 )</expression>
     </formulas>
     <formulas>
-        <description>Generates the full name of the related Contact in the related contact relationship.</description>
-        <name>Formula_RelatedContactFullName</name>
+        <description>Returns the name of the related contact from the associated Contact Contact Relationship record.</description>
+        <name>RelatedContactNameFormula</name>
         <dataType>String</dataType>
-        <expression>TRIM(IF(ISBLANK({!Get_Related_Contact_Relationship.FinServ__RelatedContact__r.FirstName}), &quot;&quot;, {!Get_Related_Contact_Relationship.FinServ__RelatedContact__r.FirstName} &amp; &quot; &quot;) &amp; IF(ISBLANK({!Get_Related_Contact_Relationship.FinServ__RelatedContact__r.LastName}), &quot;&quot;, {!Get_Related_Contact_Relationship.FinServ__RelatedContact__r.LastName}))</expression>
+        <expression>TRIM(IF(ISBLANK({!GetContactContactRelationship.FinServ__RelatedContact__r.FirstName}), &quot;&quot;, {!GetContactContactRelationship.FinServ__RelatedContact__r.FirstName} &amp; &quot; &quot;) &amp; IF(ISBLANK({!GetContactContactRelationship.FinServ__RelatedContact__r.LastName}), &quot;&quot;, {!GetContactContactRelationship.FinServ__RelatedContact__r.LastName}))</expression>
     </formulas>
-    <interviewLabel>Delete Related Contact Relationship in Managed Package {!$Flow.CurrentDateTime}</interviewLabel>
+    <interviewLabel>Delete Related Contact Relationship from Household (Managed Package) {!$Flow.CurrentDateTime}</interviewLabel>
     <isOverridable>true</isOverridable>
     <isTemplate>false</isTemplate>
-    <label>Delete Related Contact Relationship in Managed Package</label>
+    <label>Delete Related Contact Relationship from Household (Managed Package)</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -279,32 +273,32 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Delete_Related_Contact_Relationship_Successful</targetReference>
+            <targetReference>ShowDeleteRelatedContactRelationshipSuccessMessage</targetReference>
         </connector>
         <faultConnector>
-            <targetReference>Delete_Related_Contact_Relationship_Error</targetReference>
+            <targetReference>ShowDeleteRecordError</targetReference>
         </faultConnector>
-        <inputReference>Get_Related_Contact_Relationship</inputReference>
+        <inputReference>GetContactContactRelationship</inputReference>
     </recordDeletes>
     <recordLookups>
-        <description>Retrieves the related contact relationship record for the specified ID.</description>
-        <name>Get_Related_Contact_Relationship</name>
-        <label>Get Related Contact Relationship</label>
+        <description>Gets the contact contact relationship record with a record ID that matches the contactContactRelationshipId passed into the flow. Stores the result in the Contact Contact Relationship from GetContactContactRelationship record variable.</description>
+        <name>GetContactContactRelationship</name>
+        <label>Get Contact Contact Relationship</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Is_Valid_Related_Contact_Relationship</targetReference>
+            <targetReference>HaveContactContactRelationshipId</targetReference>
         </connector>
         <faultConnector>
-            <targetReference>Get_Related_Contact_Relationship_Error</targetReference>
+            <targetReference>ShowRecordRetrievalError</targetReference>
         </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>txt_contactContactRelationshipId</elementReference>
+                <elementReference>contactContactRelationshipId</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
@@ -316,9 +310,9 @@
     </recordLookups>
     <runInMode>DefaultMode</runInMode>
     <screens>
-        <description>Confirms deletion of the related contact relationship.</description>
-        <name>Screen_Delete_Related_Contact_Relationship</name>
-        <label>Delete Related Contact Relationship</label>
+        <description>Displays a modal prompting users to confirm deleting a related contact relationship from a household.</description>
+        <name>ScreenDisplayDeleteContactContactRelationshipConfirmationMessage</name>
+        <label>Display Delete Contact Contact Relationship Confirmation Message</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <allowBack>true</allowBack>
@@ -329,8 +323,8 @@
             <targetReference>Delete_Related_Contact_Relationship_Record</targetReference>
         </connector>
         <fields>
-            <name>DeleteConfirmationMessage</name>
-            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;Are you sure you want to delete &lt;strong&gt;{!Formula_RelatedContactFullName}&lt;/strong&gt; from the household member &lt;strong&gt;{!Formula_ContactFullName}&lt;/strong&gt;?&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;This will permanently delete the relationship record.&lt;/p&gt;</fieldText>
+            <name>DeleteConfirmationMessageDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;Remove &lt;strong&gt;{!RelatedContactNameFormula}&lt;/strong&gt; from this household?&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;This action deletes the contact contact relationship record associated with the related contact, but it doesn't delete the contact record.&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -370,13 +364,13 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Get_Related_Contact_Relationship</targetReference>
+            <targetReference>GetContactContactRelationship</targetReference>
         </connector>
     </start>
     <status>Active</status>
     <variables>
-        <description>Unique identifier of the related contact relationship record to delete.</description>
-        <name>txt_contactContactRelationshipId</name>
+        <description>Stores the ID of the contact contact relationship record that was passed into the flow. This variable is available as input to the flow.</description>
+        <name>contactContactRelationshipId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>

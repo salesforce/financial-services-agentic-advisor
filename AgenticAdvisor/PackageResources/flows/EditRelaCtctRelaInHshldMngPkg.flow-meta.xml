@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
-        <description>Displays an error toast when retrieving the related contact relationship fails.</description>
-        <name>Get_Related_Contact_Relationship_Error</name>
-        <label>Get Related Contact Relationship Error</label>
+        <description>Shows an error toast when the specified contact contact relationship record couldn’t be retrieved.</description>
+        <name>ShowRelatedContactRelationshipRecordRetrievalError</name>
+        <label>Show Related Contact Relationship Record Retrieval Error</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>flowruntime:showToastMessage</actionName>
@@ -15,13 +15,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Get Related Contact Relationship Error</stringValue>
+                <stringValue>Can’t retrieve contact contact relationship record</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>{!Clean_Error_Message}</stringValue>
+                <stringValue>{!ExtractErrorMessageFormula}</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -41,9 +41,9 @@
         <offset>0</offset>
     </actionCalls>
     <actionCalls>
-        <description>Displays an error toast when the related contact relationship ID is invalid.</description>
-        <name>Invalid_Related_Contact_Relationship_Error</name>
-        <label>Invalid Related Contact Relationship Error</label>
+        <description>Shows an error toast when the specified Contact Contact Relationship ID doesn't exist.</description>
+        <name>ShowRelatedContactRelationshipRecordInvalidError</name>
+        <label>Show Related Contact Relationship Record Invalid Error</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>flowruntime:showToastMessage</actionName>
@@ -55,13 +55,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Invalid Related Contact Relationship Error</stringValue>
+                <stringValue>Contact contact relationship record not found</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>The related contact relationship is unavailable. Verify the related contact relationship ID and try again. If the issue persists, contact your Salesforce administrator.</stringValue>
+                <stringValue>The specified contact contact relationship record doesn’t exist. Specify a valid ID and try again.</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -81,9 +81,9 @@
         <offset>0</offset>
     </actionCalls>
     <actionCalls>
-        <description>Displays an error toast when updating the related contact relationship fails.</description>
-        <name>Update_Related_Contact_Relationship_Error</name>
-        <label>Update Related Contact Relationship Error</label>
+        <description>Shows an error toast when the specified contact contact relationship record couldn’t be updated.</description>
+        <name>ShowUpdateRecordError</name>
+        <label>Show Update Record Error</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>flowruntime:showToastMessage</actionName>
@@ -95,13 +95,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Update Related Contact Relationship Error</stringValue>
+                <stringValue>Can’t update contact contact relationship record</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>{!Clean_Error_Message}</stringValue>
+                <stringValue>{!ExtractErrorMessageFormula}</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -121,9 +121,9 @@
         <offset>0</offset>
     </actionCalls>
     <actionCalls>
-        <description>Displays an success toast when updating the related contact relationship is done.</description>
-        <name>Update_Related_Contact_Relationship_Successful</name>
-        <label>Update Related Contact Relationship Successful</label>
+        <description>Shows a success toast message to convey that the relationship record associated with the contact was updated.</description>
+        <name>ShowUpdateRelatedContactSuccessMessage</name>
+        <label>Show Update Related Contact Success Message</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>flowruntime:showToastMessage</actionName>
@@ -135,13 +135,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Success</stringValue>
+                <stringValue>Related contact was updated</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>Related contact is updated successfully</stringValue>
+                <stringValue>The relationship record associated with the contact was updated.</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -169,32 +169,32 @@
         </value>
     </customProperties>
     <decisions>
-        <description>Checks whether the related contact relationship is available.</description>
-        <name>Is_Valid_Related_Contact_Relationship</name>
-        <label>Is Valid Related Contact Relationship</label>
+        <description>Determines whether the ContactContactRelationshipId exists.</description>
+        <name>HaveContactContactRelationshipId</name>
+        <label>Have Contact Contact Relationship ID?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Invalid_Related_Contact_Relationship_Error</targetReference>
+            <targetReference>ShowRelatedContactRelationshipRecordInvalidError</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Invalid Related Contact Relationship</defaultConnectorLabel>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
         <rules>
-            <name>Valid_Related_Contact_Relationship</name>
+            <name>HasContactContactRelationshipId</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_Related_Contact_Relationship</leftValueReference>
+                <leftValueReference>GetContactContactRelationship</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Screen_Edit_Related_Contact_Relationship</targetReference>
+                <targetReference>ScreenEditRelatedContactDetails</targetReference>
             </connector>
-            <label>Valid Related Contact Relationship</label>
+            <label>Yes</label>
         </rules>
     </decisions>
-    <description>Updates a related contact relationship in the managed package.</description>
+    <description>Gets the existing related contact details of the household, and allows the flow user to edit the related contact’s role in an org with managed package.</description>
     <environments>Default</environments>
     <ends>
         <name>END_ELEMENT_1</name>
@@ -217,8 +217,8 @@
         <locationY>0</locationY>
     </ends>
     <formulas>
-        <description>Extracts the user-facing portion of a flow error message.</description>
-        <name>Clean_Error_Message</name>
+        <description>Stores the extracted part of a flow error message that’s shown to the user.</description>
+        <name>ExtractErrorMessageFormula</name>
         <dataType>String</dataType>
         <expression>IF(
   AND(
@@ -238,15 +238,15 @@
 )</expression>
     </formulas>
     <formulas>
-        <description>Generates the full name of the related Contact in the related contact relationship.</description>
-        <name>Formula_RelatedContactFullName</name>
+        <description>Concatenates the FirstName and LastName of the Contact in Contact Contact Relationship from GetContactContactRelationship to create the account name for the related contact.</description>
+        <name>FullNameFormula</name>
         <dataType>String</dataType>
-        <expression>TRIM(IF(ISBLANK({!Get_Related_Contact_Relationship.FinServ__RelatedContact__r.FirstName}), &quot;&quot;, {!Get_Related_Contact_Relationship.FinServ__RelatedContact__r.FirstName} &amp; &quot; &quot;) &amp; IF(ISBLANK({!Get_Related_Contact_Relationship.FinServ__RelatedContact__r.LastName}), &quot;&quot;, {!Get_Related_Contact_Relationship.FinServ__RelatedContact__r.LastName}))</expression>
+        <expression>TRIM(IF(ISBLANK({!GetContactContactRelationship.FinServ__RelatedContact__r.FirstName}), &quot;&quot;, {!GetContactContactRelationship.FinServ__RelatedContact__r.FirstName} &amp; &quot; &quot;) &amp; IF(ISBLANK({!GetContactContactRelationship.FinServ__RelatedContact__r.LastName}), &quot;&quot;, {!GetContactContactRelationship.FinServ__RelatedContact__r.LastName}))</expression>
     </formulas>
-    <interviewLabel>Edit Related Contact Relationship in Managed Package {!$Flow.CurrentDateTime}</interviewLabel>
+    <interviewLabel>Edit Related Contact Relationship in Household (Managed Package) {!$Flow.CurrentDateTime}</interviewLabel>
     <isOverridable>true</isOverridable>
     <isTemplate>false</isTemplate>
-    <label>Edit Related Contact Relationship in Managed Package</label>
+    <label>Edit Related Contact Relationship in Household (Managed Package)</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -267,24 +267,24 @@
     </processMetadataValues>
     <processType>Flow</processType>
     <recordLookups>
-        <description>Retrieves the related contact relationship record for the provided ID.</description>
-        <name>Get_Related_Contact_Relationship</name>
-        <label>Get Related Contact Relationship</label>
+        <description>Gets the contact contact relationship record with a record ID that matches the contactContactRelationshipId passed into the flow. Stores the result in the Contact Contact Relationship from GetContactContactRelationship record variable.</description>
+        <name>GetContactContactRelationship</name>
+        <label>Get Contact Contact Relationship</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Is_Valid_Related_Contact_Relationship</targetReference>
+            <targetReference>HaveContactContactRelationshipId</targetReference>
         </connector>
         <faultConnector>
-            <targetReference>Get_Related_Contact_Relationship_Error</targetReference>
+            <targetReference>ShowRelatedContactRelationshipRecordRetrievalError</targetReference>
         </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>txt_relatedContactRelationshipId</elementReference>
+                <elementReference>contactContactRelationshipId</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
@@ -295,38 +295,38 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordUpdates>
-        <description>Updates the related contact relationship record.</description>
-        <name>Update_Related_Contact_Relationship</name>
+        <description>Updates the contact contact membership record with an ID that matches the Contact Contact Relationship ID in the Contact Contact Relationship from GetContactContactRelationship record variable. Sets the RelatedRole to RolePicklist entered on the ScreenEditRelatedContactDetails screen.</description>
+        <name>UpdateRelatedContactRelationship</name>
         <label>Update Related Contact Relationship</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Update_Related_Contact_Relationship_Successful</targetReference>
+            <targetReference>ShowUpdateRelatedContactSuccessMessage</targetReference>
         </connector>
         <faultConnector>
-            <targetReference>Update_Related_Contact_Relationship_Error</targetReference>
+            <targetReference>ShowUpdateRecordError</targetReference>
         </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>Get_Related_Contact_Relationship.Id</elementReference>
+                <elementReference>GetContactContactRelationship.Id</elementReference>
             </value>
         </filters>
         <inputAssignments>
             <field>FinServ__Role__c</field>
             <value>
-                <elementReference>RelatedRole.recordId</elementReference>
+                <elementReference>NewContactReciprocalRolePicklist.recordId</elementReference>
             </value>
         </inputAssignments>
         <object>FinServ__ContactContactRelation__c</object>
     </recordUpdates>
     <runInMode>DefaultMode</runInMode>
     <screens>
-        <description>Lets the user update the relationship details of a related contact.</description>
-        <name>Screen_Edit_Related_Contact_Relationship</name>
-        <label>Edit Related Contact Relationship</label>
+        <description>Allows the flow user to edit the related contact’s role in the household.</description>
+        <name>ScreenEditRelatedContactDetails</name>
+        <label>Edit Related Contact Details</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <allowBack>true</allowBack>
@@ -334,11 +334,11 @@
         <allowPause>false</allowPause>
         <backButtonLabel>Cancel</backButtonLabel>
         <connector>
-            <targetReference>Update_Related_Contact_Relationship</targetReference>
+            <targetReference>UpdateRelatedContactRelationship</targetReference>
         </connector>
         <fields>
-            <name>EditRelatedContactDetails</name>
-            <fieldText>&lt;h3&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Edit Related Contact Relationship Details&lt;/strong&gt;&lt;/h3&gt;</fieldText>
+            <name>EditRelatedContactDetailsDisplaytext</name>
+            <fieldText>&lt;h3&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Edit Related Contact Details&lt;/strong&gt;&lt;/h3&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -350,10 +350,10 @@
             </styleProperties>
         </fields>
         <fields>
-            <name>Name</name>
+            <name>NameText</name>
             <dataType>String</dataType>
             <defaultValue>
-                <elementReference>Formula_RelatedContactFullName</elementReference>
+                <elementReference>FullNameFormula</elementReference>
             </defaultValue>
             <fieldText>Name</fieldText>
             <fieldType>InputField</fieldType>
@@ -372,7 +372,7 @@
             </styleProperties>
         </fields>
         <fields>
-            <name>RelatedRole</name>
+            <name>NewContactReciprocalRolePicklist</name>
             <extensionName>flowruntime:lookup</extensionName>
             <fieldType>ComponentInstance</fieldType>
             <inputParameters>
@@ -396,7 +396,7 @@
             <inputParameters>
                 <name>recordId</name>
                 <value>
-                    <elementReference>Get_Related_Contact_Relationship.FinServ__Role__r.Id</elementReference>
+                    <elementReference>GetContactContactRelationship.FinServ__Role__r.Id</elementReference>
                 </value>
             </inputParameters>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
@@ -419,13 +419,13 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Get_Related_Contact_Relationship</targetReference>
+            <targetReference>GetContactContactRelationship</targetReference>
         </connector>
     </start>
     <status>Active</status>
     <variables>
-        <description>Unique identifier of the related contact relationship record to update.</description>
-        <name>txt_relatedContactRelationshipId</name>
+        <description>Stores the ID of the contact contact relationship record that was passed into the flow. This variable is available as input to the flow.</description>
+        <name>contactContactRelationshipId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>

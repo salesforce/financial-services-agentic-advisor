@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
-        <description>Displays an error toast when retrieving the member relationship fails.</description>
-        <name>Get_Member_Relationship_Error</name>
-        <label>Get Member Relationship Error</label>
+        <description>Shows an error toast when the specified account contact relationship record couldn’t be retrieved.</description>
+        <name>ShowMemberRelationshipRecordRetrievalError</name>
+        <label>Show Member Relationship Record Retrieval Error</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>flowruntime:showToastMessage</actionName>
@@ -15,13 +15,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Get Member Relationship Error</stringValue>
+                <stringValue>Can’t retrieve the account contact relationship record</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>{!Clean_Error_Message}</stringValue>
+                <stringValue>{!ExtractErrorMessageFormula}</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -41,9 +41,9 @@
         <offset>0</offset>
     </actionCalls>
     <actionCalls>
-        <description>Displays an error toast when the provided member relationship ID is invalid.</description>
-        <name>Invalid_Member_Relationship_Error</name>
-        <label>Invalid Member Relationship Error</label>
+        <description>Shows an error toast when the specified Account Contact Relationship ID doesn't exist.</description>
+        <name>ShowMemberRelationshipRecordInvalidError</name>
+        <label>Show Member Relationship Record Invalid Error</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>flowruntime:showToastMessage</actionName>
@@ -55,13 +55,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Invalid Member Relationship Error</stringValue>
+                <stringValue>Account contact relationship record not found</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>The provided member relationship ID is invalid. Enter a valid member relationship ID and try again.</stringValue>
+                <stringValue>The specified account contact relationship record doesn’t exist. Specify a valid ID and try again.</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -81,9 +81,9 @@
         <offset>0</offset>
     </actionCalls>
     <actionCalls>
-        <description>Displays an error toast when updating the member relationship fails.</description>
-        <name>Update_Member_Relationship_Error</name>
-        <label>Update Member Relationship Error</label>
+        <description>Shows an error toast when the specified account contact relationship record couldn’t be updated.</description>
+        <name>ShowUpdateRecordError</name>
+        <label>Show Update Record Error</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>flowruntime:showToastMessage</actionName>
@@ -95,13 +95,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Update Member Relationship Error</stringValue>
+                <stringValue>Can’t update account contact relationship record</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>{!Clean_Error_Message}</stringValue>
+                <stringValue>{!ExtractErrorMessageFormula}</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -121,9 +121,9 @@
         <offset>0</offset>
     </actionCalls>
     <actionCalls>
-        <description>Displays an success toast when updating the member relationship is done.</description>
-        <name>Update_Member_Relationship_Successful</name>
-        <label>Update Member Relationship Successful</label>
+        <description>Shows a success toast message to convey that the member was removed from the household.</description>
+        <name>ShowRemoveMemberSuccessMessage</name>
+        <label>Show Remove Member Success Message</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>flowruntime:showToastMessage</actionName>
@@ -135,13 +135,13 @@
         <inputParameters>
             <name>toastMessageTitle</name>
             <value>
-                <stringValue>Success</stringValue>
+                <stringValue>Household member was removed</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
             <name>toastMessageBody</name>
             <value>
-                <stringValue>Member is updated successfully</stringValue>
+                <stringValue>The member was removed from the household.</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -169,42 +169,32 @@
         </value>
     </customProperties>
     <decisions>
-        <description>Checks whether the provided ID identifies a member relationship.</description>
-        <name>Is_Valid_Member_Relationship</name>
-        <label>Is Valid Member Relationship</label>
+        <description>Determines whether the AccountContactRelationshipId exists.</description>
+        <name>HaveAccountContactRelationshipId</name>
+        <label>Have Account Contact Relationship ID?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Invalid_Member_Relationship_Error</targetReference>
+            <targetReference>ShowMemberRelationshipRecordInvalidError</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Invalid Member Relationship</defaultConnectorLabel>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
         <rules>
-            <name>Valid_Member_Relationship</name>
+            <name>HasAccountContactRelationshipId</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_Member_Relationship</leftValueReference>
+                <leftValueReference>GetAccountContactRelationship</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Screen_Edit_Member_Relationship</targetReference>
+                <targetReference>ScreenRemoveRecordConfirmationMessage</targetReference>
             </connector>
-            <label>Valid Member Relationship</label>
+            <label>Yes</label>
         </rules>
     </decisions>
-    <description>Updates a member relationship in the managed package.</description>
-    <dynamicChoiceSets>
-        <description>Retrieves the values from the Roles picklist field on the Account Contact Relation object.</description>
-        <name>RolesPicklist</name>
-        <dataType>Multipicklist</dataType>
-        <displayField xsi:nil="true"/>
-        <object xsi:nil="true"/>
-        <picklistField>Roles</picklistField>
-        <picklistObject>AccountContactRelation</picklistObject>
-    </dynamicChoiceSets>
-    <environments>Default</environments>
+    <description>Deactivates the account contact relationship record associated with a household member in an org with managed package.</description>
     <ends>
         <name>END_ELEMENT_1</name>
         <locationX>0</locationX>
@@ -225,9 +215,10 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
     </ends>
+    <environments>Default</environments>
     <formulas>
-        <description>Extracts the user-facing portion of a flow error message.</description>
-        <name>Clean_Error_Message</name>
+        <description>Returns the extracted part of a flow error message that is shown to the user.</description>
+        <name>ExtractErrorMessageFormula</name>
         <dataType>String</dataType>
         <expression>IF(
   AND(
@@ -247,15 +238,15 @@
 )</expression>
     </formulas>
     <formulas>
-        <description>Generates the full name of the Contact in the member relationship.</description>
-        <name>Formula_ContactFullName</name>
+        <description>Concatenates the first name and last name of  the Contact in the Account Contact Relationship from GetAccountAccountRelationship record variable, and returns the full name.</description>
+        <name>ContactFullNameFormula</name>
         <dataType>String</dataType>
-        <expression>TRIM(IF(ISBLANK({!Get_Member_Relationship.Contact.FirstName}), &quot;&quot;, {!Get_Member_Relationship.Contact.FirstName} &amp; &quot; &quot;) &amp; IF(ISBLANK({!Get_Member_Relationship.Contact.LastName}), &quot;&quot;, {!Get_Member_Relationship.Contact.LastName}))</expression>
+        <expression>TRIM(IF(ISBLANK({!GetAccountContactRelationship.Contact.FirstName}), &quot;&quot;, {!GetAccountContactRelationship.Contact.FirstName} &amp; &quot; &quot;) &amp; IF(ISBLANK({!GetAccountContactRelationship.Contact.LastName}), &quot;&quot;, {!GetAccountContactRelationship.Contact.LastName}))</expression>
     </formulas>
-    <interviewLabel>Edit Member Relationship in Managed Package {!$Flow.CurrentDateTime}</interviewLabel>
+    <interviewLabel>Remove Member Relationship from Household (Managed Package) {!$Flow.CurrentDateTime}</interviewLabel>
     <isOverridable>true</isOverridable>
     <isTemplate>false</isTemplate>
-    <label>Edit Member Relationship in Managed Package</label>
+    <label>Remove Member Relationship from Household (Managed Package)</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -276,24 +267,24 @@
     </processMetadataValues>
     <processType>Flow</processType>
     <recordLookups>
-        <description>Retrieves the member relationship record for the provided ID.</description>
-        <name>Get_Member_Relationship</name>
-        <label>Get Member Relationship</label>
+        <description>Gets the account contact relationship record with a record ID that matches the account contact relationship ID passed into the flow. Stores the result in the Account Contact Relationship from GetAccountContactRelationship record variable.</description>
+        <name>GetAccountContactRelationship</name>
+        <label>Get Account Contact Relationship</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Is_Valid_Member_Relationship</targetReference>
+            <targetReference>HaveAccountContactRelationshipId</targetReference>
         </connector>
         <faultConnector>
-            <targetReference>Get_Member_Relationship_Error</targetReference>
+            <targetReference>ShowMemberRelationshipRecordRetrievalError</targetReference>
         </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>txt_memberRelationshipId</elementReference>
+                <elementReference>accountContactRelationshipId</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
@@ -301,49 +292,41 @@
         <queriedFields>Id</queriedFields>
         <queriedFields>AccountId</queriedFields>
         <queriedFields>ContactId</queriedFields>
-        <queriedFields>FinServ__Primary__c</queriedFields>
-        <queriedFields>Roles</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordUpdates>
-        <description>Updates the member relationship record.</description>
-        <name>Update_Member_Relationship</name>
-        <label>Update Member Relationship</label>
+        <description>Updates the account contact relationship record with a record ID that matches the account contact relationship ID passed into the flow, and sets Active to False.</description>
+        <name>UpdateAccountContactRelationship</name>
+        <label>Update Account Contact Relationship</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Update_Member_Relationship_Successful</targetReference>
+            <targetReference>ShowRemoveMemberSuccessMessage</targetReference>
         </connector>
         <faultConnector>
-            <targetReference>Update_Member_Relationship_Error</targetReference>
+            <targetReference>ShowUpdateRecordError</targetReference>
         </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>Get_Member_Relationship.Id</elementReference>
+                <elementReference>GetAccountContactRelationship.Id</elementReference>
             </value>
         </filters>
         <inputAssignments>
-            <field>FinServ__Primary__c</field>
+            <field>IsActive</field>
             <value>
-                <elementReference>Primary_Member</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Roles</field>
-            <value>
-                <elementReference>Roles.selectedChoiceValues</elementReference>
+                <booleanValue>false</booleanValue>
             </value>
         </inputAssignments>
         <object>AccountContactRelation</object>
     </recordUpdates>
     <runInMode>DefaultMode</runInMode>
     <screens>
-        <description>Lets the user update the member relationship details.</description>
-        <name>Screen_Edit_Member_Relationship</name>
-        <label>Edit Member Relationship</label>
+        <description>Allows the flow user to confirm if the account contact relationship record can be removed from the household or not.</description>
+        <name>ScreenRemoveRecordConfirmationMessage</name>
+        <label>Show Remove Record Confirmation Message</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <allowBack>true</allowBack>
@@ -351,11 +334,11 @@
         <allowPause>false</allowPause>
         <backButtonLabel>Cancel</backButtonLabel>
         <connector>
-            <targetReference>Update_Member_Relationship</targetReference>
+            <targetReference>UpdateAccountContactRelationship</targetReference>
         </connector>
         <fields>
-            <name>EditMemberDetails</name>
-            <fieldText>&lt;h3&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Edit Member Details&lt;/strong&gt;&lt;/h3&gt;</fieldText>
+            <name>RemoveConfirmationMessageDisplayText</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;Remove &lt;strong&gt;{!ContactFullNameFormula}&lt;/strong&gt; from this household?&lt;/p&gt;&lt;p style=&quot;text-align: center;&quot;&gt;This action removes the contact's relationship to the household by making it inactive.&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
             <styleProperties>
                 <verticalAlignment>
@@ -366,89 +349,42 @@
                 </width>
             </styleProperties>
         </fields>
-        <fields>
-            <name>Name</name>
-            <dataType>String</dataType>
-            <defaultValue>
-                <elementReference>Formula_ContactFullName</elementReference>
-            </defaultValue>
-            <fieldText>Name</fieldText>
-            <fieldType>InputField</fieldType>
-            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
-            <isDisabled>
-                <booleanValue>true</booleanValue>
-            </isDisabled>
-            <isRequired>false</isRequired>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>6</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>Roles</name>
-            <choiceReferences>RolesPicklist</choiceReferences>
-            <defaultValue>
-                <elementReference>Get_Member_Relationship.Roles</elementReference>
-            </defaultValue>
-            <extensionName>flowruntime:choiceLookup</extensionName>
-            <fieldText>Roles</fieldText>
-            <fieldType>ComponentMultiChoice</fieldType>
-            <inputParameters>
-                <name>placeholder</name>
-                <value>
-                    <stringValue>Select...</stringValue>
-                </value>
-            </inputParameters>
-            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
-            <isRequired>true</isRequired>
-            <storeOutputAutomatically>true</storeOutputAutomatically>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>top</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>6</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <fields>
-            <name>Primary_Member</name>
-            <dataType>Boolean</dataType>
-            <defaultValue>
-                <elementReference>Get_Member_Relationship.FinServ__Primary__c</elementReference>
-            </defaultValue>
-            <fieldText>Primary Member</fieldText>
-            <fieldType>InputField</fieldType>
-            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
-            <isRequired>true</isRequired>
-            <styleProperties>
-                <verticalAlignment>
-                    <stringValue>middle</stringValue>
-                </verticalAlignment>
-                <width>
-                    <stringValue>6</stringValue>
-                </width>
-            </styleProperties>
-        </fields>
-        <nextOrFinishButtonLabel>Save</nextOrFinishButtonLabel>
+        <nextOrFinishButtonLabel>Remove</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
+        <styleSettings>
+            <propertyName>--slds-c-button-brand-color-background</propertyName>
+            <propertyValue>
+                <stringValue>#E3066A</stringValue>
+            </propertyValue>
+            <scope>NextOrFinish</scope>
+        </styleSettings>
+        <styleSettings>
+            <propertyName>--slds-c-button-brand-color-border</propertyName>
+            <propertyValue>
+                <stringValue>#E3066A</stringValue>
+            </propertyValue>
+            <scope>NextOrFinish</scope>
+        </styleSettings>
+        <styleSettings>
+            <propertyName>--slds-c-button-brand-text-color</propertyName>
+            <propertyValue>
+                <stringValue>#FFFFFF</stringValue>
+            </propertyValue>
+            <scope>NextOrFinish</scope>
+        </styleSettings>
     </screens>
     <start>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Get_Member_Relationship</targetReference>
+            <targetReference>GetAccountContactRelationship</targetReference>
         </connector>
     </start>
     <status>Active</status>
     <variables>
-        <description>Unique identifier of the member relationship record to update.</description>
-        <name>txt_memberRelationshipId</name>
+        <description>Stores the ID of the account contact relationship record that was passed into the flow. This variable is available as input to the flow.</description>
+        <name>accountContactRelationshipId</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
