@@ -199,7 +199,7 @@ Financial Plan Details:
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>AddMeetingPlaybookToPrompt</targetReference>
+            <targetReference>PriorMeetingHasEventDate</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -221,6 +221,61 @@ Prior Meetings:
         </assignmentItems>
         <connector>
             <targetReference>IterateOverMeetingPlaybooks</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add Meeting Playbook with no associated event to the prompt, noting that the shown date is the record creation date.</description>
+        <name>AddMeetingPlaybookNoEventToPrompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Meeting Playbook (No Event) to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>================================
+Prior Meetings:
+{!MeetingPlaybookNoEventTextTemplate}
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverMeetingPlaybooks</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets the cutoff date to the current meeting&apos;s event start time so that prior meetings occurring after it are excluded.</description>
+        <name>SetCutoffToEventStart</name>
+        <label>Set Cutoff to Event Start</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>CutoffDateTime</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>GetMeetingPlaybook.Event.StartDateTime</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetMeetingPlaybookStageText</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets the cutoff date to the current date and time when the current meeting has no associated event.</description>
+        <name>SetCutoffToNow</name>
+        <label>Set Cutoff to Now</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>CutoffDateTime</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>GetMeetingPlaybookStageText</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -573,6 +628,91 @@ Task Details:
         </connector>
     </assignments>
     <decisions>
+        <description>Determines whether the current meeting has an associated event start date to use as the cutoff for filtering prior meetings.</description>
+        <name>CurrentMeetingHasEventDate</name>
+        <label>Current Meeting Has Event Date?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>SetCutoffToNow</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>HasCurrentEventDate</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>GetMeetingPlaybook.Event.StartDateTime</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SetCutoffToEventStart</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Skips the current prior meeting when its associated event occurs after the cutoff date so future or after-current meetings aren&apos;t included.</description>
+        <name>IsMeetingAfterCutoff</name>
+        <label>Is Meeting After Cutoff?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>AddMeetingPlaybookIdToCollection</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No, In Scope (Default)</defaultConnectorLabel>
+        <rules>
+            <name>MeetingAfterCutoff</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IterateOverMeetingPlaybooks.Event.StartDateTime</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>IterateOverMeetingPlaybooks.Event.StartDateTime</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <elementReference>CutoffDateTime</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>IterateOverMeetingPlaybooks</targetReference>
+            </connector>
+            <label>Yes, After Cutoff</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether the current prior meeting has an associated event start date to choose between showing the event date or a created-date caveat.</description>
+        <name>PriorMeetingHasEventDate</name>
+        <label>Prior Meeting Has Event Date?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>AddMeetingPlaybookNoEventToPrompt</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No, No Event (Default)</defaultConnectorLabel>
+        <rules>
+            <name>HasPriorEventDate</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IterateOverMeetingPlaybooks.Event.StartDateTime</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>AddMeetingPlaybookToPrompt</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
         <description>Determines whether the AiSummary of the current meeting playbook stage content document record in IterateOverMeetingPlaybookStageContentDocs isn&apos;t false.</description>
         <name>HaveAiSummary</name>
         <label>Have AI Summary?</label>
@@ -750,7 +890,7 @@ Task Details:
         <collectionReference>GetMeetingPlaybooks</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
-            <targetReference>AddMeetingPlaybookIdToCollection</targetReference>
+            <targetReference>IsMeetingAfterCutoff</targetReference>
         </nextValueConnector>
         <noMoreValuesConnector>
             <targetReference>GetMeetingPlaybookStages</targetReference>
@@ -980,7 +1120,7 @@ Task Details:
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>GetMeetingPlaybookStageText</targetReference>
+            <targetReference>CurrentMeetingHasEventDate</targetReference>
         </connector>
         <faultConnector>
             <targetReference>SetGetMeetingPlaybookErrorMessage</targetReference>
@@ -1018,12 +1158,15 @@ Task Details:
                 <elementReference>GetAccount.Id</elementReference>
             </value>
         </filters>
+        <filters>
+            <field>Id</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <elementReference>GetMeetingPlaybook.Id</elementReference>
+            </value>
+        </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
         <object>MeetingPlaybook</object>
-        <queriedFields>Id</queriedFields>
-        <queriedFields>Name</queriedFields>
-        <queriedFields>CreatedDate</queriedFields>
-        <queriedFields>EventId</queriedFields>
         <sortField>CreatedDate</sortField>
         <sortOrder>Desc</sortOrder>
         <storeOutputAutomatically>true</storeOutputAutomatically>
@@ -1285,10 +1428,16 @@ Task Details:
         <text>&lt;p&gt;Financial Plan : {!IterateOverFinancialPlans.Name} [ SourceId : {!IterateOverFinancialPlans.Id} ]&lt;/p&gt;&lt;p&gt;Type: {!IterateOverFinancialPlans.Type}&lt;/p&gt;&lt;p&gt;Status: {!IterateOverFinancialPlans.Status}&lt;/p&gt;&lt;p&gt;Last Modified: {!IterateOverFinancialPlans.LastModifiedDate}&lt;/p&gt;</text>
     </textTemplates>
     <textTemplates>
-        <description>Stores the formatted basic details of a meeting playbook.</description>
+        <description>Stores the formatted basic details of a meeting playbook that has an associated event, using the event start time as the meeting date.</description>
         <name>MeetingPlaybookTextTemplate</name>
         <isViewedAsPlainText>false</isViewedAsPlainText>
-        <text>&lt;p&gt;Meeting: {!IterateOverMeetingPlaybooks.Name} [SourceId: {!IterateOverMeetingPlaybooks.Id}]&lt;/p&gt;&lt;p&gt;Date: {!IterateOverMeetingPlaybooks.CreatedDate}&lt;/p&gt;</text>
+        <text>&lt;p&gt;Meeting: {!IterateOverMeetingPlaybooks.Name} [SourceId: {!IterateOverMeetingPlaybooks.Id}]&lt;/p&gt;&lt;p&gt;Meeting Date: {!IterateOverMeetingPlaybooks.Event.StartDateTime}&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Stores the formatted basic details of a meeting playbook that has no associated event, noting that the shown date is the record creation date and may not reflect when the meeting took place.</description>
+        <name>MeetingPlaybookNoEventTextTemplate</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Meeting: {!IterateOverMeetingPlaybooks.Name} [SourceId: {!IterateOverMeetingPlaybooks.Id}]&lt;/p&gt;&lt;p&gt;No associated calendar event. Record Created Date: {!IterateOverMeetingPlaybooks.CreatedDate} (this is when the record was created and may not be when the meeting took place).&lt;/p&gt;</text>
     </textTemplates>
     <textTemplates>
         <description>Stores the formatted details of a life event.</description>
@@ -1302,6 +1451,14 @@ Task Details:
         <isViewedAsPlainText>false</isViewedAsPlainText>
         <text>&lt;p&gt;Task: {!IterateOverTasks.Subject} [SourceId : {!IterateOverTasks.Id}]&lt;/p&gt;&lt;p&gt;Status: {!IterateOverTasks.Status}&lt;/p&gt;&lt;p&gt;Priority: {!IterateOverTasks.Priority}&lt;/p&gt;&lt;p&gt;DueDate: {!IterateOverTasks.ActivityDate}&lt;/p&gt;</text>
     </textTemplates>
+    <variables>
+        <description>Stores the cutoff date and time used to exclude prior meetings occurring after the current meeting&apos;s event start time, or after now when the current meeting has no event.</description>
+        <name>CutoffDateTime</name>
+        <dataType>DateTime</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
     <variables>
         <description>A list of Financial Account Ids</description>
         <name>FinancialAccountIds</name>

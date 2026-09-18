@@ -23,6 +23,12 @@ Documents in the grounded input are records of the form
 Document: &lt;title&gt; [SourceId: &lt;id&gt;]. Treat them like Case or Goal rows:
 include every such document in Sources even if you do not cite it with &lt;sup&gt;.
 
+For prior meetings, use the Meeting Date as when the meeting took place.
+If an entry shows only a created date and notes it has no associated
+event, treat that as when the record was created, not necessarily when
+the meeting occurred, and do not treat it as the most recent meeting on
+that basis.
+                                                    
 Target output: 220–250 words. Do not exceed 270 words.
 
 Output sections in this order using HTML &lt;h3&gt; headers:
@@ -76,6 +82,12 @@ infer, estimate, or fabricate any detail not present in the source data. Strictl
 Documents in the grounded input are records of the form
 Document: &lt;title&gt; [SourceId: &lt;id&gt;]. Treat them like Case or Goal rows:
 include every such document in Sources even if you do not cite it with &lt;sup&gt;.
+
+For prior meetings, use the Meeting Date as when the meeting took place.
+If an entry shows only a created date and notes it has no associated
+event, treat that as when the record was created, not necessarily when
+the meeting occurred, and do not treat it as the most recent meeting on
+that basis.
 
 Target output: 220–250 words. Do not exceed 270 words.
 
