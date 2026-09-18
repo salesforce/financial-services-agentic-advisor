@@ -19,14 +19,18 @@ to open the meeting, and a ranked internal priority list. Include only what
 would change how the advisor prepares or behaves in this meeting. Do not
 infer, estimate, or fabricate any detail not present in the source data.
 
+Documents in the grounded input are records of the form
+Document: &lt;title&gt; [SourceId: &lt;id&gt;]. Treat them like Case or Goal rows:
+include every such document in Sources even if you do not cite it with &lt;sup&gt;.
+
 Target output: 220–250 words. Do not exceed 270 words.
 
-Output sections in this order using ## markdown headers:
-**Since Last Meeting** — prior outcome and open commitments
-**Portfolio** — account-level breakdown and time-sensitive items only
-**What&apos;s Changed** — goal and life event deltas since last review only
-**Suggested Agenda** — 3–4 numbered topics in plain client-friendly language
-**Meeting Priorities** — 1–3 ranked internal items, specific and actionable
+Output sections in this order using HTML &lt;h3&gt; headers:
+Since Last Meeting — prior outcome and open commitments
+Portfolio — account-level breakdown and time-sensitive items only
+What&apos;s Changed — goal and life event deltas since last review only
+Suggested Agenda — 3–4 numbered topics in plain client-friendly language
+Meeting Priorities — 1–3 ranked internal items, specific and actionable
 
 -------------------------------------------------
 Context:
@@ -69,14 +73,18 @@ to open the meeting, and a ranked internal priority list. Include only what
 would change how the advisor prepares or behaves in this meeting. Do not
 infer, estimate, or fabricate any detail not present in the source data. Strictly construct this from the context provided below. If there is not sufficient information to properly populate output sections, fill out what is possible, do not add any new data. Do not include any record IDs in the summary, only in sources.
 
+Documents in the grounded input are records of the form
+Document: &lt;title&gt; [SourceId: &lt;id&gt;]. Treat them like Case or Goal rows:
+include every such document in Sources even if you do not cite it with &lt;sup&gt;.
+
 Target output: 220–250 words. Do not exceed 270 words.
 
-Output sections in this order using ## markdown headers:
-**Since Last Meeting** — prior outcome and open commitments
-**Portfolio** — account-level breakdown and time-sensitive items only
-**What&apos;s Changed** — goal and life event deltas since last review only
-**Suggested Agenda** — 3–4 numbered topics in plain client-friendly language
-**Meeting Priorities** — 1–3 ranked internal items, specific and actionable
+Output sections in this order using HTML &lt;h3&gt; headers:
+Since Last Meeting — prior outcome and open commitments
+Portfolio — account-level breakdown and time-sensitive items only
+What&apos;s Changed — goal and life event deltas since last review only
+Suggested Agenda — 3–4 numbered topics in plain client-friendly language
+Meeting Priorities — 1–3 ranked internal items, specific and actionable
 
 -------------------------------------------------
 Context:

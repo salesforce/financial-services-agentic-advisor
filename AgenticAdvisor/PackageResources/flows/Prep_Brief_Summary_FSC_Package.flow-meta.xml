@@ -80,7 +80,7 @@ Case Details:
             <operator>Add</operator>
             <value>
                 <stringValue>===============================
-Client Summary:
+Client Summary (context only — do not copy citation markers or Sources from this JSON; cite only records tagged [SourceId:] elsewhere in this prompt):
 {!GetMeetingPlaybookStageText.Text}
 
 </stringValue>
@@ -91,7 +91,7 @@ Client Summary:
         </connector>
     </assignments>
     <assignments>
-        <description>Adds the extracted text from each meeting playbook stage content document to the prompt instructions.</description>
+        <description>Adds each included document as a grounded SourceId record (same shape as Case/Goal rows) plus its AI summary.</description>
         <name>AddDocSumToPromptText</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
         <label>Add Document Summary to Prompt Text</label>
@@ -102,8 +102,8 @@ Client Summary:
             <operator>Add</operator>
             <value>
                 <stringValue>===============================
-&quot;{!IterateOverMeetingPlaybookStageContentDocs.ContentDocument.Title}&quot; Summary :
-{!IterateOverMeetingPlaybookStageContentDocs.AiSummary}
+Document: {!IterateOverMeetingPlaybookStageContentDocs.ContentDocument.Title} [SourceId: {!IterateOverMeetingPlaybookStageContentDocs.ContentDocumentId}]
+Summary: {!IterateOverMeetingPlaybookStageContentDocs.AiSummary}
 
 </stringValue>
             </value>
@@ -1029,7 +1029,7 @@ Task Details:
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets the meeting playbook stage content document records with a meeting playbook stage ID that matches the ID of the meeting playbook stage passed into the flow. Stores the results in the Meeting Playbook Stage Content Documents from GetMeetingPlaybookStageContentDoc record collection.</description>
+        <description>Gets meeting playbook stage content document records for this stage that are flagged Include in Meeting Prep Brief. Stores the results in the Meeting Playbook Stage Content Documents from GetMeetingPlaybookStageContentDoc record collection.</description>
         <name>GetMeetingPlaybookStageContentDoc</name>
         <label>Get Meeting Playbook Stage Content Document</label>
         <locationX>0</locationX>
@@ -1047,6 +1047,13 @@ Task Details:
             <operator>EqualTo</operator>
             <value>
                 <elementReference>$Input.MeetingPlaybookStage.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>IsIncludeInMeetingBrief</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
