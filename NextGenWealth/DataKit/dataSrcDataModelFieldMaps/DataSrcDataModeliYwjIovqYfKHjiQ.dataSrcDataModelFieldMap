@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSrcDataModelFieldMap xmlns="http://soap.sforce.com/2006/04/metadata">
+    <filterApplied>false</filterApplied>
+    <masterLabel>DataSrcDataModeliYwjIovqYfKHjiQ</masterLabel>
+    <sourceField>Account_Data_Stream5.FinServ_ClientCategory_c__c</sourceField>
+    <targetField>ssot__FinancialCustomer__dlm.ssot__CustomerCategory__c</targetField>
+    <templateVersion>1</templateVersion>
+    <versionNumber>1.0</versionNumber>
+</DataSrcDataModelFieldMap>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSrcDataModelFieldMap xmlns="http://soap.sforce.com/2006/04/metadata">
+    <filterApplied>false</filterApplied>
+    <masterLabel>DataSrcDataModelETjpdnSCyRyUYfQ</masterLabel>
+    <sourceField>Financial_Account_Data_Stream6.FinServ_InsuredAmount_c__c</sourceField>
+    <targetField>ssot__InsurancePolicy__dlm.ssot__InsuredAmount__c</targetField>
+    <templateVersion>1</templateVersion>
+    <versionNumber>1.0</versionNumber>
+</DataSrcDataModelFieldMap>
