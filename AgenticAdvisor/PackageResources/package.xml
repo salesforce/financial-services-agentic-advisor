@@ -6,11 +6,27 @@
         <name>FlexiPage</name>
     </types>
     <types>
+        <members>AddMbrAcctToHshldInMngPkg</members>
+        <members>AddMemberToHshldInMngPkg</members>
+        <members>AddRelaAccountToHshldMngPkg</members>
+        <members>AddRelaCtctToHshldInMngPkg</members>
+        <members>AddRelaGrpToHshldInMngPkg</members>
         <members>Client_Summary_FSC_Package</members>
         <members>Create_Meeting_from_Event_FSC_package</members>
+        <members>DelMbrAcctRelaFrHshldMngPkg</members>
+        <members>DelMbrRelaFromHshldMngPkg</members>
+        <members>DelRelaAcctRelaFrHshldMngPkg</members>
+        <members>DelRelaCtctRelaHshldMngPkg</members>
+        <members>DelRelaGrpRelaFrHshldMngPkg</members>
+        <members>EditHouseholdMbrRelaMngPkg</members>
+        <members>EditMbrAcctInHshldInMngPkg</members>
+        <members>EditRelaAcctRelaInHshldMngPkg</members>
+        <members>EditRelaCtctRelaInHshldMngPkg</members>
+        <members>EditRelaGrpRelaInHshldMngPkg</members>
         <members>GetAcctDtlClntPulsePkg</members>
         <members>Periodic_Create_New_Goals_Or_Update_Existing_Goals_FSC_Package</members>
         <members>Prep_Brief_Summary_FSC_Package</members>
+        <members>RemoveMbrRelaFromHshldMngPkg</members>
         <members>Create_Person_Life_Event_FSC_Package</members>
         <name>Flow</name>
     </types>
@@ -30,8 +46,8 @@
         <name>FieldSet</name>
     </types>
     <types>
-        <members>Household_Graph_for_Managed_Package</members>
+        <members>Household_Management_Graph_for_Managed_Package</members>
         <name>RelationshipGraphDefinition</name>
     </types>
-    <version>67.0</version>
+    <version>68.0</version>
 </Package>

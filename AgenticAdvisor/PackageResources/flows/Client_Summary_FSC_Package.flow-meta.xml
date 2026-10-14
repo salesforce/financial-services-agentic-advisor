@@ -284,7 +284,7 @@
         </connector>
     </assignments>
     <assignments>
-        <description>Adds the current prior meeting playbook&apos;s name and created date to the prompt instructions.</description>
+        <description>Adds a prior meeting that has an associated event to the prompt, using the event start time as the meeting date.</description>
         <name>Add_Meeting_Playbook_Details_to_Prompt_Instructions</name>
         <elementSubtype>AddPromptInstructions</elementSubtype>
         <label>Add Meeting Playbook Details to Prompt Instructions</label>
@@ -295,7 +295,7 @@
             <operator>Add</operator>
             <value>
                 <stringValue>Prior Meeting Name: {!Loop_Through_Meeting_Playbooks.Name} [SourceId : {!Loop_Through_Meeting_Playbooks.Id}]
-- Created Date: {!Loop_Through_Meeting_Playbooks.CreatedDate}
+- Meeting Date: {!Loop_Through_Meeting_Playbooks.Event.StartDateTime}
 </stringValue>
             </value>
         </assignmentItems>
@@ -486,6 +486,76 @@
         </assignmentItems>
         <connector>
             <targetReference>Loop_Through_Tasks</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets the cutoff date to the current meeting&apos;s event start time so that prior meetings occurring after it are excluded.</description>
+        <name>Set_Cutoff_To_Event_Start</name>
+        <label>Set Cutoff to Event Start</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>cutoffDateTime</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Current_Meeting_Playbook.Event.StartDateTime</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Past_Meetings</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets the cutoff date to the current date and time when the current meeting has no associated event.</description>
+        <name>Set_Cutoff_To_Now</name>
+        <label>Set Cutoff to Now</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>cutoffDateTime</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Past_Meetings</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Adds the flow error message to the prompt instructions when there&apos;s an error getting the current meeting playbook record.</description>
+        <name>Set_Get_Current_Meeting_Playbook_Error</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Set Get Current Meeting Playbook Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!$Flow.FaultMessage}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Adds a prior meeting that has no associated event to the prompt, noting that the shown date is the record creation date and may not reflect when the meeting took place.</description>
+        <name>Add_Meeting_Playbook_No_Event_Details_to_Prompt_Instructions</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Meeting Playbook No Event Details to Prompt Instructions</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>Prior Meeting Name: {!Loop_Through_Meeting_Playbooks.Name} [SourceId : {!Loop_Through_Meeting_Playbooks.Id}]
+- No associated calendar event. Record Created Date: {!Loop_Through_Meeting_Playbooks.CreatedDate} (this is when the record was created and may not be when the meeting took place).
+</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Has_Followup_Summary_Decision</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -769,6 +839,91 @@ No associated related record on the meeting playbook to generate a client summar
         </connector>
     </assignments>
     <decisions>
+        <description>Determines whether the current meeting has an associated event start date to use as the cutoff for filtering prior meetings.</description>
+        <name>Current_Meeting_Has_Event_Date</name>
+        <label>Current Meeting Has Event Date?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Set_Cutoff_To_Now</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>HasCurrentEventDate</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Current_Meeting_Playbook.Event.StartDateTime</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Cutoff_To_Event_Start</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Skips the current prior meeting when its associated event occurs after the cutoff date so future or after-current meetings aren&apos;t included.</description>
+        <name>Is_Meeting_After_Cutoff</name>
+        <label>Is Meeting After Cutoff?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Clear_Stage_IDs_Collection</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No, In Scope (Default)</defaultConnectorLabel>
+        <rules>
+            <name>MeetingAfterCutoff</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Loop_Through_Meeting_Playbooks.Event.StartDateTime</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Loop_Through_Meeting_Playbooks.Event.StartDateTime</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <elementReference>cutoffDateTime</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Loop_Through_Meeting_Playbooks</targetReference>
+            </connector>
+            <label>Yes, After Cutoff</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether the current prior meeting has an associated event start date to choose between showing the event date or a created-date caveat.</description>
+        <name>Prior_Meeting_Has_Event_Date</name>
+        <label>Prior Meeting Has Event Date?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Add_Meeting_Playbook_No_Event_Details_to_Prompt_Instructions</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No, No Event (Default)</defaultConnectorLabel>
+        <rules>
+            <name>HasPriorEventDate</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Loop_Through_Meeting_Playbooks.Event.StartDateTime</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Meeting_Playbook_Details_to_Prompt_Instructions</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
         <description>Determines whether any financial account roles were found for the household. If so, collects and de-duplicates the financial accounts; otherwise skips to opportunities.</description>
         <name>Has_Financial_Account_Roles_Decision</name>
         <label>Has Financial Account Roles Decision</label>
@@ -903,7 +1058,7 @@ No associated related record on the meeting playbook to generate a client summar
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>Get_Past_Meetings</targetReference>
+            <targetReference>Get_Current_Meeting_Playbook</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -1198,7 +1353,7 @@ No associated related record on the meeting playbook to generate a client summar
             <targetReference>Add_Case_Details_to_Prompt_Instructions</targetReference>
         </nextValueConnector>
         <noMoreValuesConnector>
-            <targetReference>Get_Past_Meetings</targetReference>
+            <targetReference>Get_Current_Meeting_Playbook</targetReference>
         </noMoreValuesConnector>
     </loops>
     <loops>
@@ -1255,7 +1410,7 @@ No associated related record on the meeting playbook to generate a client summar
         <collectionReference>Get_Past_Meetings</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
-            <targetReference>Clear_Stage_IDs_Collection</targetReference>
+            <targetReference>Is_Meeting_After_Cutoff</targetReference>
         </nextValueConnector>
     </loops>
     <loops>
@@ -1557,7 +1712,7 @@ No associated related record on the meeting playbook to generate a client summar
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Add_Meeting_Playbook_Details_to_Prompt_Instructions</targetReference>
+            <targetReference>Prior_Meeting_Has_Event_Date</targetReference>
         </connector>
         <faultConnector>
             <targetReference>Set_Get_Followup_Summary_Text_Error_Message</targetReference>
@@ -1713,6 +1868,31 @@ No associated related record on the meeting playbook to generate a client summar
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
+        <description>Gets the meeting playbook record that matches the meeting playbook ID passed into the flow as part of the prompt template input. Stores the result in the Meeting Playbook from Get_Current_Meeting_Playbook record variable.</description>
+        <name>Get_Current_Meeting_Playbook</name>
+        <label>Get Current Meeting Playbook</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Current_Meeting_Has_Event_Date</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Get_Current_Meeting_Playbook_Error</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Input.MeetingPlaybookStage.MeetingPlaybookId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>MeetingPlaybook</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
         <description>Gets up to 3 meeting playbook records with a related record ID that matches the ID of the account from Get_Account. Records are sorted by CreatedDate in descending order (most recent first). Stores the results in the Meeting Playbooks from Get_Past_Meetings record collection.</description>
         <name>Get_Past_Meetings</name>
         <label>Get Past Meeting Playbooks</label>
@@ -1748,10 +1928,10 @@ No associated related record on the meeting playbook to generate a client summar
             </value>
         </filters>
         <filters>
-            <field>CreatedDate</field>
-            <operator>LessThan</operator>
+            <field>Id</field>
+            <operator>NotEqualTo</operator>
             <value>
-                <elementReference>$Flow.CurrentDate</elementReference>
+                <elementReference>Get_Current_Meeting_Playbook.Id</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
@@ -1844,6 +2024,14 @@ No associated related record on the meeting playbook to generate a client summar
         <triggerType>Capability</triggerType>
     </start>
     <status>Active</status>
+    <variables>
+        <description>Stores the cutoff date and time used to exclude prior meetings occurring after the current meeting&apos;s event start time, or after now when the current meeting has no event.</description>
+        <name>cutoffDateTime</name>
+        <dataType>DateTime</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
     <variables>
         <description>Collection of contact-side account IDs (household members or the single person account, excluding the household account) used to re-query the person accounts for member name, birthdate, and person contact IDs.</description>
         <name>contactAccountIds</name>

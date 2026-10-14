@@ -30,6 +30,12 @@ Include a bullet only if its content would change how the advisor prepares or
 behaves in the meeting. Do not pad or fabricate. Do not infer, estimate, or
 project any detail not explicitly present in the source data.
 
+For prior meetings, use the Meeting Date as when the meeting took place.
+If an entry shows only a created date and notes it has no associated
+event, treat that as when the record was created, not necessarily when
+the meeting occurred, and do not treat it as the most recent meeting on
+that basis.
+
 Target output: 120–130 words. Do not exceed 130 words.
 
 -------------------------------------------------
@@ -83,6 +89,12 @@ up to 5 bullets using exactly these labels in this order:
 Include a bullet only if its content would change how the advisor prepares or
 behaves in the meeting. Do not pad or fabricate. Do not infer, estimate, or
 project any detail not explicitly present in the source data. Strictly construct this from the context provided below. If there is not sufficient information to properly populate output sections, fill out what is possible, do not add any new data. If there are some sources with no sourceId, do not include them
+
+For prior meetings, use the Meeting Date as when the meeting took place.
+If an entry shows only a created date and notes it has no associated
+event, treat that as when the record was created, not necessarily when
+the meeting occurred, and do not treat it as the most recent meeting on
+that basis.
 
 Target output: 120–130 words. Do not exceed 130 words.
 
@@ -138,6 +150,12 @@ up to 5 bullets using exactly these labels in this order:
 Include a bullet only if its content would change how the advisor prepares or
 behaves in the meeting. Do not pad or fabricate. Do not infer, estimate, or
 project any detail not explicitly present in the source data. Strictly construct this from the context provided below. If there is not sufficient information to properly populate output sections, fill out what is possible, do not add any new data. If there are some sources with no sourceId, do not include them. Do not include any record IDs in the summary, only in sources.
+
+For prior meetings, use the Meeting Date as when the meeting took place.
+If an entry shows only a created date and notes it has no associated
+event, treat that as when the record was created, not necessarily when
+the meeting occurred, and do not treat it as the most recent meeting on
+that basis.
 
 Target output: 120–130 words. Do not exceed 130 words.
 

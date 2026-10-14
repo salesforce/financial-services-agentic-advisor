@@ -25,6 +25,29 @@
         </customErrorMessages>
     </customErrors>
     <decisions>
+        <description>Only create a Meeting Playbook for the calendar invite organizer's Event. In a group event, the organizer owns the parent Event (IsChild = false) while every invitee gets a child copy (IsChild = true). Proceeding only for the parent avoids creating duplicate Meeting Playbooks for the same meeting when multiple EAC-enabled teammates are invited.</description>
+        <name>IsOrganizerEvent</name>
+        <label>Is Organizer Event?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>IsParentEvent</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.IsChild</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>HaveLeadOrAccount</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
         <description>Checks if the annual review template was found</description>
         <name>Has_Annual_Review_Template</name>
         <label>Has Annual Review Template?</label>
@@ -164,9 +187,9 @@
         </rules>
     </decisions>
     <environments>Default</environments>
-    <interviewLabel>Meeting Concierge: Create Meeting from Event FSC package {!$Flow.CurrentDateTime}</interviewLabel>
+    <interviewLabel>Meeting Concierge: Create Meeting from Event FSC Package {!$Flow.CurrentDateTime}</interviewLabel>
     <isTemplate>true</isTemplate>
-    <label>Meeting Concierge: Create Meeting from Event FSC package</label>
+    <label>Meeting Concierge: Create Meeting from Event FSC Package</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -471,7 +494,7 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>HaveLeadOrAccount</targetReference>
+            <targetReference>IsOrganizerEvent</targetReference>
         </connector>
         <object>Event</object>
         <recordTriggerType>Create</recordTriggerType>
