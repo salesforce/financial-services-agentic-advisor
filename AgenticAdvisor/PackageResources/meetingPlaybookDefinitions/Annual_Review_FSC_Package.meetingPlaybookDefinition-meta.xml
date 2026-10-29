@@ -51,7 +51,7 @@
         <mtgPlbkDefStgCapability>
             <capabilityOrder>-21</capabilityOrder>
             <isAllowMultipleUse>false</isAllowMultipleUse>
-            <promptGeneratedTextType>FollowupSummaryPrompt</promptGeneratedTextType>
+            <promptGeneratedTextType>MeetingFollowup</promptGeneratedTextType>
             <promptTemplate>meetingcenter_wealth__PeriodicPostMeetingPrompt</promptTemplate>
         </mtgPlbkDefStgCapability>
         <mtgPlbkDefStgCapability>
