@@ -1705,7 +1705,7 @@ No associated related record on the meeting playbook to generate a client summar
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <description>Gets the followup summary text for the current meeting playbook&apos;s stages by matching MeetingPlaybookStageText of type MeetingFollowup against the stage IDs in the stageIdsForTasks collection.</description>
+        <description>Gets the followup summary text for the current meeting playbook&apos;s stages by matching MeetingPlaybookStageText of type FollowupSummaryPrompt against the stage IDs in the stageIdsForTasks collection.</description>
         <name>Get_Followup_Summary_Text</name>
         <label>Get Followup Summary Text</label>
         <locationX>0</locationX>
@@ -1722,7 +1722,7 @@ No associated related record on the meeting playbook to generate a client summar
             <field>Type</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>MeetingFollowup</stringValue>
+                <stringValue>FollowupSummaryPrompt</stringValue>
             </value>
         </filters>
         <filters>
