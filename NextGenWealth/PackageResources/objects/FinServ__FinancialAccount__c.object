@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Field sets consumed by FinServ:FinancialAccountList in:
+      * flexipages/NextGenWlthMgmt_HshldAcct_Pkg_rec_L.flexipage   (uses FSC_Group_*)
+      * flexipages/NextGenWlthMgmt_PersonAcct_Pkg_rec_L.flexipage  (uses FSC_Client_*)
+
+    Target object: FinServ__FinancialAccount__c (FSC managed package custom object).
+    As a subscriber, we extend this managed object by adding our own field sets.
+
+    Field API names below use the FinServ__ namespace prefix because the underlying
+    fields ship as custom fields in the managed package. The mirror source of truth
+    is the wealth1 unmanaged extension (unmanaged/Extension/src/objects/FinancialAccount__c.object),
+    whose fields become FinServ__*__c when packaged and installed into a subscriber org.
+
+    Naming convention:
+      FSC_{Client|Group}_{AccountType}
+        - Client -> Person Account (individual advisor view)   -> uses FinServ__OwnerType__c
+        - Group  -> Household (household advisor view)          -> uses FinServ__PrimaryOwner__c
+-->
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <fullName>WlthMgmtFinancialAccountFieldSet</fullName>
+        <description>Client detail financial account field set for Agentic Advisor.</description>
+        <displayedFields>
+            <field>Name</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>FinServ__FinancialAccountType__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>FinServ__OwnerType__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>FinServ__OpenDate__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>FinServ__Balance__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>FinServ__Managed__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>FinServ__Status__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>Agentic Advisor</label>
+    </fieldSets>
+</CustomObject>

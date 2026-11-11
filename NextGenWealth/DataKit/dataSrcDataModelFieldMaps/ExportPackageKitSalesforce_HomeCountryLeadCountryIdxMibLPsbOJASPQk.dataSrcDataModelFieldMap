@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSrcDataModelFieldMap xmlns="http://soap.sforce.com/2006/04/metadata">
+    <filterApplied>false</filterApplied>
+    <masterLabel>ExportPackageKitSalesforce_HomeCountryLeadCountryIdxMibLPsbOJASPQk</masterLabel>
+    <sourceField>Lead_Data_Stream6.Country__c</sourceField>
+    <targetField>LeadDmo.LeadDmo.CountryId</targetField>
+    <templateVersion>1</templateVersion>
+    <versionNumber>1.0</versionNumber>
+</DataSrcDataModelFieldMap>

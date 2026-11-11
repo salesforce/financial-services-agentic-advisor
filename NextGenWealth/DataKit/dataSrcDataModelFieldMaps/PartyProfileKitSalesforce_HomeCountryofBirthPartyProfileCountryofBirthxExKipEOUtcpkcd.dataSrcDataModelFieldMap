@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataSrcDataModelFieldMap xmlns="http://soap.sforce.com/2006/04/metadata">
+    <filterApplied>false</filterApplied>
+    <filterOperationType>Equal</filterOperationType>
+    <masterLabel>PartyProfileKitSalesforce_HomeCountryofBirthPartyProfileCountryofBirthxExKipEOUtcpkcd</masterLabel>
+    <sourceField>Party_Profile_Data_Stream6.CountryofBirth__c</sourceField>
+    <targetField>PartyProfileDmo.PartyProfileDmo.CountryofBirth</targetField>
+    <templateVersion>1</templateVersion>
+    <versionNumber>1.0</versionNumber>
+</DataSrcDataModelFieldMap>

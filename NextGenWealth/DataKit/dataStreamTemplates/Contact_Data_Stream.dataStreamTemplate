@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataStreamTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <dataSourceBundleDefinition>FSCAgenticAdvisorPackageDataBundle</dataSourceBundleDefinition>
+    <dataSourceObject>Contact_Data_Stream6</dataSourceObject>
+    <masterLabel>Contact Data Stream</masterLabel>
+    <objectCategory>Salesforce_SFDCReferenceModel_0_93.Profile</objectCategory>
+    <refreshFrequency>BATCH</refreshFrequency>
+    <refreshMode>UPSERT</refreshMode>
+    <sourceObjectName>Contact_Data_Stream</sourceObjectName>
+    <templateVersion>1</templateVersion>
+</DataStreamTemplate>
