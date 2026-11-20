@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MeetingPlaybookDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
+    <compatibleObject>Account</compatibleObject>
     <description>Ideal for quarterly or annual check-ins with existing clients. Includes pre-meeting research, in-session discussion guide, and post-meeting follow-up.</description>
     <isActive>false</isActive>
     <label>Annual Review FSC Package</label>

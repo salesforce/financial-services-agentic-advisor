@@ -1,7 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Gets the recent emails between the meeting's organizer and the client&apos;s contacts, grouped into threads and formatted for the prompt. A fault never fails the prep brief.</description>
+        <name>BuildEmailHistory</name>
+        <label>Build Email History</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>getMeetingEmailHistory</actionName>
+        <actionType>getMeetingEmailHistory</actionType>
+        <connector>
+            <targetReference>HaveEmailHistory</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>SetNoEmailHistory</targetReference>
+        </faultConnector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>clientIds</name>
+            <value>
+                <elementReference>personContactIds</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>organizerId</name>
+            <value>
+                <elementReference>GetMeetingPlaybook.OrganizerId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>startDateTime</name>
+            <value>
+                <elementReference>LastMeetingDateTime</elementReference>
+            </value>
+        </inputParameters>
+        <outputParameters>
+            <assignToReference>hasEmailHistory</assignToReference>
+            <name>hasEmailHistory</name>
+        </outputParameters>
+        <outputParameters>
+            <assignToReference>emailHistory</assignToReference>
+            <name>emailHistory</name>
+        </outputParameters>
+        <storeOutputAutomatically>false</storeOutputAutomatically>
+    </actionCalls>
     <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <description>Add Email History to Prompt</description>
+        <name>AddEmailHistoryToPrompt</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>Add Email History to Prompt</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>================================
+Email History:
+{!emailHistory}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
     <assignments>
         <description>Add Financial Holding to Prompt</description>
         <name>Add_Financial_Holding_to_Prompt</name>
@@ -199,7 +260,7 @@ Financial Plan Details:
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>PriorMeetingHasEventDate</targetReference>
+            <targetReference>IsLaterThanLastMeeting</targetReference>
         </connector>
     </assignments>
     <assignments>
@@ -627,6 +688,100 @@ Task Details:
             <targetReference>Get_Financial_Account_Roles</targetReference>
         </connector>
     </assignments>
+    <assignments>
+        <description>Records the current prior meeting&apos;s event start as the latest prior meeting seen so far. The core email history action clamps the lookback window to between 30 days and one year.</description>
+        <name>SetLastMeetingDateTime</name>
+        <label>Set Last Meeting Date Time</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>LastMeetingDateTime</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>IterateOverMeetingPlaybooks.Event.StartDateTime</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>PriorMeetingHasEventDate</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Leaves email history out of the prompt when getting email history faults, so the prep brief still completes.</description>
+        <name>SetNoEmailHistory</name>
+        <label>Set No Email History</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>hasEmailHistory</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <description>Determines whether the current in-scope prior meeting started after every earlier one seen so far, so LastMeetingDateTime ends up as the most recent prior meeting.</description>
+        <name>IsLaterThanLastMeeting</name>
+        <label>Is Later Than Last Meeting?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>PriorMeetingHasEventDate</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>LaterThanLastMeeting</name>
+            <conditionLogic>1 AND (2 OR 3)</conditionLogic>
+            <conditions>
+                <leftValueReference>IterateOverMeetingPlaybooks.Event.StartDateTime</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>LastMeetingDateTime</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>IterateOverMeetingPlaybooks.Event.StartDateTime</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <elementReference>LastMeetingDateTime</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SetLastMeetingDateTime</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determines whether the action returned any email history to add to the prompt.</description>
+        <name>HaveEmailHistory</name>
+        <label>Have Email History?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>No (Default)</defaultConnectorLabel>
+        <rules>
+            <name>EmailHistoryFound</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>hasEmailHistory</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>AddEmailHistoryToPrompt</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
     <decisions>
         <description>Determines whether the current meeting has an associated event start date to use as the cutoff for filtering prior meetings.</description>
         <name>CurrentMeetingHasEventDate</name>
@@ -865,6 +1020,9 @@ Task Details:
         <nextValueConnector>
             <targetReference>AddCaseToPrompt</targetReference>
         </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>BuildEmailHistory</targetReference>
+        </noMoreValuesConnector>
     </loops>
     <loops>
         <description>Repeats an action for each record in the Financial Plans from GetFinancialPlans record collection.</description>
@@ -1452,6 +1610,33 @@ Task Details:
         <text>&lt;p&gt;Task: {!IterateOverTasks.Subject} [SourceId : {!IterateOverTasks.Id}]&lt;/p&gt;&lt;p&gt;Status: {!IterateOverTasks.Status}&lt;/p&gt;&lt;p&gt;Priority: {!IterateOverTasks.Priority}&lt;/p&gt;&lt;p&gt;DueDate: {!IterateOverTasks.ActivityDate}&lt;/p&gt;</text>
     </textTemplates>
     <variables>
+        <description>Stores the start of the most recent in-scope prior meeting with the client, or null when there is none. The core email history action applies the fallback and lookback limits.</description>
+        <name>LastMeetingDateTime</name>
+        <dataType>DateTime</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores the email history text returned by the BuildEmailHistory action.</description>
+        <name>emailHistory</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Stores whether the BuildEmailHistory action returned any email history.</description>
+        <name>hasEmailHistory</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
         <description>Stores the cutoff date and time used to exclude prior meetings occurring after the current meeting&apos;s event start time, or after now when the current meeting has no event.</description>
         <name>CutoffDateTime</name>
         <dataType>DateTime</dataType>
@@ -1476,7 +1661,7 @@ Task Details:
         <isOutput>false</isOutput>
     </variables>
     <variables>
-        <description>Collection of person contact IDs for all household members (or the single person account) used for person-based queries such as person life events.</description>
+        <description>Collection of person contact IDs for all household members (or the single person account) used for person-based queries such as person life events and email history.</description>
         <name>personContactIds</name>
         <dataType>String</dataType>
         <isCollection>true</isCollection>
